@@ -1,5 +1,7 @@
 package model;
 
+import metadata.NPCMessage;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +11,7 @@ public class NPCModel {
     private String role;
     private List<String> dialogues;
     private List<TaskModel> tasks;
-    private List<String> dialogueHistory;
+    private List<NPCMessage> dialogueHistory;
     private List<ItemModel> items;
 
     public NPCModel(String name, String description, String role, List<String> dialogues, List<TaskModel> tasks) {
@@ -27,6 +29,9 @@ public class NPCModel {
     public String getDescription(){
         return description;
     }
+    public String getRole(){
+        return role;
+    }
     public List<TaskModel> getTasks(){
         return tasks;
     }
@@ -34,8 +39,14 @@ public class NPCModel {
         tasks.add(task);
     }
 
-    public void addDialogueToHistory(String dialogue) {
+    // 修改对话历史的添加方法，接受 NPCMessage 对象
+    public void addDialogueToHistory(NPCMessage dialogue) {
         dialogueHistory.add(dialogue);
+    }
+
+    // 返回 NPCMessage 列表
+    public List<NPCMessage> getDialogueHistory() {
+        return dialogueHistory;
     }
 
     public void updateTaskStatus(String taskId, boolean completed) {

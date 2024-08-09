@@ -1,6 +1,8 @@
 package view;
 
+import interfaces.GameControllerInterface;
 import model.ItemModel;
+import model.NPCModel;
 import model.TaskModel;
 import util.ResourcePathUtil;
 
@@ -17,6 +19,7 @@ public class GameView extends JFrame {
     private JPanel backpackPanel;
     private JPanel worldObjectsPanel;
     private JPanel gameAssetsPanel;
+    private GameControllerInterface controller;
 
     public GameView() {
         setTitle("NPC Interaction Demo");
@@ -24,6 +27,10 @@ public class GameView extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         initComponents();
+    }
+
+    public void setController(GameControllerInterface controller) {
+        this.controller = controller;
     }
 
     private void initComponents() {
@@ -54,12 +61,12 @@ public class GameView extends JFrame {
     }
 
 
-    public void addNpcTab(String npcName, String description, List<TaskModel> tasks) {
+    public void addNpcTab(NPCModel npc) {
         JPanel npcPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
 
         // NPC信息标签
-        JLabel lblNpcInfo = new JLabel(description);
+        JLabel lblNpcInfo = new JLabel(npc.getDescription());
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 3;
@@ -68,7 +75,7 @@ public class GameView extends JFrame {
 
         // 创建任务列表
         DefaultListModel<String> taskModel = new DefaultListModel<>();
-        tasks.forEach(task -> taskModel.addElement(task.getDescription()));
+        npc.getTasks().forEach(task -> taskModel.addElement(task.getDescription()));
         JList<String> taskList = new JList<>(taskModel);
         JScrollPane taskScrollPane = new JScrollPane(taskList);
 
@@ -101,6 +108,10 @@ public class GameView extends JFrame {
             if (!inputText.trim().isEmpty()) {
                 txtHistory.append("You: " + inputText + "\n");
                 txtInput.setText(""); // 清空输入框
+
+                // 处理与 NPC 的交互
+                String response = controller.interactWithNPC(npc, inputText);
+                txtHistory.append(npc.getNPCName() + ": "+ response + "\n");
             }
         });
         gbc.gridx = 0;
@@ -119,7 +130,7 @@ public class GameView extends JFrame {
         npcPanel.add(btnSend, gbc);
 
         // 将NPC面板添加到tabbedPane
-        tabbedPane.addTab(npcName, npcPanel);
+        tabbedPane.addTab(npc.getNPCName(), npcPanel);
     }
     public void updateDescription(String description) {
         txtDescription.setText(description);
