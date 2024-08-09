@@ -1,0 +1,16 @@
+{
+  "game_assets": [
+    {"name": "Mrs.Norris", "image_path": "1.png"},
+    {"name": "Dew Grass", "image_path": "grass.png"},
+    {"name": "Books", "image_path": "books.png"},
+    {"name": "Picture", "image_path": "picture.png"},
+    {"name": "Magic stone", "image_path": "stone.png"},
+
+    {"name": "Map", "image_path": "map.png"},
+    {"name": "Lantern", "image_path": "lantern.png"},
+    {"name": "Magic Medicine", "image_path": "Medicine.png"},
+    {"name": "Card of Nicolas Flamel", "image_path": "card_N.png"},
+    {"name": "Card of Dumbledore", "image_path": "card_D.png"},
+    {"name": "Credit", "image_path": "credit.png"}
+  ]
+}
