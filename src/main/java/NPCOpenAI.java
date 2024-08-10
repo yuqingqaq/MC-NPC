@@ -17,9 +17,10 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.stream.Collectors;
 
-@Mod("npcopenai")
+@Mod(NPCOpenAI.MODID)
 public class NPCOpenAI
 {
+    public static final String MODID = "npcopenai";
     private static final Logger LOGGER = LogManager.getLogger();
 
     public NPCOpenAI() {
