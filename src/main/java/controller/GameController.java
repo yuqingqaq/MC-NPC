@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class GameController implements GameControllerInterface {
+    private static GameController instance; // Singleton instance
+
     private GameView view;
     private List<NPCModel> npcs;
     private List<ItemModel> backpackItems;
@@ -24,12 +26,22 @@ public class GameController implements GameControllerInterface {
     private NPCSystem npcSystem;
     private OpenAIGPT gptModel;
 
-    public GameController(GameView view) {
-        this.view = view;
-        this.view.setController(this);
-        loadGameData();
-        initializeView();
+    public static GameController getInstance() {
+        if (instance == null) {
+            instance = new GameController();
+        }
+        return instance;
     }
+    private GameController() {
+        loadGameData();
+    }
+
+//    public GameController(GameView view) {
+//        this.view = view;
+//        this.view.setController(this);
+//        loadGameData();
+//        initializeView();
+//    }
 
     private void loadGameData() {
 
