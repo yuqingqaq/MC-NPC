@@ -12,7 +12,6 @@ buildscript {
 plugins {
     id 'eclipse'
     id 'maven-publish'
-    id 'com.github.johnrengelman.shadow' version '7.1.0'
 }
 apply plugin: 'net.minecraftforge.gradle'
 
@@ -216,7 +215,7 @@ reobf {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifact shadowJar // 使用 shadowJar 作为发布的 artifact
+            artifact jar // 作为发布的 artifact
         }
     }
     repositories {

@@ -1,8 +1,13 @@
 package api.metadata;
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResponseData {
@@ -141,6 +146,8 @@ public class ResponseData {
     }
 
     public static class Message {
+        private Map<String, Object> additionalProperties = new HashMap<>();
+
         @JsonProperty("role")
         private String role;
 
@@ -172,6 +179,17 @@ public class ResponseData {
 
         public void setRefusal(Object refusal) {
             this.refusal = refusal;
+        }
+
+
+        @JsonAnyGetter
+        public Map<String, Object> getAdditionalProperties() {
+            return this.additionalProperties;
+        }
+
+        @JsonAnySetter
+        public void setAdditionalProperty(String name, Object value) {
+            this.additionalProperties.put(name, value);
         }
     }
 
