@@ -18,7 +18,6 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import com.fasterxml.jackson.core.type.TypeReference;
 import java.util.stream.Collectors;
 
 @Mod(NPCOpenAI.MODID)
