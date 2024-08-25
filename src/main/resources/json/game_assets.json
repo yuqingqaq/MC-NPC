@@ -11,6 +11,11 @@
     {"name": "Magic Medicine", "image_path": "Medicine.png"},
     {"name": "Card of Nicolas Flamel", "image_path": "card_N.png"},
     {"name": "Card of Dumbledore", "image_path": "card_D.png"},
-    {"name": "Credit", "image_path": "credit.png"}
+    {"name": "Credit", "image_path": "credit.png"},
+
+    {"name": "Library Card", "image_path": "card_L.png"},
+    {"name": "Campus Map", "image_path": "campus_map.png"},
+    {"name": "AI Tool Kit", "image_path": "aitk.png"},
+    {"name": "Sports Gear", "image_path": "sports_gear.png"}
   ]
 }

@@ -1,6 +1,22 @@
 package npcopenai;
 
+import command.CommandRegistry;
 import controller.GameController;
+import entity.*;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.geom.EntityModelSet;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
+import net.minecraftforge.event.server.ServerStoppingEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import net.minecraft.world.item.Item;
@@ -27,9 +43,21 @@ public class NPCOpenAI {
     private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
     public static final RegistryObject<Item> CUSTOM_ITEM = ITEMS.register("custom_item", CustomItem::new);
 
+    public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES,  MODID);
+
+    public static final RegistryObject<EntityType<NPCEntity>> NPC_ENTITY = ENTITIES.register("npc_entity",
+            () -> EntityType.Builder.of(NPCEntity::new, MobCategory.MISC)
+                    .sized(0.6F, 1.95F)
+                    .build(new ResourceLocation(MODID, "npc_entity").toString()));
+    public static final RegistryObject<EntityType<ProfessorNPCEntity>> PROFESSOR_ENTITY = ENTITIES.register("professor_entity",
+            () -> EntityType.Builder.of(ProfessorNPCEntity::new, MobCategory.MISC)
+                    .sized(0.6F, 1.95F)
+                    .build(new ResourceLocation(MODID, "professor_entity").toString()));
+
     public NPCOpenAI()
     {
         ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
@@ -49,14 +77,7 @@ public class NPCOpenAI {
     {
         LOGGER.info("HELLO FROM PREINIT");
         LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
-        System.out.println("Attempting to load Jackson classes...");
-        try {
-            Class.forName("com.fasterxml.jackson.core.type.TypeReference");
-            System.out.println("Jackson TypeReference class loaded successfully.");
-        } catch (ClassNotFoundException e) {
-            System.out.println("Failed to load Jackson TypeReference class.");
-            e.printStackTrace();
-        }
+
         // 初始化逻辑
         GameController.getInstance();
         LOGGER.info(" GameController: {}", GameController.getInstance().getNpcs());
@@ -80,9 +101,22 @@ public class NPCOpenAI {
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event)
     {
+        ServerLevel world = event.getServer().overworld();  // 获取主世界
+        NPCDataManager.checkNPCExists(world);  // 检查 NPC 是否存在
         LOGGER.info("HELLO from server starting");
     }
-
+    public class ServerEvents {
+        @SubscribeEvent
+        public void onServerStopping(ServerStoppingEvent event) {
+            ServerLevel world = event.getServer().overworld();  // 获取主世界
+            if (CommandRegistry.uniqueNpc != null) {
+                NPCDataManager.saveNPC(world, CommandRegistry.uniqueNpc);  // 保存 NPC 数据
+            }
+            if (CommandRegistry.uniqueProfessor != null) {
+                NPCDataManager.saveNPC(world, CommandRegistry.uniqueProfessor);  // 保存 NPC 数据
+            }
+        }
+    }
     @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistryEvents {
         @SubscribeEvent
@@ -92,6 +126,24 @@ public class NPCOpenAI {
                     CUSTOM_ITEM.get()
             );
             LOGGER.info("Custom items registered.");
+        }
+        @SubscribeEvent
+        public static void onEntityAttributeCreation(EntityAttributeCreationEvent event) {
+            event.put(NPC_ENTITY.get(), NPCEntity.createAttributes().build());
+            event.put(PROFESSOR_ENTITY.get(), ProfessorNPCEntity.createAttributes().build());
+
+        }
+    }
+
+    @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
+    public class ClientProxy {
+        @SubscribeEvent
+        public static void onClientSetup(FMLClientSetupEvent event) {
+            event.enqueueWork(() -> {
+                EntityRenderers.register(NPC_ENTITY.get(), NPCEntityRenderer::new);
+                EntityRenderers.register(PROFESSOR_ENTITY.get(), ProfessorNPCEntityRenderer::new); // 添加此行
+
+            });
         }
     }
 }

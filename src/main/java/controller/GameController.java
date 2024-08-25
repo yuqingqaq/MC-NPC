@@ -45,14 +45,6 @@ public class GameController implements GameControllerInterface {
 
     private void loadGameData() {
 
-        System.out.println("Attempting to load Jackson classes...");
-        try {
-            Class.forName("com.fasterxml.jackson.core.type.TypeReference");
-            System.out.println("Jackson TypeReference class loaded successfully.");
-        } catch (ClassNotFoundException e) {
-            System.out.println("Failed to load Jackson TypeReference class.");
-            e.printStackTrace();
-        }
         npcs = JsonLoader.loadNPCsFromJson("json/World.json");
         backpackItems = JsonLoader.loadObjectListFromJson(
                 "json/playerBackpack.json",
