@@ -35,7 +35,9 @@ public class NPCSystem {
                 "[Rule 2: Avoid EXPLICITLY mentioning 'tasks']." +
                 "[Rule 3: Imitate the Character and relationships.]" +
                 "[Rule 4: Use natural conversation to guide the interaction.]" +
-                "[Rule 5: Avoid EXPLICITLY telling the task_significance, keep it a secret ]");
+                "[Rule 5: Avoid EXPLICITLY telling the task_significance, keep it a secret ]" +
+                "[Rule 6: Reply with no more than 30 words ]"
+        );
 
         String systemPrompt = String.format("IMPORTANT Rules:%s %s   Task System: %s. ", cautionNote, introduction, taskDetails);
 
