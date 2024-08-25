@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraftforge.api.distmarker.Dist;
@@ -102,18 +103,26 @@ public class NPCOpenAI {
     public void onServerStarting(ServerStartingEvent event)
     {
         ServerLevel world = event.getServer().overworld();  // 获取主世界
-        NPCDataManager.checkNPCExists(world);  // 检查 NPC 是否存在
+        NPCData data = NPCData.forLevel(world);
+        NPCDataManager.checkNPCExists(world, data);  // 检查 NPC 是否存在
         LOGGER.info("HELLO from server starting");
     }
     public class ServerEvents {
         @SubscribeEvent
         public void onServerStopping(ServerStoppingEvent event) {
             ServerLevel world = event.getServer().overworld();  // 获取主世界
-            if (CommandRegistry.uniqueNpc != null) {
-                NPCDataManager.saveNPC(world, CommandRegistry.uniqueNpc);  // 保存 NPC 数据
+
+            if (NPCDataManager.uniqueNpcUUID != null) {
+                Entity npc = NPCDataManager.findNPCByUUID(world, NPCDataManager.uniqueNpcUUID);
+                if (npc != null) {
+                    NPCDataManager.saveNPC(npc.getUUID(), world);  // 保存 NPC 数据
+                }
             }
-            if (CommandRegistry.uniqueProfessor != null) {
-                NPCDataManager.saveNPC(world, CommandRegistry.uniqueProfessor);  // 保存 NPC 数据
+            if (NPCDataManager.uniqueProfessorUUID != null) {
+                Entity professor = NPCDataManager.findNPCByUUID(world, NPCDataManager.uniqueProfessorUUID);
+                if (professor != null) {
+                    NPCDataManager.saveProfessor(professor.getUUID(), world);  // 保存 NPC 数据
+                }
             }
         }
     }

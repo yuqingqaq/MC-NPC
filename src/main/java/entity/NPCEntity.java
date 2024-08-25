@@ -24,7 +24,7 @@ public class NPCEntity extends Villager {
         super((EntityType<? extends Villager>) type, world);
         this.setCustomName(new TextComponent("librarian")); // 设置自定义名称
         this.setCustomNameVisible(true); // 始终显示名称
-        //this.registerGoals(); // 初始化 AI 行为
+        this.registerGoals(); // 初始化 AI 行为
 
     }
 
@@ -34,11 +34,11 @@ public class NPCEntity extends Villager {
 //                .add(Attributes.MOVEMENT_SPEED, 0.25);
 //    }
 
-//    @Override
-//    protected void registerGoals() {
-//        super.registerGoals();
-//        this.goalSelector.addGoal(5, new CustomRandomStrollGoal(this, 0.05));
-//    }
+    @Override
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(5, new CustomRandomStrollGoal(this, 0.05));
+    }
 
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {

@@ -46,6 +46,8 @@ bin/
 # other
 eclipse
 run
-
+libs
+mods
 ## Secret Key ###
 src/main/resources/config/gpt3keys.txt
+src/main/resources/assets/npcopenai/models

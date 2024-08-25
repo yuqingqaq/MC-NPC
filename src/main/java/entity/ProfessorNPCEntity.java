@@ -28,7 +28,7 @@ public class ProfessorNPCEntity extends Mob {
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(5, new CustomRandomStrollGoal(this, 0.05));
+        this.goalSelector.addGoal(5, new CustomRandomStrollGoal(this, 0.1));
     }
     // 定义实体的基本属性
     public static AttributeSupplier.Builder createAttributes() {

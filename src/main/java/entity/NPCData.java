@@ -3,20 +3,27 @@ package entity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.nbt.CompoundTag;
+import java.util.UUID;
 
 public class NPCData extends SavedData {
     private static final String DATA_NAME = "npc_unique_data";
 
     private boolean npcExists;
+    private UUID npcUuid;  // UUID to identify the normal NPC
+    private UUID professorUuid;  // UUID to identify the Professor NPC
     private int npcX, npcY, npcZ;
-
-    public NPCData() {
-        // 默认构造函数
-    }
 
     @Override
     public CompoundTag save(CompoundTag tag) {
         tag.putBoolean("npcExists", npcExists);
+        if (npcExists) {
+            if (npcUuid != null) {
+                tag.putUUID("npcUuid", npcUuid);
+            }
+            if (professorUuid != null) {
+                tag.putUUID("professorUuid", professorUuid);
+            }
+        }
         tag.putInt("npcX", npcX);
         tag.putInt("npcY", npcY);
         tag.putInt("npcZ", npcZ);
@@ -26,9 +33,13 @@ public class NPCData extends SavedData {
     public static NPCData load(CompoundTag tag) {
         NPCData data = new NPCData();
         data.npcExists = tag.getBoolean("npcExists");
-        data.npcX = tag.getInt("npcX");
-        data.npcY = tag.getInt("npcY");
-        data.npcZ = tag.getInt("npcZ");
+        if (data.npcExists) {
+            data.npcUuid = tag.getUUID("npcUuid");
+            data.professorUuid = tag.getUUID("professorUuid");
+            data.npcX = tag.getInt("npcX");
+            data.npcY = tag.getInt("npcY");
+            data.npcZ = tag.getInt("npcZ");
+        }
         return data;
     }
 
@@ -36,37 +47,40 @@ public class NPCData extends SavedData {
         return world.getDataStorage().computeIfAbsent(NPCData::load, NPCData::new, DATA_NAME);
     }
 
-    // Getter methods
+    public void setNpcExists(boolean exists) {
+        this.npcExists = exists;
+        setDirty();
+    }
+
     public boolean getNpcExists() {
-        return npcExists;
+        return this.npcExists;
     }
 
-    public int getNpcX() {
-        return npcX;
+    public void setNpcUuid(UUID uuid) {
+        this.npcUuid = uuid;
+        setDirty();
     }
 
-    public int getNpcY() {
-        return npcY;
+    public UUID getNpcUuid() {
+        return this.npcUuid;
     }
 
-    public int getNpcZ() {
-        return npcZ;
+    public void setProfessorUuid(UUID uuid) {
+        this.professorUuid = uuid;
+        setDirty();
     }
 
-    // Setter methods
-    public void setNpcExists(boolean npcExists) {
-        this.npcExists = npcExists;
+    public UUID getProfessorUuid() {
+        return this.professorUuid;
     }
 
-    public void setNpcX(int npcX) {
-        this.npcX = npcX;
-    }
-
-    public void setNpcY(int npcY) {
-        this.npcY = npcY;
-    }
-
-    public void setNpcZ(int npcZ) {
-        this.npcZ = npcZ;
+    public void deleteData() {
+        this.npcExists = false;
+        this.npcUuid = null;
+        this.professorUuid = null;
+        this.npcX = 0;
+        this.npcY = 0;
+        this.npcZ = 0;
+        setDirty();
     }
 }
