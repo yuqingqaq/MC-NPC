@@ -3,6 +3,7 @@ package command;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import entity.LibrarianNPCEntity;
 import entity.NPCDataManager;
 import entity.NPCEntity;
 import entity.ProfessorNPCEntity;
@@ -25,7 +26,7 @@ import java.util.UUID;
 public class CommandRegistry {
 
     public enum NPCType {
-        NORMAL,
+        LIBRARIAN,
         PROFESSOR
     }
 
@@ -33,17 +34,17 @@ public class CommandRegistry {
     public static void onCommandRegister(RegisterCommandsEvent event) {
         CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
 
-        dispatcher.register(Commands.literal("spawnnpc")
+        dispatcher.register(Commands.literal("spawnlibrarian")
                 .requires(cs -> cs.hasPermission(2))
-                .executes(context -> spawnNPC(context.getSource(), NPCType.NORMAL)));
+                .executes(context -> spawnNPC(context.getSource(), NPCType.LIBRARIAN)));
 
         dispatcher.register(Commands.literal("spawnprofessor")
                 .requires(cs -> cs.hasPermission(2))
                 .executes(context -> spawnNPC(context.getSource(), NPCType.PROFESSOR)));
 
-        dispatcher.register(Commands.literal("findnpc")
+        dispatcher.register(Commands.literal("findlibrarian")
                 .requires(cs -> cs.hasPermission(2))
-                .executes(context -> findNPC(context.getSource(), NPCType.NORMAL)));
+                .executes(context -> findNPC(context.getSource(), NPCType.LIBRARIAN)));
 
         dispatcher.register(Commands.literal("findprofessor")
                 .requires(cs -> cs.hasPermission(2))
@@ -60,16 +61,16 @@ public class CommandRegistry {
         Entity npc = null;
 
         switch (type) {
-            case NORMAL:
-                if (NPCDataManager.uniqueNpcUUID == null) {  // Check if an NPC already exists
-                    npc = new NPCEntity(NPCOpenAI.NPC_ENTITY.get(), world);
+            case LIBRARIAN:
+                if (NPCDataManager.uniqueLibrarianUuid == null) {  // Check if an NPC already exists
+                    npc = new LibrarianNPCEntity(NPCOpenAI.LIBRAIAN_ENTITY.get(), world);
                     npc.setUUID(UUID.randomUUID());
                     npc.setPos(pos.getX(), pos.getY(), pos.getZ());
                     world.addFreshEntity(npc);
                     NPCDataManager.saveNPC(npc.getUUID(), world);
-                    source.sendSuccess(new TextComponent("Normal NPC spawned successfully!"), true);
+                    source.sendSuccess(new TextComponent("Librarian NPC spawned successfully!"), true);
                 } else {
-                    source.sendFailure(new TextComponent("A normal NPC already exists."));
+                    source.sendFailure(new TextComponent("A librarian NPC already exists."));
                 }
                 break;
             case PROFESSOR:
@@ -90,7 +91,7 @@ public class CommandRegistry {
     }
 
     private static int findNPC(CommandSourceStack source, NPCType type) throws CommandSyntaxException {
-        UUID uuid = (type == NPCType.NORMAL) ? NPCDataManager.uniqueNpcUUID : NPCDataManager.uniqueProfessorUUID;
+        UUID uuid = (type == NPCType.LIBRARIAN) ? NPCDataManager.uniqueLibrarianUuid : NPCDataManager.uniqueProfessorUUID;
         Entity npc = NPCDataManager.findNPCByUUID(source.getLevel(), uuid);
 
         if (npc != null) {
@@ -98,10 +99,10 @@ public class CommandRegistry {
             BlockPos npcPos = npc.blockPosition();
             player.teleportTo(source.getLevel(), npcPos.getX(), npcPos.getY(), npcPos.getZ(), player.getYRot(), player.getXRot());
             source.sendSuccess(new TextComponent(String.format("%s NPC is located at [%d, %d, %d].",
-                    type == NPCType.NORMAL ? "Normal" : "Professor", npcPos.getX(), npcPos.getY(), npcPos.getZ())), true);
+                    type == NPCType.LIBRARIAN ? "LIBRARIAN" : "Professor", npcPos.getX(), npcPos.getY(), npcPos.getZ())), true);
         } else {
             source.sendFailure(new TextComponent(String.format("%s NPC not found.",
-                    type == NPCType.NORMAL ? "Normal" : "Professor")));
+                    type == NPCType.LIBRARIAN ? "LIBRARIAN" : "Professor")));
         }
         return 1;
     }
@@ -112,7 +113,7 @@ public class CommandRegistry {
         // 移除所有 NPCEntity 类型的实体
         Iterable<Entity> entities = world.getAllEntities();
         for (Entity entity : entities) {
-            if (entity instanceof NPCEntity || entity instanceof ProfessorNPCEntity) {
+            if (entity instanceof LibrarianNPCEntity || entity instanceof ProfessorNPCEntity || entity instanceof NPCEntity ) {
                 entity.remove(Entity.RemovalReason.DISCARDED); // 或者使用 entity.discard() 根据你的API版本
             }
         }

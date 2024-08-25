@@ -9,7 +9,7 @@ public class NPCData extends SavedData {
     private static final String DATA_NAME = "npc_unique_data";
 
     private boolean npcExists;
-    private UUID npcUuid;  // UUID to identify the normal NPC
+    private UUID librarianUuid;  // UUID to identify the normal NPC
     private UUID professorUuid;  // UUID to identify the Professor NPC
     private int npcX, npcY, npcZ;
 
@@ -17,8 +17,8 @@ public class NPCData extends SavedData {
     public CompoundTag save(CompoundTag tag) {
         tag.putBoolean("npcExists", npcExists);
         if (npcExists) {
-            if (npcUuid != null) {
-                tag.putUUID("npcUuid", npcUuid);
+            if (librarianUuid != null) {
+                tag.putUUID("librarianUuid", librarianUuid);
             }
             if (professorUuid != null) {
                 tag.putUUID("professorUuid", professorUuid);
@@ -34,7 +34,7 @@ public class NPCData extends SavedData {
         NPCData data = new NPCData();
         data.npcExists = tag.getBoolean("npcExists");
         if (data.npcExists) {
-            data.npcUuid = tag.getUUID("npcUuid");
+            data.librarianUuid = tag.getUUID("librarianUuid");
             data.professorUuid = tag.getUUID("professorUuid");
             data.npcX = tag.getInt("npcX");
             data.npcY = tag.getInt("npcY");
@@ -56,13 +56,13 @@ public class NPCData extends SavedData {
         return this.npcExists;
     }
 
-    public void setNpcUuid(UUID uuid) {
-        this.npcUuid = uuid;
+    public void setLibrarianUuid(UUID uuid) {
+        this.librarianUuid = uuid;
         setDirty();
     }
 
-    public UUID getNpcUuid() {
-        return this.npcUuid;
+    public UUID getLibrarianUuid() {
+        return this.librarianUuid;
     }
 
     public void setProfessorUuid(UUID uuid) {
@@ -76,7 +76,7 @@ public class NPCData extends SavedData {
 
     public void deleteData() {
         this.npcExists = false;
-        this.npcUuid = null;
+        this.librarianUuid = null;
         this.professorUuid = null;
         this.npcX = 0;
         this.npcY = 0;

@@ -5,11 +5,11 @@ import net.minecraft.world.entity.Entity;
 import java.util.UUID;
 
 public class NPCDataManager {
-    public static UUID uniqueNpcUUID;
+    public static UUID uniqueLibrarianUuid;
     public static UUID uniqueProfessorUUID;
 
     public static void saveNPC(UUID uuid, ServerLevel world) {
-        uniqueNpcUUID = uuid;
+        uniqueLibrarianUuid = uuid;
         updateNPCData(world, uuid);
     }
 
@@ -21,7 +21,7 @@ public class NPCDataManager {
     private static void updateNPCData(ServerLevel world, UUID uuid) {
         NPCData data = NPCData.forLevel(world);
         data.setNpcExists(true);
-        data.setNpcUuid(uuid);
+        data.setLibrarianUuid(uuid);
         data.setDirty();
     }
 
@@ -46,19 +46,19 @@ public class NPCDataManager {
         }
 
         // 也应该重置任何静态UUID存储
-        uniqueNpcUUID = null;
+        uniqueLibrarianUuid = null;
         uniqueProfessorUUID = null;
     }
 
     public static void checkNPCExists(ServerLevel world, NPCData data) {
 // 检查普通NPC
-        UUID npcUuid = data.getNpcUuid();
-        if (npcUuid != null) {
-            Entity npc = findNPCByUUID(world, npcUuid);
+        UUID LibrarianUuid = data.getLibrarianUuid();
+        if (LibrarianUuid != null) {
+            Entity npc = findNPCByUUID(world, LibrarianUuid);
             if (npc != null) {
-                uniqueNpcUUID = npcUuid;  // 更新静态UUID以保持引用
+                uniqueLibrarianUuid = LibrarianUuid;  // 更新静态UUID以保持引用
             } else {
-                uniqueNpcUUID = null;  // NPC不存在，清除UUID
+                uniqueLibrarianUuid = null;  // NPC不存在，清除UUID
             }
         }
 

@@ -46,10 +46,11 @@ public class NPCOpenAI {
 
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES,  MODID);
 
-    public static final RegistryObject<EntityType<NPCEntity>> NPC_ENTITY = ENTITIES.register("npc_entity",
-            () -> EntityType.Builder.of(NPCEntity::new, MobCategory.MISC)
+    public static final RegistryObject<EntityType<LibrarianNPCEntity>> LIBRAIAN_ENTITY = ENTITIES.register("librarian_entity",
+            () -> EntityType.Builder.of(LibrarianNPCEntity::new, MobCategory.MISC)
                     .sized(0.6F, 1.95F)
-                    .build(new ResourceLocation(MODID, "npc_entity").toString()));
+                    .build(new ResourceLocation(MODID, "librarian_entity").toString()));
+
     public static final RegistryObject<EntityType<ProfessorNPCEntity>> PROFESSOR_ENTITY = ENTITIES.register("professor_entity",
             () -> EntityType.Builder.of(ProfessorNPCEntity::new, MobCategory.MISC)
                     .sized(0.6F, 1.95F)
@@ -112,8 +113,8 @@ public class NPCOpenAI {
         public void onServerStopping(ServerStoppingEvent event) {
             ServerLevel world = event.getServer().overworld();  // 获取主世界
 
-            if (NPCDataManager.uniqueNpcUUID != null) {
-                Entity npc = NPCDataManager.findNPCByUUID(world, NPCDataManager.uniqueNpcUUID);
+            if (NPCDataManager.uniqueLibrarianUuid != null) {
+                Entity npc = NPCDataManager.findNPCByUUID(world, NPCDataManager.uniqueLibrarianUuid);
                 if (npc != null) {
                     NPCDataManager.saveNPC(npc.getUUID(), world);  // 保存 NPC 数据
                 }
@@ -138,7 +139,7 @@ public class NPCOpenAI {
         }
         @SubscribeEvent
         public static void onEntityAttributeCreation(EntityAttributeCreationEvent event) {
-            event.put(NPC_ENTITY.get(), NPCEntity.createAttributes().build());
+            event.put(LIBRAIAN_ENTITY.get(), LibrarianNPCEntity.createAttributes().build());
             event.put(PROFESSOR_ENTITY.get(), ProfessorNPCEntity.createAttributes().build());
 
         }
@@ -149,7 +150,7 @@ public class NPCOpenAI {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
             event.enqueueWork(() -> {
-                EntityRenderers.register(NPC_ENTITY.get(), NPCEntityRenderer::new);
+                EntityRenderers.register(LIBRAIAN_ENTITY.get(), LibrarianNPCEntityRenderer::new);
                 EntityRenderers.register(PROFESSOR_ENTITY.get(), ProfessorNPCEntityRenderer::new); // 添加此行
 
             });
