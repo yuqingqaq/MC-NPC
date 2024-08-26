@@ -12,6 +12,7 @@ public class NPCModel {
     private List<String> dialogues;
     private List<TaskModel> tasks;
     private List<NPCMessage> dialogueHistory;
+    private List<NPCMessage> chatHistory; // Only dialogues shown in the GUI
     private List<ItemModel> items;
 
     public NPCModel(String name, String description, String role, List<String> dialogues, List<TaskModel> tasks) {
@@ -21,6 +22,7 @@ public class NPCModel {
         this.dialogues = new ArrayList<>(dialogues);
         this.tasks = new ArrayList<>(tasks);
         this.dialogueHistory = new ArrayList<>();
+        this.chatHistory = new ArrayList<>();
         this.items = new ArrayList<>();
     }
     public String getNPCName(){
@@ -43,11 +45,18 @@ public class NPCModel {
     public void addDialogueToHistory(NPCMessage dialogue) {
         dialogueHistory.add(dialogue);
     }
-
+    // Other methods remain the same with slight modification for chatHistory
+    public void addDialogueTochatHistory(NPCMessage dialogue) {
+        dialogueHistory.add(dialogue);
+        if (!"system".equals(dialogue.getSender())) {
+            chatHistory.add(dialogue);
+        }
+    }
     // 返回 NPCMessage 列表
     public List<NPCMessage> getDialogueHistory() {
         return dialogueHistory;
     }
+    public List<NPCMessage> getChatHistory() { return chatHistory; }
 
     public void updateTaskStatus(String taskId, boolean completed) {
         for (TaskModel task : tasks) {
