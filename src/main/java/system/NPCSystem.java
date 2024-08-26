@@ -69,7 +69,7 @@ public class NPCSystem {
 //                        task.getReward()))
 //                .collect(Collectors.joining(" "));
         return npc.getTasks().stream()
-                .map(task -> String.format("My Task Status %s: (*STATUS*: %s)%s ",
+                .map(task -> String.format("My Task %s: (*STATUS*: %s)%s ",
                         task.getTaskId(),
                         (task.isCompleted() ? "Completed" : "FAILED"),
                         task.getDescription()))
