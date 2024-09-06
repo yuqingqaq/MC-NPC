@@ -159,9 +159,9 @@ dependencies {
     minecraftLibrary jarJar(group: "com.squareup.okhttp3", name: "okhttp", version: "[3.14.9,)") { transitive = false }
     minecraftLibrary jarJar(group: "com.squareup.okio", name: "okio", version: "[1.17.2,)") { transitive = false }
 
-    minecraftLibrary jarJar(group: "com.fasterxml.jackson.core", name: "jackson-annotations", version: "[2.10.1,)") { transitive = false }
-    minecraftLibrary jarJar(group: "com.fasterxml.jackson.core", name: "jackson-core", version: "[2.10.1,)") { transitive = false }
-    minecraftLibrary jarJar(group: "com.fasterxml.jackson.core", name: "jackson-databind", version: "[2.12.7.1,)") { transitive = false }
+    minecraftLibrary jarJar(group: "com.fasterxml.jackson.core", name: "jackson-annotations", version: "[2.10.1, 2.17.2]") { transitive = false }
+    minecraftLibrary jarJar(group: "com.fasterxml.jackson.core", name: "jackson-core", version: "[2.10.1, 2.17.2]") { transitive = false }
+    minecraftLibrary jarJar(group: "com.fasterxml.jackson.core", name: "jackson-databind", version: "[2.10.1, 2.17.2]") { transitive = false }
 
     minecraftLibrary jarJar(group: "org.jetbrains.kotlin", name: "kotlin-stdlib", version: "[1.1.3,)") { transitive = false }
 
