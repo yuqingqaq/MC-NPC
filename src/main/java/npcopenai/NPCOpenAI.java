@@ -140,7 +140,8 @@ public class NPCOpenAI {
         @SubscribeEvent
         public static void onEntityAttributeCreation(EntityAttributeCreationEvent event) {
             event.put(LIBRAIAN_ENTITY.get(), LibrarianNPCEntity.createAttributes().build());
-            event.put(PROFESSOR_ENTITY.get(), ProfessorNPCEntity.createAttributes().build());
+            // No usage currently --Tz
+            //event.put(PROFESSOR_ENTITY.get(), ProfessorNPCEntity.createAttributes().build());
 
         }
     }

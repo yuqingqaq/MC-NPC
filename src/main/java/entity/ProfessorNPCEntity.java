@@ -16,9 +16,9 @@ import net.minecraft.network.chat.TextComponent;
 import npcopenai.NPCInteractionScreen;
 import npcopenai.NPCOpenAI;
 
-public class ProfessorNPCEntity extends Villager {
+public class ProfessorNPCEntity extends Mob {
     public ProfessorNPCEntity(EntityType<? extends Mob> type, Level world) {
-        super((EntityType<? extends Villager>) type, world);
+        super((EntityType<? extends Mob>) type, world);
 
         this.setCustomName(new TextComponent("Professor Wang"));
         this.setCustomNameVisible(true); // 名称始终显示
