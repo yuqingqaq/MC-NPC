@@ -18,7 +18,7 @@ import npcopenai.NPCOpenAI;
 
 public class ProfessorNPCEntity extends Mob {
     public ProfessorNPCEntity(EntityType<? extends Mob> type, Level world) {
-        super((EntityType<? extends Mob>) type, world);
+        super(type, world);
 
         this.setCustomName(new TextComponent("Professor Wang"));
         this.setCustomNameVisible(true); // 名称始终显示
@@ -32,12 +32,12 @@ public class ProfessorNPCEntity extends Mob {
         this.goalSelector.addGoal(5, new CustomRandomStrollGoal(this, 0.1));
     }
 
-//    // 定义实体的基本属性
-//    public static AttributeSupplier.Builder createAttributes() {
-//        return Mob.createMobAttributes()
-//                .add(Attributes.MAX_HEALTH, 24.0)  // 增加健康值，表示更高的耐力
-//                .add(Attributes.MOVEMENT_SPEED, 0.25);  // 正常移动速度
-//    }
+    // 定义实体的基本属性
+    public static AttributeSupplier.Builder createAttributes() {
+        return Mob.createMobAttributes()
+                .add(Attributes.MAX_HEALTH, 24.0)  // 增加健康值，表示更高的耐力
+                .add(Attributes.MOVEMENT_SPEED, 0.25);  // 正常移动速度
+    }
 
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {

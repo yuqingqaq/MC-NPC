@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.resources.ResourceLocation;
 
 public class ProfessorLayer extends RenderLayer<ProfessorNPCEntity, VillagerModel<ProfessorNPCEntity>> {
-    public final static ResourceLocation PROF_TEXTURE = new ResourceLocation("textures/entity/profession/profession.png");
+    public final static ResourceLocation PROF_TEXTURE = new ResourceLocation("npcopenai", "textures/entity/villager/profession/engineer.png");
 
     public ProfessorLayer(RenderLayerParent<ProfessorNPCEntity, VillagerModel<ProfessorNPCEntity>> parent) {
         super(parent);

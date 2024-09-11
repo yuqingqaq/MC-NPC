@@ -5,7 +5,6 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import entity.LibrarianNPCEntity;
 import entity.NPCDataManager;
-import entity.NPCEntity;
 import entity.ProfessorNPCEntity;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -19,8 +18,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import npcopenai.NPCOpenAI;
 
-import java.util.List;
 import java.util.UUID;
+
+import static npcopenai.NPCOpenAI.getLogger;
 
 @Mod.EventBusSubscriber
 public class CommandRegistry {
@@ -40,7 +40,11 @@ public class CommandRegistry {
 
         dispatcher.register(Commands.literal("spawnprofessor")
                 .requires(cs -> cs.hasPermission(2))
-                .executes(context -> spawnNPC(context.getSource(), NPCType.PROFESSOR)));
+                .executes(context -> {
+                    CommandSourceStack source = context.getSource();
+                    getLogger().debug("Attempting to spawn a Professor NPC at {} by {}", source.getPosition(), source.getTextName());
+                    return spawnNPC(source, NPCType.PROFESSOR);
+                }));
 
         dispatcher.register(Commands.literal("findlibrarian")
                 .requires(cs -> cs.hasPermission(2))
@@ -74,14 +78,18 @@ public class CommandRegistry {
                 }
                 break;
             case PROFESSOR:
-                if (NPCDataManager.uniqueProfessorUUID == null) {  // Check if a Professor NPC already exists
+                getLogger().debug("Checking for existing Professor NPC...");
+                if (NPCDataManager.uniqueProfessorUUID == null) {
+                    getLogger().debug("Professor NPC spawning");
                     npc = new ProfessorNPCEntity(NPCOpenAI.PROFESSOR_ENTITY.get(), world);
                     npc.setUUID(UUID.randomUUID());
                     npc.setPos(pos.getX(), pos.getY(), pos.getZ());
                     world.addFreshEntity(npc);
                     NPCDataManager.saveProfessor(npc.getUUID(), world);
+                    getLogger().info("Professor NPC spawned successfully at {}", pos);
                     source.sendSuccess(new TextComponent("Professor NPC spawned successfully!"), true);
                 } else {
+                    getLogger().warn("Attempted to spawn a Professor NPC, but one already exists.");
                     source.sendFailure(new TextComponent("A professor NPC already exists."));
                 }
                 break;
@@ -113,7 +121,7 @@ public class CommandRegistry {
         // 移除所有 NPCEntity 类型的实体
         Iterable<Entity> entities = world.getAllEntities();
         for (Entity entity : entities) {
-            if (entity instanceof LibrarianNPCEntity || entity instanceof ProfessorNPCEntity || entity instanceof NPCEntity ) {
+            if (entity instanceof LibrarianNPCEntity || entity instanceof ProfessorNPCEntity) {
                 entity.remove(Entity.RemovalReason.DISCARDED); // 或者使用 entity.discard() 根据你的API版本
             }
         }

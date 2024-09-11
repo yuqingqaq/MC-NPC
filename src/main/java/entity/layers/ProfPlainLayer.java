@@ -1,7 +1,6 @@
 package entity.layers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import entity.LibrarianNPCEntity;
 import entity.ProfessorNPCEntity;
 import net.minecraft.client.model.VillagerModel;
 import net.minecraft.client.renderer.MultiBufferSource;
