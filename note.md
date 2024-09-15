@@ -33,7 +33,7 @@
   - ItemModel
   - NPCModel
   - TaskModel
-- npcopenai
+- projectpn
   - CustomItem
   - NPCInteractionScreen
   - NPCOpenAI
@@ -44,3 +44,5 @@
   - ResourcePathUtil
 - view
   - GameView
+
+
