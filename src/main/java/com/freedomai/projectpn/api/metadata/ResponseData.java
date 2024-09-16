@@ -20,7 +20,7 @@ public class ResponseData {
     @JsonProperty("created")
     private long created;
 
-    @JsonProperty("com")
+    @JsonProperty("model")
     private String model;
 
     @JsonProperty("choices")

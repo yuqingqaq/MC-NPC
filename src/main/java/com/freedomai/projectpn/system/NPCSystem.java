@@ -43,7 +43,7 @@ public class NPCSystem {
         //npc.addDialogueTochatHistory(new NPCMessage("user", userInput));
 
         List<NPCMessage> messageHistory = new ArrayList<>();
-        messageHistory.add(new NPCMessage("projectpn", systemPrompt));
+        messageHistory.add(new NPCMessage("system", systemPrompt));
         messageHistory.addAll(npc.getDialogueHistory());
 
         System.out.println("Prompt to GPT:");

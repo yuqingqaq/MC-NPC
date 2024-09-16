@@ -7,7 +7,7 @@ import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RequestData {
-    @JsonProperty("com")
+    @JsonProperty("model")
     private String model;
 
     @JsonProperty("messages")
