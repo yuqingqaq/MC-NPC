@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class NPCSystem {
-    private NPCModel npc;
+    //private NPCModel npc;
     private OpenAIGPT gptModel;
 
     public NPCSystem(OpenAIGPT gptModel) {
@@ -19,9 +19,8 @@ public class NPCSystem {
 
     public String interact(NPCModel npc, String userInput) {
 
-
-        String introduction = String.format("The world is CUHKSZ Theme. You are an intelligent agent simulating a real person, your task is to simulate %s, a %s, who is %s. "+
-                                            "You need to answer the user's questions from his/her perspective" +
+        String introduction = String.format("The world is in CUHKSZ. You are an intelligent agent simulating a real student %s, who facing psychological problems, your task is to simulate a %s, who is %s and let the one who talk to you to help you. "+
+                                            "You need to express your feelings as much as possible and do not give advices or professional psychology knowledge" +
                                             "Each time you will receive two messages, one is the user's conversation with you, and the other is the current user's task completion status",
                 npc.getNPCName(), npc.getRole(), npc.getDescription());
 
@@ -46,7 +45,7 @@ public class NPCSystem {
         messageHistory.add(new NPCMessage("system", systemPrompt));
         messageHistory.addAll(npc.getDialogueHistory());
 
-        System.out.println("Prompt to GPT:");
+        System.out.println("Prompt to NPCGPT:");
         messageHistory.forEach(m -> System.out.println(m.getSender() + ": " + m.getContent()));
         System.out.println();
 

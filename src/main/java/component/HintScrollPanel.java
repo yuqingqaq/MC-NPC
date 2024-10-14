@@ -29,7 +29,7 @@ public class HintScrollPanel extends ScrollPanel {
         updateWrappedChatLines(this.width);  // 假设边距为10，总共20
         maxScrollY = Math.max(0, getContentHeight() - height); // 更新最大滚动位置
         scrollY = Math.min(scrollY, maxScrollY); // 保证滚动位置不超出最大值
-        System.out.println("Height: " + height +" Panel refreshed, maxScrollY set to " + maxScrollY);
+        //System.out.println("Height: " + height +" Panel refreshed, maxScrollY set to " + maxScrollY);
 
     }
 
@@ -125,7 +125,7 @@ public class HintScrollPanel extends ScrollPanel {
     private void drawScrollbar(PoseStack poseStack) {
         int scrollbarHeight = Math.max(10, (int) ((float) height * (height / (float) getContentHeight())));
         int scrollbarTop = top + (int) ((float) scrollY / maxScrollY * (height - scrollbarHeight));
-        int scrollbarRight = left + width + 5; // Assuming the scrollbar is 5 pixels wide
+        int scrollbarRight = left + width + 10; // Assuming the scrollbar is 5 pixels wide
         int scrollbarLeft = scrollbarRight - 5;
 
         fill(poseStack, scrollbarLeft, scrollbarTop, scrollbarRight, scrollbarTop + scrollbarHeight, 0xFFAAAAAA); // Grey scrollbar

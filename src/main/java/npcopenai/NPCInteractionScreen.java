@@ -3,6 +3,7 @@ import component.ChatScrollPanel;
 import component.HintScrollPanel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import controller.GameController;
+import metadata.NPCMessage;
 import model.NPCModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -13,35 +14,23 @@ import net.minecraft.network.chat.TextComponent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class NPCInteractionScreen extends Screen {
     private EditBox inputField;
     private Button sendButton;
     private Button hintButton;
     private NPCModel currentNPC;
-    private List<String> chatHistory;
+    private List<NPCMessage> chatHistory;
+    private List<String> hintHistory;
     private HintScrollPanel hintPanel;
     private ChatScrollPanel chatPanel;
 
     public NPCInteractionScreen(NPCModel npc) {
         super(new TextComponent("NPC Interaction: " + npc.getNPCName()));
         this.currentNPC = npc;
-        //this.chatHistory = new ArrayList<>();
-        this.chatHistory = new ArrayList<>(Arrays.asList(
-                "Hello, how are you?",
-                "I'm doing well, thank you!",
-                "Glad to hear that. What are you up to today?",
-                "Just doing some coding and debugging.",
-                "Hello, how are you?",
-                "I'm doing well, thank you!",
-                "Glad to hear that. What are you up to today?",
-                "Just doing some coding and debugging.",
-                "Hello, how are you?",
-                "I'm doing well, thank you!",
-                "Glad to hear that. What are you up to today?",
-                "Just doing some coding and debugging."
-                // 这里可以继续添加更多的预设对话
-        ));
+        this.chatHistory = npc.getChatHistory();
+        this.hintHistory = new ArrayList<>(Arrays.asList());
     }
     @Override
     protected void init() {
@@ -55,7 +44,7 @@ public class NPCInteractionScreen extends Screen {
         this.addWidget(this.inputField);
 
         this.hintButton = this.addRenderableWidget(new Button(centerX + 75, centerY + 65, 80, 20, new TextComponent("Hint"), button -> {
-            sendChatMessage();
+            getAdvice();
         }));
 
         this.sendButton = this.addRenderableWidget(new Button(centerX - 125, centerY + 95, 80, 20, new TextComponent("Send"), button -> {
@@ -75,7 +64,7 @@ public class NPCInteractionScreen extends Screen {
         int scrollBarWidth = 5; // 滚动条宽度
 
         // 在 NPCInteractionScreen 的 init 方法中
-        this.hintPanel = new HintScrollPanel(mc, hintPanelWidth, hintPanelHeight, panelTop, hintPanelLeft, hintPanelBorder, scrollBarWidth, chatHistory);
+        this.hintPanel = new HintScrollPanel(mc, hintPanelWidth, hintPanelHeight, panelTop, hintPanelLeft, hintPanelBorder, scrollBarWidth, hintHistory);
 
         // ScrollPanel 的其他参数
         int chatPanelWidth = 250;  // 面板宽度
@@ -103,29 +92,25 @@ public class NPCInteractionScreen extends Screen {
         String message = inputField.getValue().trim();
         if (!message.isEmpty()) {
             String response = GameController.getInstance().interactWithNPC(currentNPC, message);
-            this.minecraft.player.sendMessage(new TextComponent("You: " + message), this.minecraft.player.getUUID());
             inputField.setValue(""); // Clear input field after sending
-            this.minecraft.player.sendMessage(new TextComponent(currentNPC.getNPCName() + ": " + response), this.minecraft.player.getUUID());
-            // Add messages to chat history
-            chatHistory.add("You: " + message);
-            chatHistory.add(currentNPC.getNPCName() + ": " + response);
 
+            // 更新聊天历史
+            chatHistory.add(new NPCMessage("user", message));
+            chatHistory.add(new NPCMessage(currentNPC.getNPCName(), response));
+
+            // 刷新聊天面板和提示面板
             this.chatPanel.refreshPanel();
-            this.hintPanel.refreshPanel();
-
         }
     }
-//    // 在 NPCInteractionScreen 类中，重写 mouseScrolled 方法
-//    @Override
-//    public boolean mouseScrolled(double mouseX, double mouseY, double scroll) {
-//        if (chatPanel.mouseScrolled(mouseX, mouseY, scroll)) {
-//            return true;
-//        }
-//        if (hintPanel.mouseScrolled(mouseX, mouseY, scroll)) {
-//            return true;
-//        }
-//        return super.mouseScrolled(mouseX, mouseY, scroll);
-//    }
+    private void getAdvice() {
+        if (!chatHistory.isEmpty()) {
+            String advice= GameController.getInstance().interactWithExpert(currentNPC,"当前对话无法进行下去，Give concise and professional advice from a third-party perspective to keep the conversation going");
+            // 更新聊天历史
+            hintHistory.add(advice);
+            hintHistory.add("");
+            this.hintPanel.refreshPanel();
+        }
+    }
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scroll) {

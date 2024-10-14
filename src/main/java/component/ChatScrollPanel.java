@@ -2,6 +2,7 @@ package component;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
+import metadata.NPCMessage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -11,14 +12,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChatScrollPanel extends ScrollPanel {
-    private List<String> chatHistory;
+    private List<NPCMessage> chatHistory;
     private boolean needsRefresh = false;
     private final Font font;
-    private List<String> wrappedChatLines = new ArrayList<>();
+    private List<ColoredText> wrappedChatLines = new ArrayList<>();
     private int scrollY = 0; // 当前滚动位置
     private int maxScrollY = 0; // 最大滚动位置
 
-    public ChatScrollPanel(Minecraft mc, int width, int height, int top, int left, int border, int barWidth, List<String> chatHistory) {
+    // 辅助类，用于存储文本及其颜色
+    private static class ColoredText {
+        String text;
+        int color;
+
+        ColoredText(String text, int color) {
+            this.text = text;
+            this.color = color;
+        }
+    }
+    public ChatScrollPanel(Minecraft mc, int width, int height, int top, int left, int border, int barWidth, List<NPCMessage> chatHistory) {
         super(mc, width, height, top, left, border, barWidth, 0, 0, 0x00000000, 0x00000000, 0x00000000);
         this.chatHistory = chatHistory;
         this.font = mc.font;  // 获取 Minecraft 的字体渲染器实例
@@ -29,50 +40,49 @@ public class ChatScrollPanel extends ScrollPanel {
         updateWrappedChatLines(this.width);  // 假设边距为10，总共20
         maxScrollY = Math.max(0, getContentHeight() - height); // 更新最大滚动位置
         scrollY = Math.min(scrollY, maxScrollY); // 保证滚动位置不超出最大值
-        System.out.println("Height: " + height +" Panel refreshed, maxScrollY set to " + maxScrollY);
 
     }
 
     public void updateWrappedChatLines(int maxWidth) {
-        wrappedChatLines.clear(); // 清空之前的换行结果
-        for (String chatLine : chatHistory) {
+        wrappedChatLines.clear();
+        for (NPCMessage chatLine : chatHistory) {
             wrapTextToFitWidth(chatLine, maxWidth);
         }
     }
+    private void wrapTextToFitWidth(NPCMessage message, int maxWidth) {
+        StringBuilder currentLine = new StringBuilder();
+        int currentLineWidth = 0;
 
-    private void wrapTextToFitWidth(String text, int maxWidth) {
-        StringBuilder currentLine = new StringBuilder(); // 当前行的文本
-        int currentLineWidth = 0; // 当前行的宽度
+        int widthPerEnglishChar = 6;
+        int widthPerChineseChar = 11;
 
-        int widthPerEnglishChar = 6; // 英文字符的宽度
-        int widthPerChineseChar = 11; // 中文字符的宽度
+        String sender = message.getSender();
+        String prefix = sender.equals("user") ? "You: " : sender + ": ";  // 根据发送者添加前缀
+        String text = prefix + message.getContent();
+        int textColor = message.getSender().equals("user") ? 0xFFFFFFFF : 0xFFFFAA00; // 黄色或白色
 
         for (char ch : text.toCharArray()) {
             int charWidth = (isChinese(ch) ? widthPerChineseChar : widthPerEnglishChar);
 
-            // 检查是否需要换行
             if (currentLineWidth + charWidth > maxWidth) {
-                // 检查能否在较早位置断行
                 int lastSpace = currentLine.lastIndexOf(" ");
                 if (lastSpace != -1 && !isChinese(ch)) {
                     String lineToAdd = currentLine.substring(0, lastSpace);
-                    wrappedChatLines.add(lineToAdd);
-                    currentLine = new StringBuilder(currentLine.substring(lastSpace + 1)); // 创建新行
+                    wrappedChatLines.add(new ColoredText(lineToAdd, textColor));
+                    currentLine = new StringBuilder(currentLine.substring(lastSpace + 1));
                 } else {
-                    wrappedChatLines.add(currentLine.toString());
-                    currentLine = new StringBuilder(); // 创建新行
+                    wrappedChatLines.add(new ColoredText(currentLine.toString(), textColor));
+                    currentLine = new StringBuilder();
                 }
-                currentLineWidth = 0; // 重置行宽
+                currentLineWidth = 0;
             }
 
-            // 添加字符到当前行
             currentLine.append(ch);
             currentLineWidth += charWidth;
         }
 
-        // 添加最后一行（如果有的话）
         if (currentLine.length() > 0) {
-            wrappedChatLines.add(currentLine.toString());
+            wrappedChatLines.add(new ColoredText(currentLine.toString(), textColor));
         }
     }
 
@@ -90,25 +100,21 @@ public class ChatScrollPanel extends ScrollPanel {
 
     }
 
-
     @Override
     protected void drawPanel(PoseStack poseStack, int mouseX, int mouseY, Tesselator tesselator, int scrollY, int visibleHeight) {
-
         if (needsRefresh) {
             needsRefresh = false;
-            System.out.println("Panel refreshed due to content change or resizing.");
         }
         scrollY = this.scrollY;
-        int yPos = top + 5 - scrollY;  // 起始绘制的y位置，随滚动条滚动调整
-        for (String chatLine : wrappedChatLines) {
-//            if (yPos + 10 > top && yPos < top + visibleHeight) { // 仅绘制当前可见部分
-            drawString(poseStack, this.font, chatLine, left + 10, yPos, 0xFFFFFF);
-                //System.out.println("Drawing chat line at yPos: " + yPos + " | Content: " + chatLine);
+        int yPos = top + 5 - scrollY;
+
+        for (ColoredText line : wrappedChatLines) {
+//            if (yPos + 10 > top && yPos < top + visibleHeight) {
+                drawString(poseStack, this.font, line.text, left + 10, yPos, line.color);
 //            }
-            yPos += 12; // 更新y位置到下一行
+            yPos += 12;
         }
 
-        // Draw the scrollbar
         drawScrollbar(poseStack);
     }
 
@@ -125,7 +131,7 @@ public class ChatScrollPanel extends ScrollPanel {
     private void drawScrollbar(PoseStack poseStack) {
         int scrollbarHeight = Math.max(10, (int) ((float) height * (height / (float) getContentHeight())));
         int scrollbarTop = top + (int) ((float) scrollY / maxScrollY * (height - scrollbarHeight));
-        int scrollbarRight = left + width + 5; // Assuming the scrollbar is 5 pixels wide
+        int scrollbarRight = left + width + 10; // Assuming the scrollbar is 5 pixels wide
         int scrollbarLeft = scrollbarRight - 5;
 
         fill(poseStack, scrollbarLeft, scrollbarTop, scrollbarRight, scrollbarTop + scrollbarHeight, 0xFFAAAAAA); // Grey scrollbar

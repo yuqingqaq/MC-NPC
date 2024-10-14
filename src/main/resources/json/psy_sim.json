@@ -1,0 +1,67 @@
+{
+  "chapter_title": "CUHK(SZ) Freshman Orientation - Mental Wellness Journey",
+  "chapter_description": "新生们步入香港中文大学（深圳）的校园，除了面对新的学术挑战，还将接触到校园中不同背景和经历的同学们，其中一些可能正在经历心理健康的挑战。",
+  "npcs": [
+    {
+      "name": "李维",
+      "description": "一位经常感到孤独和压力重重的学生，正在寻找方法来缓解他的焦虑。",
+      "role": "大三学生",
+      "dialogues": [
+        "最近总是感到无法集中注意力，你能陪我去散散步吗？",
+        "我有时候觉得自己什么都做不好，你有没有好的建议？"
+      ],
+      "tasks": [
+        {
+          "task_id": "1",
+          "description": "陪Wei Li去校园走走，帮助他放松心情",
+          "completion_criteria": "完成一次校园散步并进行心情分享",
+          "completed": false,
+          "object": "Campus Walk",
+          "reward": ["Understanding Emotions Badge"],
+          "plot_significance": "通过与Student Li的互动，玩家不仅帮助了他减少焦虑，还学习了如何识别和处理情绪问题。"
+        }
+      ]
+    },
+    {
+      "name": "张萌",
+      "description": "一位表面上总是很开心，但实际上深受抑郁困扰的学生。",
+      "role": "学生",
+      "dialogues": [
+        "虽然我总是笑着，但有时候我真的很难过。",
+        "我不知道该如何求助，你可以帮帮我吗？"
+      ],
+      "tasks": [
+        {
+          "task_id": "2",
+          "description": "与Meng Zhang进行一次深入对话，了解他的感受",
+          "completion_criteria": "通过对话了解Meng Zhang的真实感受，并提供支持",
+          "completed": false,
+          "object": "Heart-to-Heart Talk",
+          "reward": ["Empathy Booster"],
+          "plot_significance": "通过这次深入的交流，玩家帮助Student Zhang打开心扉，同时增强了自己的同理心和支持他人的能力。"
+        }
+      ]
+    },
+    {
+      "name": "王畅",
+      "description": "一位因为学业压力巨大而感到极度焦虑的学生。",
+      "role": "大一学生",
+      "dialogues": [
+        "考试就要来了，我感觉自己要崩溃了。",
+        "你有没有什么好方法可以管理这种压力？"
+      ],
+      "tasks": [
+        {
+          "task_id": "3",
+          "description": "帮助Chang Wang找到有效的压力管理技巧",
+          "completion_criteria": "分享有效的压力管理技巧并帮助Student Wang应对即将到来的考试",
+          "completed": false,
+          "object": "Stress Management Techniques",
+          "reward": ["Stress Relief Kit"],
+          "plot_significance": "玩家通过与Student Wang的互动，不仅帮助他减轻了考试压力，也学到了如何更好地管理自己的压力。"
+        }
+      ]
+    }
+  ],
+  "chapter_end_description": "通过一系列的互动和对话，新生们不仅帮助了他们的同学们克服了各自的心理健康挑战，也对如何处理自己未来可能遇到的类似问题有了更深的理解和准备。"
+}

@@ -110,8 +110,8 @@ public class GameView extends JFrame {
                 txtInput.setText(""); // 清空输入框
 
                 // 处理与 NPC 的交互
-                String response = controller.interactWithNPC(npc, inputText);
-                txtHistory.append(npc.getNPCName() + ": "+ response + "\n");
+                //String response = controller.interactWithNPC(npc, inputText);
+                //txtHistory.append(npc.getNPCName() + ": "+ response + "\n");
             }
         });
         gbc.gridx = 0;

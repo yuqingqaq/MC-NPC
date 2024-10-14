@@ -3,6 +3,7 @@ package controller;
 import api.OpenAIGPT;
 import controller.GameController;
 import interfaces.GameControllerInterface;
+import system.ExpertSystem;
 import system.NPCSystem;
 import view.GameView;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -24,7 +25,9 @@ public class GameController implements GameControllerInterface {
     private List<ItemModel> worldObjects;
     private List<ItemModel> gameAssets;
     private NPCSystem npcSystem;
+    private ExpertSystem expertSystem;
     private OpenAIGPT gptModel;
+    private OpenAIGPT expertModel;
 
     public static GameController getInstance() {
         if (instance == null) {
@@ -36,16 +39,10 @@ public class GameController implements GameControllerInterface {
         loadGameData();
     }
 
-//    public GameController(GameView view) {
-//        this.view = view;
-//        this.view.setController(this);
-//        loadGameData();
-//        initializeView();
-//    }
 
     private void loadGameData() {
 
-        npcs = JsonLoader.loadNPCsFromJson("json/World.json");
+        npcs = JsonLoader.loadNPCsFromJson("json/psy_sim.json");
         backpackItems = JsonLoader.loadObjectListFromJson(
                 "json/playerBackpack.json",
                 "player_backpack",
@@ -62,8 +59,10 @@ public class GameController implements GameControllerInterface {
                 new TypeReference<List<ItemModel>>() {}
         );
         gptModel = new OpenAIGPT("gpt-3.5-turbo","config/gpt3keys.txt");
+        expertModel = new OpenAIGPT("gpt-3.5-turbo","config/gpt3keys.txt");
 
         this.npcSystem = new NPCSystem(gptModel);
+        this.expertSystem = new ExpertSystem(expertModel);
 
     }
 
@@ -83,10 +82,15 @@ public class GameController implements GameControllerInterface {
     public String interactWithNPC(NPCModel npc, String userInput) {
         if (userInput != null && !userInput.trim().isEmpty()) {
             String response = npcSystem.interact(npc, userInput);
+
             // 可以在这里添加更多逻辑，如更新模型等
             return response;
         }
         return "";
+    }
+    public String interactWithExpert(NPCModel npc, String userInput) {
+            String advice = expertSystem.interact(npc,userInput);
+            return advice;
     }
 
     public List<NPCModel> getNpcs() {
