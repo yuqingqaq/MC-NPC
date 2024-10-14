@@ -1,0 +1,124 @@
+{
+  "chapter_title": "CUHK(SZ) Freshman Orientation",
+  "chapter_description": "新生们兴奋地步入香港中文大学（深圳）的校园，面对新的学术挑战和校园生活，同时探索校园隐藏的历史和文化。",
+  "npcs": [
+    {
+      "name": "Librarian",
+      "description": "A sophomore in Computer Science, overwhelmed by the upcoming exams and project deadlines",
+      "role": "Student",
+      "dialogues": [
+        {
+          "stage": "initial",
+          "message": "I feel so stressed, there's too much to study and I fear I won't do well.",
+          "responses": [
+            {
+              "option": "It's okay to feel this way. Let's try to break things down a bit. What subject are you most worried about?",
+              "effect": "Helps Xiao Ming know how to focus on specific concerns.",
+              "task_trigger": "1"
+            },
+            {
+              "option": "Have you tried using any study techniques like the Pomodoro Technique?",
+              "effect": "Introduces Xiao Ming effective study methods.",
+              "task_trigger": "2"
+            },
+            {
+              "option": "Sometimes taking a short break can really help. Want to walk and talk for a bit?",
+              "effect": "Encourages a physical activity break.",
+              "task_trigger": "3"
+            }
+          ]
+        }
+      ],
+      "tasks": [
+        {
+          "task_id": "1",
+          "description": "Instruct me to assist Xiao Ming in organizing his study materials for his most worried subject and creating a manageable study schedule.",
+          "completion_criteria": "Xiao Ming know how to create a study schedule and help Xiao Ming feel less stressed about the subject.",
+          "completed": false,
+          "object": "Study Plan",
+          "reward": ["Reduced Anxiety"],
+          "plot_significance": "Helping Xiao Ming manage his study time effectively reduces his stress and improves focus."
+        },
+        {
+          "task_id": "2",
+          "description": "Instruct me to Introduce and help Li Ming implement the Pomodoro Technique for his study sessions.",
+          "completion_criteria": "Xiao Ming know how to adopt the technique and improves his study efficiency.",
+          "completed": false,
+          "object": "Pomodoro Technique",
+          "reward": ["Improved Focus"],
+          "plot_significance": "Xiao Ming learns to manage his time effectively, leading to better academic performance."
+        },
+        {
+          "task_id": "3",
+          "description": "Instruct me to Encourage Xiao Ming to take regular breaks and engage in physical activities to prevent burnout.",
+          "completion_criteria": "Xiao Ming know how to incorporate regular breaks into his study routine and participates in a physical activity.",
+          "completed": false,
+          "object": "Physical Activity",
+          "reward": ["Sustained Energy"],
+          "plot_significance": "Regular physical activity helps Li Ming maintain energy levels and reduces stress."
+        }
+      ]
+    },
+    {
+      "name": "Senior Zhang",
+      "description": "资深学长，热心帮助新生，熟悉校园环境",
+      "role": "学长",
+      "dialogues": [
+        "你好，新生！需要一些关于校园的小贴士吗？",
+        "跟我来，我带你去看看我们的学生活动中心。"
+      ],
+      "tasks": [
+        {
+          "task_id": "4",
+          "description": "参加校园导览",
+          "completion_criteria": "跟随学长张参观完所有主要校园设施",
+          "completed": false,
+          "object": "Campus",
+          "reward": ["Campus Map"],
+          "plot_significance": "通过校园导览，新生们可以更快熟悉校园环境，了解各种校园资源和活动中心的位置。"
+        }
+      ]
+    },
+    {
+      "name": "Professor Wang",
+      "description": "SDS助理教授，对大模型技术和创新充满热情",
+      "role": "教授",
+      "dialogues": [
+        "欢迎加入我们的SDS，这里是充满挑战和机遇的地方。",
+        "我有一个关于人工智能-大模型的研究项目，你有兴趣参加吗？"
+      ],
+      "tasks": [
+        {
+          "task_id": "5",
+          "description": "参与人工智能研究项目",
+          "completion_criteria": "完成项目报告并进行演示",
+          "completed": false,
+          "object": "Research Project",
+          "reward": ["Credit", "AI Tool Kit"],
+          "plot_significance": "通过参与前沿的人工智能研究，新生可以获得实战经验，同时对未来的学术方向有更清晰的认识。"
+        }
+      ]
+    },
+    {
+      "name": "Coach Liu",
+      "description": "体育教练，擅长多种运动，注重学生的身体健康",
+      "role": "体育教练",
+      "dialogues": [
+        "体育是每个学生生活的重要组成部分，来参加我们的体育俱乐部吧！",
+        "我们这周有一场友谊篮球赛，你要加入我们的队伍吗？"
+      ],
+      "tasks": [
+        {
+          "task_id": "6",
+          "description": "参加友谊篮球赛",
+          "completion_criteria": "完成一场篮球比赛",
+          "completed": false,
+          "object": "Basketball Game",
+          "reward": ["Sports Gear"],
+          "plot_significance": "通过参与体育活动，新生不仅能增强体质，还能在校园中建立友谊和团队合作的精神。"
+        }
+      ]
+    }
+  ],
+  "chapter_end_description": "经过一系列的学术和体育活动，新生们对于香港中文大学（深圳）的校园生活感到充满期待和激动。"
+}

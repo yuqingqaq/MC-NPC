@@ -10,7 +10,7 @@ import net.minecraftforge.client.gui.ScrollPanel;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChatScrollPanel extends ScrollPanel {
+public class HintScrollPanel extends ScrollPanel {
     private List<String> chatHistory;
     private boolean needsRefresh = false;
     private final Font font;
@@ -18,7 +18,7 @@ public class ChatScrollPanel extends ScrollPanel {
     private int scrollY = 0; // 当前滚动位置
     private int maxScrollY = 0; // 最大滚动位置
 
-    public ChatScrollPanel(Minecraft mc, int width, int height, int top, int left, int border, int barWidth, List<String> chatHistory) {
+    public HintScrollPanel(Minecraft mc, int width, int height, int top, int left, int border, int barWidth, List<String> chatHistory) {
         super(mc, width, height, top, left, border, barWidth, 0, 0, 0x00000000, 0x00000000, 0x00000000);
         this.chatHistory = chatHistory;
         this.font = mc.font;  // 获取 Minecraft 的字体渲染器实例

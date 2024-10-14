@@ -1,8 +1,7 @@
 package npcopenai;
 import component.ChatScrollPanel;
-import com.mojang.blaze3d.systems.RenderSystem;
+import component.HintScrollPanel;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
 import controller.GameController;
 import model.NPCModel;
 import net.minecraft.client.Minecraft;
@@ -12,32 +11,54 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.TextComponent;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class NPCInteractionScreen extends Screen {
     private EditBox inputField;
     private Button sendButton;
+    private Button hintButton;
     private NPCModel currentNPC;
     private List<String> chatHistory;
+    private HintScrollPanel hintPanel;
     private ChatScrollPanel chatPanel;
 
     public NPCInteractionScreen(NPCModel npc) {
         super(new TextComponent("NPC Interaction: " + npc.getNPCName()));
         this.currentNPC = npc;
-        this.chatHistory = new ArrayList<>();
-
+        //this.chatHistory = new ArrayList<>();
+        this.chatHistory = new ArrayList<>(Arrays.asList(
+                "Hello, how are you?",
+                "I'm doing well, thank you!",
+                "Glad to hear that. What are you up to today?",
+                "Just doing some coding and debugging.",
+                "Hello, how are you?",
+                "I'm doing well, thank you!",
+                "Glad to hear that. What are you up to today?",
+                "Just doing some coding and debugging.",
+                "Hello, how are you?",
+                "I'm doing well, thank you!",
+                "Glad to hear that. What are you up to today?",
+                "Just doing some coding and debugging."
+                // 这里可以继续添加更多的预设对话
+        ));
     }
     @Override
     protected void init() {
 
         super.init();
-        int centerY = this.height / 2;
-        int centerX = this.width / 2;
 
-        this.inputField = new EditBox(this.font, centerX - 150, centerY + 65, 300, 20, new TextComponent("Enter Message"));
+        int centerY = this.height / 2;
+        int centerX = this.width  / 2;
+
+        this.inputField = new EditBox(this.font, centerX - 190, centerY + 65, 200, 20, new TextComponent("Enter Message"));
         this.addWidget(this.inputField);
 
-        this.sendButton = this.addRenderableWidget(new Button(centerX - 40, centerY + 95, 80, 20, new TextComponent("Send"), button -> {
+        this.hintButton = this.addRenderableWidget(new Button(centerX + 75, centerY + 65, 80, 20, new TextComponent("Hint"), button -> {
+            sendChatMessage();
+        }));
+
+        this.sendButton = this.addRenderableWidget(new Button(centerX - 125, centerY + 95, 80, 20, new TextComponent("Send"), button -> {
             sendChatMessage();
         }));
 
@@ -47,15 +68,35 @@ public class NPCInteractionScreen extends Screen {
         int panelTop = centerY - 87; // ScrollPanel 的顶部位置
 
         // ScrollPanel 的其他参数
-        int panelWidth = 300;  // 面板宽度
-        int panelHeight = 140; // 面板高度
-        int panelLeft = 60;    // 面板左侧位置
-        int panelBorder = 5;   // 面板边框大小
-        int scrollBarWidth = 10; // 滚动条宽度
+        int hintPanelWidth = 150;  // 面板宽度
+        int hintPanelHeight = 140; // 面板高度
+        int hintPanelLeft = 250;    // 面板左侧位置
+        int hintPanelBorder = 5;   // 面板边框大小
+        int scrollBarWidth = 5; // 滚动条宽度
 
         // 在 NPCInteractionScreen 的 init 方法中
-        this.chatPanel = new ChatScrollPanel(mc, panelWidth, panelHeight, panelTop, panelLeft, panelBorder, scrollBarWidth, chatHistory);
+        this.hintPanel = new HintScrollPanel(mc, hintPanelWidth, hintPanelHeight, panelTop, hintPanelLeft, hintPanelBorder, scrollBarWidth, chatHistory);
 
+        // ScrollPanel 的其他参数
+        int chatPanelWidth = 250;  // 面板宽度
+        int chatPanelHeight = 140; // 面板高度
+        int chatPanelLeft = 15;    // 面板左侧位置
+        int chatPanelBorder = 5;   // 面板边框大小
+
+        // 在 NPCInteractionScreen 的 init 方法中
+        this.chatPanel = new ChatScrollPanel(mc, chatPanelWidth, chatPanelHeight, panelTop, chatPanelLeft, chatPanelBorder, scrollBarWidth, chatHistory);
+
+        // 添加关闭按钮
+        this.addRenderableWidget(new Button(this.width - 30, 15, 20, 20, new TextComponent("X"), button -> {
+            onClose();
+        }));
+
+        this.chatPanel.refreshPanel();
+        this.hintPanel.refreshPanel();
+    }
+    @Override
+    public void onClose() {
+        this.minecraft.setScreen(null);  // 关闭当前屏幕
     }
 
     private void sendChatMessage() {
@@ -70,7 +111,32 @@ public class NPCInteractionScreen extends Screen {
             chatHistory.add(currentNPC.getNPCName() + ": " + response);
 
             this.chatPanel.refreshPanel();
+            this.hintPanel.refreshPanel();
 
+        }
+    }
+//    // 在 NPCInteractionScreen 类中，重写 mouseScrolled 方法
+//    @Override
+//    public boolean mouseScrolled(double mouseX, double mouseY, double scroll) {
+//        if (chatPanel.mouseScrolled(mouseX, mouseY, scroll)) {
+//            return true;
+//        }
+//        if (hintPanel.mouseScrolled(mouseX, mouseY, scroll)) {
+//            return true;
+//        }
+//        return super.mouseScrolled(mouseX, mouseY, scroll);
+//    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double scroll) {
+        double screenWidth = this.width; // 假设 'this.width' 是屏幕宽度
+
+        if (mouseX < screenWidth * 2 / 3.0) {
+            // 鼠标在屏幕左侧2/3区域内
+            return chatPanel.mouseScrolled(mouseX, mouseY, scroll);
+        } else {
+            // 鼠标在屏幕右侧1/3区域内
+            return hintPanel.mouseScrolled(mouseX, mouseY, scroll);
         }
     }
 
@@ -79,8 +145,10 @@ public class NPCInteractionScreen extends Screen {
         this.renderBackground(poseStack);
         super.render(poseStack, mouseX, mouseY, partialTicks);
         this.inputField.render(poseStack, mouseX, mouseY, partialTicks);
+        this.hintPanel.render(poseStack, mouseX, mouseY, partialTicks); // Render ScrollPanel
         this.chatPanel.render(poseStack, mouseX, mouseY, partialTicks); // Render ScrollPanel
-        drawCenteredString(poseStack, this.font, "NPC Interaction", this.width / 2, 20, 0xFFFFFF);
+        drawCenteredString(poseStack, this.font, "NPC Interaction", this.width / 2 - 150, 20, 0xFFFFFF);
+        drawCenteredString(poseStack, this.font, "Expert", this.width / 2 + 65, 20, 0xFFFFFF);
 
 //        // Render chat history
 //        int yOffset = 40;
