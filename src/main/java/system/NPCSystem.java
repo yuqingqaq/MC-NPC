@@ -58,17 +58,9 @@ public class NPCSystem {
     }
 
     private String generateTaskDetails(NPCModel npc) {
-        // Implementation remains similar; generate task details string
-//        return npc.getTasks().stream()
-//                .map(task -> String.format("My Task Status %s: (*STATUS*: %s)%s for ***plot_significance*** : %s and then I can get%s",
-//                        task.getTaskId(),
-//                        (task.isCompleted() ? "Completed" : "FAILED"),
-//                        task.getDescription(),
-//                        task.getPlotSignificance(),
-//                        task.getReward()))
-//                .collect(Collectors.joining(" "));
+
         return npc.getTasks().stream()
-                .map(task -> String.format("My Task %s: (*STATUS*: %s)%s ",
+                .map(task -> String.format("Player Task %s: (*STATUS*: %s)%s ",
                         task.getTaskId(),
                         (task.isCompleted() ? "Completed" : "FAILED"),
                         task.getDescription()))

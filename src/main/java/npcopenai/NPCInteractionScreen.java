@@ -95,7 +95,7 @@ public class NPCInteractionScreen extends Screen {
             inputField.setValue(""); // Clear input field after sending
 
             // 更新聊天历史
-            chatHistory.add(new NPCMessage("user", message));
+            chatHistory.add(new NPCMessage("player", message));
             chatHistory.add(new NPCMessage(currentNPC.getNPCName(), response));
 
             // 刷新聊天面板和提示面板
@@ -104,7 +104,7 @@ public class NPCInteractionScreen extends Screen {
     }
     private void getAdvice() {
         if (!chatHistory.isEmpty()) {
-            String advice= GameController.getInstance().interactWithExpert(currentNPC,"当前对话无法进行下去，Give concise and professional advice from a third-party perspective to keep the conversation going");
+            String advice= GameController.getInstance().interactWithExpert(currentNPC,"Give concise and professional advice from a third-party perspective to keep the conversation going");
             // 更新聊天历史
             hintHistory.add(advice);
             hintHistory.add("");

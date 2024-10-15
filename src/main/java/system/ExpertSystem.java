@@ -20,16 +20,16 @@ public class ExpertSystem {
     public String interact(NPCModel npc, String userInput) {
 
 
-        String systemPrompt = String.format("You are an third-persepective expert in mental health, you need to give professional advices to continue the conversation, with no more than 50 words. ");
+        String systemPrompt = String.format("You are an third-persepective expert in mental health, you need to give professional advices to player to continue the conversation, with no more than 50 words. ");
 
         //npc.addDialogueToHistory(new NPCMessage("user", userInput)); // Not displayed in GUI
         //npc.addDialogueTochatHistory(new NPCMessage("user", userInput));
 
         List<NPCMessage> messageHistory = new ArrayList<>();
         messageHistory.add(new NPCMessage("system", systemPrompt));
-        messageHistory.addAll(npc.getDialogueHistory());
+        //messageHistory.addAll(npc.getDialogueHistory());
 
-        messageHistory.add(new NPCMessage("user", userInput));
+        messageHistory.add(new NPCMessage("user", npc.getChatHistoryAsString() + userInput));
 
         System.out.println("Prompt to ExpertGPT:");
         messageHistory.forEach(m -> System.out.println(m.getSender() + ": " + m.getContent()));

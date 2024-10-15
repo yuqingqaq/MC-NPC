@@ -14,7 +14,7 @@ public class HintScrollPanel extends ScrollPanel {
     private List<String> chatHistory;
     private boolean needsRefresh = false;
     private final Font font;
-    private List<String> wrappedChatLines = new ArrayList<>();
+    private List<ColoredText> wrappedChatLines = new ArrayList<>();
     private int scrollY = 0; // 当前滚动位置
     private int maxScrollY = 0; // 最大滚动位置
 
@@ -33,55 +33,13 @@ public class HintScrollPanel extends ScrollPanel {
 
     }
 
+
     public void updateWrappedChatLines(int maxWidth) {
-        wrappedChatLines.clear(); // 清空之前的换行结果
-        for (String chatLine : chatHistory) {
-            wrapTextToFitWidth(chatLine, maxWidth);
+        wrappedChatLines.clear();
+        for (String hint : chatHistory) {
+            wrappedChatLines.addAll(TextUtils.wrapText(hint, maxWidth, true));
         }
     }
-
-    private void wrapTextToFitWidth(String text, int maxWidth) {
-        StringBuilder currentLine = new StringBuilder(); // 当前行的文本
-        int currentLineWidth = 0; // 当前行的宽度
-
-        int widthPerEnglishChar = 6; // 英文字符的宽度
-        int widthPerChineseChar = 11; // 中文字符的宽度
-
-        for (char ch : text.toCharArray()) {
-            int charWidth = (isChinese(ch) ? widthPerChineseChar : widthPerEnglishChar);
-
-            // 检查是否需要换行
-            if (currentLineWidth + charWidth > maxWidth) {
-                // 检查能否在较早位置断行
-                int lastSpace = currentLine.lastIndexOf(" ");
-                if (lastSpace != -1 && !isChinese(ch)) {
-                    String lineToAdd = currentLine.substring(0, lastSpace);
-                    wrappedChatLines.add(lineToAdd);
-                    currentLine = new StringBuilder(currentLine.substring(lastSpace + 1)); // 创建新行
-                } else {
-                    wrappedChatLines.add(currentLine.toString());
-                    currentLine = new StringBuilder(); // 创建新行
-                }
-                currentLineWidth = 0; // 重置行宽
-            }
-
-            // 添加字符到当前行
-            currentLine.append(ch);
-            currentLineWidth += charWidth;
-        }
-
-        // 添加最后一行（如果有的话）
-        if (currentLine.length() > 0) {
-            wrappedChatLines.add(currentLine.toString());
-        }
-    }
-
-    // 辅助方法：判断字符是否为中文
-    private boolean isChinese(char ch) {
-        return (ch >= '\u4E00' && ch <= '\u9FFF') || (ch >= '\u3400' && ch <= '\u4DBF') ||
-                (ch >= '\uF900' && ch <= '\uFAFF') ;
-    }
-    
     @Override
     protected int getContentHeight() {
         // 根据聊天历史计算内容的总高度，每行10像素
@@ -89,7 +47,6 @@ public class HintScrollPanel extends ScrollPanel {
         return contentHeight;
 
     }
-
 
     @Override
     protected void drawPanel(PoseStack poseStack, int mouseX, int mouseY, Tesselator tesselator, int scrollY, int visibleHeight) {
@@ -100,9 +57,9 @@ public class HintScrollPanel extends ScrollPanel {
         }
         scrollY = this.scrollY;
         int yPos = top + 5 - scrollY;  // 起始绘制的y位置，随滚动条滚动调整
-        for (String chatLine : wrappedChatLines) {
+        for (ColoredText chatLine : wrappedChatLines) {
 //            if (yPos + 10 > top && yPos < top + visibleHeight) { // 仅绘制当前可见部分
-            drawString(poseStack, this.font, chatLine, left + 10, yPos, 0xFFFFFF);
+            drawString(poseStack, this.font, chatLine.text, left + 10, yPos, chatLine.color);
                 //System.out.println("Drawing chat line at yPos: " + yPos + " | Content: " + chatLine);
 //            }
             yPos += 12; // 更新y位置到下一行

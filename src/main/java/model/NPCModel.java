@@ -58,6 +58,16 @@ public class NPCModel {
     }
     public List<NPCMessage> getChatHistory() { return chatHistory; }
 
+    public String getChatHistoryAsString() {
+        StringBuilder historyBuilder = new StringBuilder();
+        for (NPCMessage message : this.chatHistory) {
+            if (historyBuilder.length() > 0) {
+                historyBuilder.append("\n");  // 为每条消息添加换行符，保持清晰的格式
+            }
+            historyBuilder.append(message.getSender() + ": " + message.getContent());
+        }
+        return historyBuilder.toString();
+    }
     public void updateTaskStatus(String taskId, boolean completed) {
         for (TaskModel task : tasks) {
             if (task.getTaskId().equals(taskId)) {

@@ -19,16 +19,7 @@ public class ChatScrollPanel extends ScrollPanel {
     private int scrollY = 0; // 当前滚动位置
     private int maxScrollY = 0; // 最大滚动位置
 
-    // 辅助类，用于存储文本及其颜色
-    private static class ColoredText {
-        String text;
-        int color;
 
-        ColoredText(String text, int color) {
-            this.text = text;
-            this.color = color;
-        }
-    }
     public ChatScrollPanel(Minecraft mc, int width, int height, int top, int left, int border, int barWidth, List<NPCMessage> chatHistory) {
         super(mc, width, height, top, left, border, barWidth, 0, 0, 0x00000000, 0x00000000, 0x00000000);
         this.chatHistory = chatHistory;
@@ -45,51 +36,13 @@ public class ChatScrollPanel extends ScrollPanel {
 
     public void updateWrappedChatLines(int maxWidth) {
         wrappedChatLines.clear();
-        for (NPCMessage chatLine : chatHistory) {
-            wrapTextToFitWidth(chatLine, maxWidth);
+        for (NPCMessage message : chatHistory) {
+            String sender = message.getSender();
+            boolean isPlayer = sender.equals("player");
+            String prefix = isPlayer ? "You: " : sender + ": ";
+            String text = prefix + message.getContent();
+            wrappedChatLines.addAll(TextUtils.wrapText(text, maxWidth, isPlayer));
         }
-    }
-    private void wrapTextToFitWidth(NPCMessage message, int maxWidth) {
-        StringBuilder currentLine = new StringBuilder();
-        int currentLineWidth = 0;
-
-        int widthPerEnglishChar = 6;
-        int widthPerChineseChar = 11;
-
-        String sender = message.getSender();
-        String prefix = sender.equals("user") ? "You: " : sender + ": ";  // 根据发送者添加前缀
-        String text = prefix + message.getContent();
-        int textColor = message.getSender().equals("user") ? 0xFFFFFFFF : 0xFFFFAA00; // 黄色或白色
-
-        for (char ch : text.toCharArray()) {
-            int charWidth = (isChinese(ch) ? widthPerChineseChar : widthPerEnglishChar);
-
-            if (currentLineWidth + charWidth > maxWidth) {
-                int lastSpace = currentLine.lastIndexOf(" ");
-                if (lastSpace != -1 && !isChinese(ch)) {
-                    String lineToAdd = currentLine.substring(0, lastSpace);
-                    wrappedChatLines.add(new ColoredText(lineToAdd, textColor));
-                    currentLine = new StringBuilder(currentLine.substring(lastSpace + 1));
-                } else {
-                    wrappedChatLines.add(new ColoredText(currentLine.toString(), textColor));
-                    currentLine = new StringBuilder();
-                }
-                currentLineWidth = 0;
-            }
-
-            currentLine.append(ch);
-            currentLineWidth += charWidth;
-        }
-
-        if (currentLine.length() > 0) {
-            wrappedChatLines.add(new ColoredText(currentLine.toString(), textColor));
-        }
-    }
-
-    // 辅助方法：判断字符是否为中文
-    private boolean isChinese(char ch) {
-        return (ch >= '\u4E00' && ch <= '\u9FFF') || (ch >= '\u3400' && ch <= '\u4DBF') ||
-                (ch >= '\uF900' && ch <= '\uFAFF') ;
     }
     
     @Override
