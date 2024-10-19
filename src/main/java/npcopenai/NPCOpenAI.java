@@ -42,7 +42,7 @@ public class NPCOpenAI {
     public static final String MODID = "npcopenai";
     private static final Logger LOGGER = LogManager.getLogger();
     private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
-    public static final RegistryObject<Item> CUSTOM_ITEM = ITEMS.register("custom_item", CustomItem::new);
+    public static final RegistryObject<Item> CUSTOM_ITEM = ITEMS.register("task_book", CustomItem::new);
 
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES,  MODID);
 

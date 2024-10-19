@@ -3,6 +3,8 @@ package model;
 import metadata.NPCMessage;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class NPCModel {
@@ -37,6 +39,12 @@ public class NPCModel {
     public List<TaskModel> getTasks(){
         return tasks;
     }
+
+    // 判断此 NPC 的所有任务是否已完成
+    public boolean areAllTasksCompleted() {
+        return tasks.stream().allMatch(TaskModel::isCompleted);
+    }
+
     public void addTask(TaskModel task) {
         tasks.add(task);
     }
@@ -97,5 +105,9 @@ public class NPCModel {
             }
         }
         return neededByAnyTask;
+    }
+
+    public List<String> getDialogues() {  // 返回类型是 List<String>
+        return dialogues;
     }
 }

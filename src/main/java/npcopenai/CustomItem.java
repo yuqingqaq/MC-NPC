@@ -24,7 +24,8 @@ public class CustomItem extends Item {
             if (context.getPlayer() != null) {
                 NPCModel npc = GameController.getInstance().getNpcs().get(0); // Fetch the first NPC for demonstration
                 NPCOpenAI.getLogger().info("npcopenai.CustomItem used on: " + npc.getNPCName());
-                Minecraft.getInstance().setScreen(new NPCInteractionScreen(npc));
+                //Minecraft.getInstance().setScreen(new NPCInteractionScreen(npc));
+                Minecraft.getInstance().setScreen(new NPCTaskScreen());
                 return InteractionResult.SUCCESS;
             } else {
                 NPCOpenAI.getLogger().info("No player found");

@@ -6,10 +6,15 @@ import controller.GameController;
 import metadata.NPCMessage;
 import model.NPCModel;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.toasts.TutorialToast;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.util.FormattedCharSequence;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,6 +30,7 @@ public class NPCInteractionScreen extends Screen {
     private List<String> hintHistory;
     private HintScrollPanel hintPanel;
     private ChatScrollPanel chatPanel;
+    private TutorialToast toast;
 
     public NPCInteractionScreen(NPCModel npc) {
         super(new TextComponent("NPC Interaction: " + npc.getNPCName()));
@@ -82,6 +88,15 @@ public class NPCInteractionScreen extends Screen {
 
         this.chatPanel.refreshPanel();
         this.hintPanel.refreshPanel();
+
+        //this.toast = new PersistentToast(TutorialToast.Icons.RECIPE_BOOK,"Title","Please ask expert for advices",true);
+        //Minecraft.getInstance().getToasts().addToast(toast);
+        TextComponent title = new TextComponent("Don't know how to reply？");
+        TextComponent messageContent = new TextComponent("Ask expert for advice！");
+
+        // 创建 TutorialToast 实例
+        this.toast = new TutorialToast(TutorialToast.Icons.RECIPE_BOOK, title, messageContent, true);
+
     }
     @Override
     public void onClose() {
@@ -100,6 +115,10 @@ public class NPCInteractionScreen extends Screen {
 
             // 刷新聊天面板和提示面板
             this.chatPanel.refreshPanel();
+
+            Minecraft.getInstance().getToasts().addToast(toast);
+            // 初始化进度
+            //toast.updateProgress(0.0F);
         }
     }
     private void getAdvice() {
@@ -109,6 +128,9 @@ public class NPCInteractionScreen extends Screen {
             hintHistory.add(advice);
             hintHistory.add("");
             this.hintPanel.refreshPanel();
+            //CustomToast.show(Minecraft.getInstance(), "Hint", advice);
+            //toast.updateProgress(1.0F);
+            toast.hide();
         }
     }
 

@@ -1,67 +1,207 @@
 {
-  "chapter_title": "CUHK(SZ) Freshman Orientation - Mental Wellness Journey",
-  "chapter_description": "新生们步入香港中文大学（深圳）的校园，除了面对新的学术挑战，还将接触到校园中不同背景和经历的同学们，其中一些可能正在经历心理健康的挑战。",
+  "chapter_title": "CUHK(SZ) Freshman Orientation - Campus Challenges and Mental Wellness",
+  "chapter_description": "新生们在香港中文大学（深圳）的校园生活中，将在不同的地点遇到面临各种心理挑战的同学。这些挑战与他们所在的具体场景密切相关，需要新生们通过互动帮助他们克服困难。",
   "npcs": [
     {
-      "name": "李维",
-      "description": "一位经常感到孤独和压力重重的学生，正在寻找方法来缓解他的焦虑。",
-      "role": "大三学生",
+      "name": "黄思",
+      "description": "在图书馆门前焦虑地徘徊，因为无法完成作业和赶上DDL。",
+      "role": "SME-大一-国际商务",
       "dialogues": [
-        "最近总是感到无法集中注意力，你能陪我去散散步吗？",
-        "我有时候觉得自己什么都做不好，你有没有好的建议？"
+        "我真的不知道怎么在截止日期前完成这些作业。",
+        "每次想写作业，我就感到无比焦虑。"
       ],
       "tasks": [
         {
           "task_id": "1",
-          "description": "陪Wei Li去校园走走，帮助他放松心情",
-          "completion_criteria": "完成一次校园散步并进行心情分享",
+          "description": "帮助Si Huang制定一个实际的学习和作业计划",
+          "completion_criteria": "创建并讨论一个详细的时间管理计划",
           "completed": false,
-          "object": "Campus Walk",
-          "reward": ["Understanding Emotions Badge"],
-          "plot_significance": "通过与Student Li的互动，玩家不仅帮助了他减少焦虑，还学习了如何识别和处理情绪问题。"
+          "object": "Assignment Planning",
+          "reward": ["Time Management Wizard"],
+          "plot_significance": "通过帮助Si Huang制定学习计划，玩家学习了如何有效管理时间并减轻学术压力。"
         }
       ]
     },
     {
-      "name": "张萌",
-      "description": "一位表面上总是很开心，但实际上深受抑郁困扰的学生。",
-      "role": "学生",
+      "name": "刘晨",
+      "description": "在教室前苦恼，因为听不懂老师的讲课内容感到困扰。",
+      "role": "SSE-大二-物理学",
       "dialogues": [
-        "虽然我总是笑着，但有时候我真的很难过。",
-        "我不知道该如何求助，你可以帮帮我吗？"
+        "我真的很难跟上老师的课程节奏。",
+        "听不懂课堂内容让我感到非常挫败。"
       ],
       "tasks": [
         {
           "task_id": "2",
-          "description": "与Meng Zhang进行一次深入对话，了解他的感受",
-          "completion_criteria": "通过对话了解Meng Zhang的真实感受，并提供支持",
+          "description": "帮助Chen Liu找到合适的学习资源和策略",
+          "completion_criteria": "提供有用的学习资源和策略，并进行一次学习会话",
           "completed": false,
-          "object": "Heart-to-Heart Talk",
-          "reward": ["Empathy Booster"],
-          "plot_significance": "通过这次深入的交流，玩家帮助Student Zhang打开心扉，同时增强了自己的同理心和支持他人的能力。"
+          "object": "Academic Support",
+          "reward": ["Academic Helper"],
+          "plot_significance": "玩家通过提供学习资源帮助Student Liu改善学习效果，同时也增强了自己的学习能力。"
         }
       ]
     },
     {
-      "name": "王畅",
-      "description": "一位因为学业压力巨大而感到极度焦虑的学生。",
-      "role": "大一学生",
+      "name": "赵雨",
+      "description": "在池塘边无精打采，表现出无法适应学校生活的抑郁迹象。",
+      "role": "HSS-大一-应用心理学",
       "dialogues": [
-        "考试就要来了，我感觉自己要崩溃了。",
-        "你有没有什么好方法可以管理这种压力？"
+        "我感觉自己完全融入不了这里的生活。",
+        "这里的一切都让我感到很是压抑。"
       ],
       "tasks": [
         {
           "task_id": "3",
-          "description": "帮助Chang Wang找到有效的压力管理技巧",
-          "completion_criteria": "分享有效的压力管理技巧并帮助Student Wang应对即将到来的考试",
+          "description": "与Yu Zhao进行心理支持会话，帮助她适应校园生活",
+          "completion_criteria": "通过有效的沟通和支持帮助她缓解抑郁情绪",
           "completed": false,
-          "object": "Stress Management Techniques",
-          "reward": ["Stress Relief Kit"],
-          "plot_significance": "玩家通过与Student Wang的互动，不仅帮助他减轻了考试压力，也学到了如何更好地管理自己的压力。"
+          "object": "Adaptation Support",
+          "reward": ["Social Integrator"],
+          "plot_significance": "这次支持会话帮助Student Zhao感到被理解和支持，同时教会玩家如何帮助他人适应新环境。"
+        }
+      ]
+    },
+    {
+      "name": "李明",
+      "description": "在体育馆门口焦虑，担心不能达到体育课的要求。",
+      "role": "MED-大一-生物医学工程",
+      "dialogues": [
+        "我总是担心自己在体育课上表现不好。",
+        "我不擅长运动，感觉这会影响我的成绩。"
+      ],
+      "tasks": [
+        {
+          "task_id": "4",
+          "description": "帮助Ming Li提高体育课的自信和技能",
+          "completion_criteria": "进行一次体育训练和建议会话",
+          "completed": false,
+          "object": "Sports Confidence Boost",
+          "reward": ["Health Promoter"],
+          "plot_significance": "通过体育训练，玩家帮助Student Li建立信心，同时也增进了自己的身体健康和运动技能。"
+        }
+      ]
+    },
+    {
+      "name": "陈晓",
+      "description": "在食堂内因为人际关系而感到孤独和压力。",
+      "role": "SDS-大二-数据科学与大数据技术",
+      "dialogues": [
+        "我在食堂吃饭时总感觉孤单，和别人交流很困难。",
+        "我怕和不熟悉的人说话，这让我很不舒服。"
+      ],
+      "tasks": [
+        {
+          "task_id": "5",
+          "description": "帮助Xiao Chen提高社交技能并扩大其社交圈",
+          "completion_criteria": "组织一次小型聚会并鼓励其参与",
+          "completed": false,
+          "object": "Social Skills Workshop",
+          "reward": ["Friendship Facilitator"],
+          "plot_significance": "通过社交技能工作坊，Player帮助Student Chen克服社交障碍，同时也增强了自己的组织和领导能力。"
+        }
+      ]
+    },
+    {
+      "name": "王芳",
+      "description": "在宿舍区因为睡眠问题感到疲惫和焦虑。",
+      "role": "MUS-大一-音乐表演",
+      "dialogues": [
+        "我晚上总是睡不好，白天就感觉很累。",
+        "不知道为什么，最近总是失眠。"
+      ],
+      "tasks": [
+        {
+          "task_id": "6",
+          "description": "与Fang Wang一起探索改善睡眠的方法",
+          "completion_criteria": "分享有关睡眠卫生的知识和技巧",
+          "completed": false,
+          "object": "Sleep Hygiene Improvement",
+          "reward": ["Restful Night Award"],
+          "plot_significance": "玩家通过分享睡眠改善策略帮助Student Wang获得更好的休息，同时也学到了保持健康的重要性。"
+        }
+      ]
+    },
+    {
+      "name": "周波",
+      "description": "在艺术工作室外因为创造力阻塞感到沮丧。",
+      "role": "MUS-大三-作曲与作曲技术理论",
+      "dialogues": [
+        "我最近完全没有灵感，我的项目也停滞不前。",
+        "你知道怎么克服创作的障碍吗？"
+      ],
+      "tasks": [
+        {
+          "task_id": "7",
+          "description": "帮助Bo Zhou找到恢复创造力的新方法",
+          "completion_criteria": "探讨并实施创意激发活动",
+          "completed": false,
+          "object": "Creativity Unblocking",
+          "reward": ["Innovation Igniter"],
+          "plot_significance": "通过创意激发活动，玩家帮助Student Zhou找回创作热情，同时也激发了自己的创造潜能。"
+        }
+      ]
+    },
+    {
+      "name": "刘璐",
+      "description": "在演讲堂内因公众演讲的恐惧而感到焦虑。",
+      "role": "HSS-大二-英语",
+      "dialogues": [
+        "每次上台就感觉腿软，心跳加速。",
+        "我怕公众演讲，但我的课程需要这样做。"
+      ],
+      "tasks": [
+        {
+          "task_id": "8",
+          "description": "帮助Lu Liu克服公众演讲的恐惧",
+          "completion_criteria": "进行一次模拟演讲并给予反馈",
+          "completed": false,
+          "object": "Public Speaking Practice",
+          "reward": ["Confidence Builder"],
+          "plot_significance": "通过模拟演讲，玩家帮助Student Liu建立自信，同时也提高了自己的沟通技能。"
+        }
+      ]
+    },
+    {
+      "name": "孙静",
+      "description": "在实验室门口因为研究项目的挫败感到绝望。",
+      "role": "MED-研二-临床医学",
+      "dialogues": [
+        "我的研究项目一直没有进展，我感到非常沮丧。",
+        "我不知道我是否还应该继续我的研究方向。"
+      ],
+      "tasks": [
+        {
+          "task_id": "9",
+          "description": "帮助Jing Sun分析研究问题并找出可能的解决方案",
+          "completion_criteria": "进行一次项目复盘和策略讨论",
+          "completed": false,
+          "object": "Research Project Support",
+          "reward": ["Research Resilience"],
+          "plot_significance": "通过策略讨论，玩家帮助Student Sun找到前进的方向，同时也学习了解决复杂问题的技能。"
+        }
+      ]
+    },
+    {
+      "name": "王雷",
+      "description": "在健身房内因为身体形象问题感到自卑。",
+      "role": "SDS-大一-计算机科学与技术",
+      "dialogues": [
+        "我在镜子前看自己总感觉不满意。",
+        "我怕别人在健身房看我，感觉自己不够好。"
+      ],
+      "tasks": [
+        {
+          "task_id": "10",
+          "description": "与Lei Wang一起工作，以增强他的自尊和身体正面感受",
+          "completion_criteria": "进行一次健康咨询和身体积极性训练",
+          "completed": false,
+          "object": "Body Positivity Training",
+          "reward": ["Body Confidence Booster"],
+          "plot_significance": "通过身体积极性训练，玩家帮助Student Wang改善自我形象，同时也增强了自己的自我接受能力。"
         }
       ]
     }
   ],
-  "chapter_end_description": "通过一系列的互动和对话，新生们不仅帮助了他们的同学们克服了各自的心理健康挑战，也对如何处理自己未来可能遇到的类似问题有了更深的理解和准备。"
+  "chapter_end_description": "通过与各种背景和挑战的同学互动，新生们不仅帮助他们克服心理健康挑战，也对处理自己未来可能遇到的问题有了更深的理解和准备。"
 }
