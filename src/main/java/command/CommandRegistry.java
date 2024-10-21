@@ -95,7 +95,7 @@ public class CommandRegistry {
         BlockPos pos = new BlockPos(source.getPosition());
         npc.setPos(pos.getX(), pos.getY(), pos.getZ());
         world.addFreshEntity(npc);
-        NPCDataManager.saveOrUpdateNPC(world, index, npc);
+        NPCDataManager.saveOrUpdateNPC(world, index, npc, type);
         source.sendSuccess(new TextComponent("NPC spawned successfully!"), true);
         return Command.SINGLE_SUCCESS;
     }
@@ -108,8 +108,20 @@ public class CommandRegistry {
             return 0; // 返回 0 表示没有找到
         }
 
-
+        ServerLevel world = source.getLevel();
+        UUID uuid = NPCDataManager.getUUIDByIndex(index);
+        System.out.println("UUID: " + uuid);
         Entity npc = NPCDataManager.findNPCByIndex(source.getLevel(), index);
+
+        Iterable<Entity> entities = world.getAllEntities();
+        for (Entity entity : entities) {
+            if (entity instanceof LibrarianNPCEntity || entity instanceof ProfessorNPCEntity) {
+                if (entity.getUUID().equals(uuid)) {
+                    npc = entity;
+                }
+            }
+        }
+
         System.out.println(npc);
         if (npc != null) {
             ServerPlayer player = source.getPlayerOrException();
@@ -135,9 +147,47 @@ public class CommandRegistry {
             source.sendSuccess(new TextComponent(String.format("Found NPC at [%s].", npc.blockPosition().toShortString())), true);
         } else {
             // NPC 未找到，可能已被移除
-            source.sendFailure(new TextComponent("No NPC found with given index."));
+            source.sendFailure(new TextComponent("NPC is respawned."));
+            ServerPlayer player = source.getPlayerOrException();
+            BlockPos npcPos = NPCDataManager.getNPCLastPositionByIndex(world, index);
+            player.teleportTo(source.getLevel(), npcPos.getX(), npcPos.getY(), npcPos.getZ(), player.getYRot(), player.getXRot());
+            respawnNPC(source, world, index);
         }
         return 1;
+    }
+    private static int respawnNPC(CommandSourceStack source, ServerLevel world, int index) {
+        BlockPos lastKnownPos = NPCDataManager.getNPCLastPositionByIndex(world, index);
+        String npcType = NPCDataManager.getNPCTypeByIndex(world,index);  // Assume this method exists and properly retrieves the type
+
+        Entity npc = spawnNPCByType(world, npcType, lastKnownPos, index);
+        if (npc == null) {
+            source.sendFailure(new TextComponent("Failed to respawn NPC."));
+            return 0;
+        }
+
+        NPCDataManager.saveOrUpdateNPC(world, index, npc, npcType);
+        source.sendSuccess(new TextComponent("NPC is respawned at the last known location."), true);
+        return 1;
+    }
+
+    private static Entity spawnNPCByType(ServerLevel world, String type, BlockPos pos, int index) {
+        Entity npc = null;
+        switch (type.toLowerCase()) {
+            case "librarian":
+                npc = new LibrarianNPCEntity(EntityRegistry.LIBRARIAN_ENTITY.get(), world);
+                ((LibrarianNPCEntity) npc).initialize(index); // 初始化实体
+                break;
+            case "professor":
+                npc = new ProfessorNPCEntity(EntityRegistry.PROFESSOR_ENTITY.get(), world);
+                ((ProfessorNPCEntity) npc).initialize(index); // 初始化实体
+
+                break;
+        }
+        if (npc != null) {
+            npc.setPos(pos.getX(), pos.getY(), pos.getZ());
+            world.addFreshEntity(npc);
+        }
+        return npc;
     }
 
     private static int clearNPCData(CommandSourceStack source) {
@@ -146,8 +196,10 @@ public class CommandRegistry {
         // 移除所有 NPCEntity 类型的实体
         Iterable<Entity> entities = world.getAllEntities();
         for (Entity entity : entities) {
+
             if (entity instanceof LibrarianNPCEntity || entity instanceof ProfessorNPCEntity) {
                 entity.remove(Entity.RemovalReason.DISCARDED); // 或使用 entity.discard() 根据版本
+                System.out.println(entity.getUUID());
             }
         }
 

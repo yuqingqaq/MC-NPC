@@ -16,10 +16,12 @@ public class NPCData extends SavedData {
     public static class NPCDetails {
         public UUID uuid;
         public BlockPos position;
+        public String type; // 添加类型字段
 
-        public NPCDetails(UUID uuid, BlockPos position) {
+        public NPCDetails(UUID uuid, BlockPos position, String type) {
             this.uuid = uuid;
             this.position = position;
+            this.type = type; // 初始化类型
         }
     }
     @Override
@@ -30,6 +32,7 @@ public class NPCData extends SavedData {
             npcTag.putInt("Index", index);
             npcTag.putUUID("UUID", details.uuid);
             npcTag.putLong("Pos", details.position.asLong());
+            npcTag.putString("Type", details.type); // 保存类型信息
             list.add(npcTag);
         });
         tag.put("NPCs", list);
@@ -44,13 +47,14 @@ public class NPCData extends SavedData {
             int index = npcTag.getInt("Index");
             UUID uuid = npcTag.getUUID("UUID");
             BlockPos position = BlockPos.of(npcTag.getLong("Pos"));
-            data.npcDetailsMap.put(index, new NPCDetails(uuid, position));
+            String type = npcTag.getString("Type"); // 加载类型信息
+            data.npcDetailsMap.put(index, new NPCDetails(uuid, position, type));
         });
         return data;
     }
 
-    public void registerNPC(int index, UUID uuid, BlockPos position) {
-        npcDetailsMap.put(index, new NPCDetails(uuid, position));
+    public void registerNPC(int index, UUID uuid, BlockPos position, String type) {
+        npcDetailsMap.put(index, new NPCDetails(uuid, position, type));
         setDirty();
         System.out.println("Registered NPC with index: " + index + " and UUID: " + uuid);
     }

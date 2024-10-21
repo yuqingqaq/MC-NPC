@@ -32,9 +32,9 @@ public class NPCTaskScreen extends Screen {
         super.init();
     }
 
-    private void teleportToNPC(NPCModel npc) {
+    private void teleportToNPC(int index) {
         if (this.minecraft.player != null) {
-            this.minecraft.player.chat("/tp " + npc.getNPCName());
+            this.minecraft.player.chat("/findnpc " + index);
         }
     }
 
@@ -89,7 +89,7 @@ public class NPCTaskScreen extends Screen {
             final int index = i;  // Final variable for use in lambda
             int xButton = (columnWidth * finalColumn + 30) + maxWidth + 10;  // Calculate x position for the button based on max width
             this.addRenderableWidget(new Button(xButton, yOffset - 5, 15, 15, new TextComponent(">"), button -> {
-                teleportToNPC(npcs.get(index));  // Use the final variable `index`
+                teleportToNPC(index);  // Use the final variable `index`
             }));
             yOffset += 30;
         }
