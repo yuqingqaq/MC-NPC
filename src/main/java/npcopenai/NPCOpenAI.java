@@ -37,33 +37,41 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import java.util.stream.Collectors;
 
+import static npcopenai.EntityRegistry.LIBRAIAN_ENTITY;
+import static npcopenai.EntityRegistry.PROFESSOR_ENTITY;
+
 @Mod(NPCOpenAI.MODID)
 public class NPCOpenAI {
     public static final String MODID = "npcopenai";
     private static final Logger LOGGER = LogManager.getLogger();
-    private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
-    public static final RegistryObject<Item> CUSTOM_ITEM = ITEMS.register("task_book", CustomItem::new);
-
-    public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES,  MODID);
-
-    public static final RegistryObject<EntityType<LibrarianNPCEntity>> LIBRAIAN_ENTITY = ENTITIES.register("librarian_entity",
-            () -> EntityType.Builder.of(LibrarianNPCEntity::new, MobCategory.MISC)
-                    .sized(0.6F, 1.95F)
-                    .build(new ResourceLocation(MODID, "librarian_entity").toString()));
-
-    public static final RegistryObject<EntityType<ProfessorNPCEntity>> PROFESSOR_ENTITY = ENTITIES.register("professor_entity",
-            () -> EntityType.Builder.of(ProfessorNPCEntity::new, MobCategory.MISC)
-                    .sized(0.6F, 1.95F)
-                    .build(new ResourceLocation(MODID, "professor_entity").toString()));
+    //private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
+    //public static final RegistryObject<Item> CUSTOM_ITEM = ITEMS.register("task_book", CustomItem::new);
+//
+//    public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES,  MODID);
+//
+//    public static final RegistryObject<EntityType<LibrarianNPCEntity>> LIBRAIAN_ENTITY = ENTITIES.register("librarian_entity",
+//            () -> EntityType.Builder.of(LibrarianNPCEntity::new, MobCategory.MISC)
+//                    .sized(0.6F, 1.95F)
+//                    .build(new ResourceLocation(MODID, "librarian_entity").toString()));
+//
+//    public static final RegistryObject<EntityType<ProfessorNPCEntity>> PROFESSOR_ENTITY = ENTITIES.register("professor_entity",
+//            () -> EntityType.Builder.of(ProfessorNPCEntity::new, MobCategory.MISC)
+//                    .sized(0.6F, 1.95F)
+//                    .build(new ResourceLocation(MODID, "professor_entity").toString()));
 
     public NPCOpenAI()
     {
-        ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
-        ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
+        // 初始化逻辑
+        GameController.getInstance();
+        LOGGER.info(" GameController: {}", GameController.getInstance().getNpcs());
+        //ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        //ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
 
+        ItemRegistry.init();
+        EntityRegistry.init();
         MinecraftForge.EVENT_BUS.register(this);
     }
 
@@ -80,9 +88,7 @@ public class NPCOpenAI {
         LOGGER.info("HELLO FROM PREINIT");
         LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
 
-        // 初始化逻辑
-        GameController.getInstance();
-        LOGGER.info(" GameController: {}", GameController.getInstance().getNpcs());
+
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event)
@@ -129,14 +135,7 @@ public class NPCOpenAI {
     }
     @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistryEvents {
-        @SubscribeEvent
-        public static void onItemsRegistry(final RegistryEvent.Register<Item> itemRegistryEvent) {
-            LOGGER.info("Registering custom items");
-            itemRegistryEvent.getRegistry().registerAll(
-                    CUSTOM_ITEM.get()
-            );
-            LOGGER.info("Custom items registered.");
-        }
+
         @SubscribeEvent
         public static void onEntityAttributeCreation(EntityAttributeCreationEvent event) {
             event.put(LIBRAIAN_ENTITY.get(), LibrarianNPCEntity.createAttributes().build());

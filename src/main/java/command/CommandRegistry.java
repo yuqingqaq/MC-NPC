@@ -16,6 +16,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import npcopenai.EntityRegistry;
 import npcopenai.NPCOpenAI;
 
 import java.util.UUID;
@@ -67,7 +68,7 @@ public class CommandRegistry {
         switch (type) {
             case LIBRARIAN:
                 if (NPCDataManager.uniqueLibrarianUuid == null) {  // Check if an NPC already exists
-                    npc = new LibrarianNPCEntity(NPCOpenAI.LIBRAIAN_ENTITY.get(), world);
+                    npc = new LibrarianNPCEntity(EntityRegistry.LIBRAIAN_ENTITY.get(), world);
                     npc.setUUID(UUID.randomUUID());
                     npc.setPos(pos.getX(), pos.getY(), pos.getZ());
                     world.addFreshEntity(npc);
@@ -81,7 +82,7 @@ public class CommandRegistry {
                 getLogger().debug("Checking for existing Professor NPC...");
                 if (NPCDataManager.uniqueProfessorUUID == null) {
                     getLogger().debug("Professor NPC spawning");
-                    npc = new ProfessorNPCEntity(NPCOpenAI.PROFESSOR_ENTITY.get(), world);
+                    npc = new ProfessorNPCEntity(EntityRegistry.PROFESSOR_ENTITY.get(), world);
                     npc.setUUID(UUID.randomUUID());
                     npc.setPos(pos.getX(), pos.getY(), pos.getZ());
                     world.addFreshEntity(npc);
