@@ -17,6 +17,7 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.server.ServerStoppingEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -88,32 +89,19 @@ public class NPCOpenAI {
     }
 
     @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event)
-    {
+    public void onServerStarting(ServerStartingEvent event) {
         ServerLevel world = event.getServer().overworld();  // 获取主世界
         NPCData data = NPCData.forLevel(world);
-        NPCDataManager.checkNPCExists(world, data);  // 检查 NPC 是否存在
+        NPCDataManager.loadAllNPCs(world, data);  // 检查 NPC 是否存在
         LOGGER.info("HELLO from server starting");
     }
-    public class ServerEvents {
-        @SubscribeEvent
-        public void onServerStopping(ServerStoppingEvent event) {
-            ServerLevel world = event.getServer().overworld();  // 获取主世界
 
-            if (NPCDataManager.uniqueLibrarianUuid != null) {
-                Entity npc = NPCDataManager.findNPCByUUID(world, NPCDataManager.uniqueLibrarianUuid);
-                if (npc != null) {
-                    NPCDataManager.saveNPC(npc.getUUID(), world);  // 保存 NPC 数据
-                }
-            }
-            if (NPCDataManager.uniqueProfessorUUID != null) {
-                Entity professor = NPCDataManager.findNPCByUUID(world, NPCDataManager.uniqueProfessorUUID);
-                if (professor != null) {
-                    NPCDataManager.saveProfessor(professor.getUUID(), world);  // 保存 NPC 数据
-                }
-            }
-        }
+    @SubscribeEvent
+    public void onServerStopping(ServerStoppingEvent event) {
+        ServerLevel world = event.getServer().overworld();  // 获取主世界
+        NPCDataManager.saveAllNPCs(world);  // 保存所有 NPC 数据
     }
+
     @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistryEvents {
 

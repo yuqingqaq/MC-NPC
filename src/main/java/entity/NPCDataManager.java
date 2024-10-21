@@ -1,28 +1,30 @@
 package entity;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class NPCDataManager {
-    public static UUID uniqueLibrarianUuid;
-    public static UUID uniqueProfessorUUID;
-
-    public static void saveNPC(UUID uuid, ServerLevel world) {
-        uniqueLibrarianUuid = uuid;
-        updateNPCData(world, uuid);
-    }
-
-    public static void saveProfessor(UUID uuid, ServerLevel world) {
-        uniqueProfessorUUID = uuid;
-        updateNPCData(world, uuid);
-    }
-
-    private static void updateNPCData(ServerLevel world, UUID uuid) {
+    // 用于存储每个NPC的index和其UUID
+    public static Map<Integer, UUID> activeNPCs = new HashMap<>();
+    public static void saveOrUpdateNPC(ServerLevel world, int index, Entity npc) {
         NPCData data = NPCData.forLevel(world);
-        data.setNpcExists(true);
-        data.setLibrarianUuid(uuid);
-        data.setDirty();
+        data.registerNPC(index, npc.getUUID(), npc.blockPosition());
+        activeNPCs.put(index, npc.getUUID());
+        data.setDirty();  // 标记为需要保存
+    }
+
+    public static Entity findNPCByIndex(ServerLevel world, int index) {
+        UUID uuid = activeNPCs.get(index);
+        if (uuid == null) {
+            return null;
+        }
+        return world.getEntity(uuid);
     }
 
     public static Entity findNPCByUUID(ServerLevel world, UUID uuid) {
@@ -33,44 +35,51 @@ public class NPCDataManager {
         }
         return null;
     }
+//    public static void deleteNPCData(ServerLevel world, int index) {
+//        NPCData data = NPCData.forLevel(world);
+//        data.removeNPC(index);
+//        activeNPCs.remove(index);
+//    }
 
-    public static void deleteNPCData(ServerLevel world) {
+    public static void clearAllNPCData(ServerLevel world) {
         NPCData data = NPCData.forLevel(world);
-
-        // 如果存在NPC数据，则删除
-        if (data.getNpcExists()) {
-            data.deleteData();
-            System.out.println("NPC data has been completely removed from storage.");
-        } else {
-            System.out.println("No NPC data to remove.");
-        }
-
-        // 也应该重置任何静态UUID存储
-        uniqueLibrarianUuid = null;
-        uniqueProfessorUUID = null;
+        data.getNpcDetailsMap().clear();
+        data.setDirty();
+        activeNPCs.clear();
     }
 
-    public static void checkNPCExists(ServerLevel world, NPCData data) {
-// 检查普通NPC
-        UUID LibrarianUuid = data.getLibrarianUuid();
-        if (LibrarianUuid != null) {
-            Entity npc = findNPCByUUID(world, LibrarianUuid);
+    public static void saveAllNPCs(ServerLevel world) {
+        NPCData data = NPCData.forLevel(world);
+        activeNPCs.forEach((index, uuid) -> {
+            Entity npc = findNPCByUUID(world, uuid);
             if (npc != null) {
-                uniqueLibrarianUuid = LibrarianUuid;  // 更新静态UUID以保持引用
-            } else {
-                uniqueLibrarianUuid = null;  // NPC不存在，清除UUID
+                data.registerNPC(index, uuid, npc.blockPosition());  // 更新 NPC 数据
             }
-        }
+        });
+        data.setDirty();  // 标记为需要保存
+    }
 
-        // 检查教授NPC，假设有类似的方法和属性
-        UUID professorUuid = data.getProfessorUuid();
-        if (professorUuid != null) {
-            Entity professor = findNPCByUUID(world, professorUuid);
-            if (professor != null) {
-                uniqueProfessorUUID = professorUuid;
+    public static void loadAllNPCs(ServerLevel world, NPCData data) {
+        for (Map.Entry<Integer, NPCData.NPCDetails> entry : data.getNpcDetailsMap().entrySet()) {
+            int index = entry.getKey();
+            NPCData.NPCDetails details = entry.getValue();
+            UUID uuid = details.uuid;
+            BlockPos pos = details.position; // 直接从 NPCDetails 获取位置
+
+            // 确保区块已加载
+            if (world.isLoaded(pos)) {
+                Entity npc = findNPCByUUID(world, uuid);
+                if (npc != null) {
+                    activeNPCs.put(index, uuid);
+                    System.out.println("NPC with index " + index + " and UUID " + uuid + " found on world load.");
+                } else {
+                    System.out.println("NPC with index " + index + " and UUID " + uuid + " not found on world load.");
+                    // 这里可以考虑重新创建NPC或进行其他处理
+                }
             } else {
-                uniqueProfessorUUID = null;
+                System.out.println("Chunk not loaded for NPC with index " + index);
             }
         }
     }
+
 }

@@ -92,6 +92,13 @@ public class GameController implements GameControllerInterface {
             String advice = expertSystem.interact(npc,userInput);
             return advice;
     }
+    
+    public NPCModel getNPC(int index) {
+        if (index >= 0 && index < npcs.size()) {
+            return npcs.get(index);
+        }
+        return null;
+    }
 
     public List<NPCModel> getNpcs() {
         return npcs;

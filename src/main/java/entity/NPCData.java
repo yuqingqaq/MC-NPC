@@ -1,86 +1,76 @@
 package entity;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class NPCData extends SavedData {
-    private static final String DATA_NAME = "npc_unique_data";
+    private static final String DATA_NAME = "npc_data";
+    private Map<Integer, NPCDetails> npcDetailsMap = new HashMap<>();
 
-    private boolean npcExists;
-    private UUID librarianUuid;  // UUID to identify the normal NPC
-    private UUID professorUuid;  // UUID to identify the Professor NPC
-    private int npcX, npcY, npcZ;
+    public static class NPCDetails {
+        public UUID uuid;
+        public BlockPos position;
 
+        public NPCDetails(UUID uuid, BlockPos position) {
+            this.uuid = uuid;
+            this.position = position;
+        }
+    }
     @Override
     public CompoundTag save(CompoundTag tag) {
-        tag.putBoolean("npcExists", npcExists);
-        if (npcExists) {
-            if (librarianUuid != null) {
-                tag.putUUID("librarianUuid", librarianUuid);
-            }
-            if (professorUuid != null) {
-                tag.putUUID("professorUuid", professorUuid);
-            }
-        }
-        tag.putInt("npcX", npcX);
-        tag.putInt("npcY", npcY);
-        tag.putInt("npcZ", npcZ);
+        ListTag list = new ListTag();
+        npcDetailsMap.forEach((index, details) -> {
+            CompoundTag npcTag = new CompoundTag();
+            npcTag.putInt("Index", index);
+            npcTag.putUUID("UUID", details.uuid);
+            npcTag.putLong("Pos", details.position.asLong());
+            list.add(npcTag);
+        });
+        tag.put("NPCs", list);
         return tag;
     }
 
     public static NPCData load(CompoundTag tag) {
         NPCData data = new NPCData();
-        data.npcExists = tag.getBoolean("npcExists");
-        if (data.npcExists) {
-            data.librarianUuid = tag.getUUID("librarianUuid");
-            data.professorUuid = tag.getUUID("professorUuid");
-            data.npcX = tag.getInt("npcX");
-            data.npcY = tag.getInt("npcY");
-            data.npcZ = tag.getInt("npcZ");
-        }
+        ListTag list = tag.getList("NPCs", 10); // 10 for CompoundTag
+        list.forEach(n -> {
+            CompoundTag npcTag = (CompoundTag) n;
+            int index = npcTag.getInt("Index");
+            UUID uuid = npcTag.getUUID("UUID");
+            BlockPos position = BlockPos.of(npcTag.getLong("Pos"));
+            data.npcDetailsMap.put(index, new NPCDetails(uuid, position));
+        });
         return data;
+    }
+
+    public void registerNPC(int index, UUID uuid, BlockPos position) {
+        npcDetailsMap.put(index, new NPCDetails(uuid, position));
+        setDirty();
+        System.out.println("Registered NPC with index: " + index + " and UUID: " + uuid);
+    }
+
+    public Map<Integer, NPCDetails> getNpcDetailsMap() {
+        return npcDetailsMap;
     }
 
     public static NPCData forLevel(ServerLevel world) {
         return world.getDataStorage().computeIfAbsent(NPCData::load, NPCData::new, DATA_NAME);
     }
 
-    public void setNpcExists(boolean exists) {
-        this.npcExists = exists;
-        setDirty();
+    private static BlockPos getNpcPositionByUUID(ServerLevel world, UUID uuid) {
+        NPCData data = NPCData.forLevel(world);
+        for (NPCData.NPCDetails details : data.getNpcDetailsMap().values()) {
+            if (details.uuid.equals(uuid)) {
+                return details.position;
+            }
+        }
+        return null; // Return null if the UUID is not found
     }
 
-    public boolean getNpcExists() {
-        return this.npcExists;
-    }
-
-    public void setLibrarianUuid(UUID uuid) {
-        this.librarianUuid = uuid;
-        setDirty();
-    }
-
-    public UUID getLibrarianUuid() {
-        return this.librarianUuid;
-    }
-
-    public void setProfessorUuid(UUID uuid) {
-        this.professorUuid = uuid;
-        setDirty();
-    }
-
-    public UUID getProfessorUuid() {
-        return this.professorUuid;
-    }
-
-    public void deleteData() {
-        this.npcExists = false;
-        this.librarianUuid = null;
-        this.professorUuid = null;
-        this.npcX = 0;
-        this.npcY = 0;
-        this.npcZ = 0;
-        setDirty();
-    }
 }

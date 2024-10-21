@@ -17,13 +17,19 @@ import npcopenai.NPCInteractionScreen;
 import npcopenai.NPCOpenAI;
 
 public class ProfessorNPCEntity extends Mob {
+    private int npcIndex; // Store the index of the NPC
+    private NPCModel npc;
     public ProfessorNPCEntity(EntityType<? extends Mob> type, Level world) {
         super(type, world);
+    }
 
-        this.setCustomName(new TextComponent("Professor Wang"));
-        this.setCustomNameVisible(true); // 名称始终显示
-        this.registerGoals(); // 初始化 AI 行为
-
+    // 初始化方法，用于设置索引
+    public void initialize(int index) {
+        this.npcIndex = index;
+        NPCModel npc = GameController.getInstance().getNPC(this.npcIndex);
+        this.setCustomName(new TextComponent(npc.getNPCName()));
+        this.setCustomNameVisible(true);
+        this.registerGoals();
     }
 
     @Override
@@ -46,14 +52,14 @@ public class ProfessorNPCEntity extends Mob {
         }
 
         if (!this.level.isClientSide) {
-            // 服务器端逻辑
-            player.displayClientMessage(new TextComponent("Hello, I am Professor Wang!"), false);
+            NPCModel npc = GameController.getInstance().getNPC(this.npcIndex); // Use the stored index to get the NPC model
+            player.displayClientMessage(new TextComponent("Hello, I am " + npc.getNPCName()), false);
             return InteractionResult.sidedSuccess(this.level.isClientSide);
         }
 
         // 客户端逻辑
         try {
-            NPCModel npc = GameController.getInstance().getNpcs().get(2);
+            NPCModel npc = GameController.getInstance().getNPC(this.npcIndex);
             Minecraft.getInstance().setScreen(new NPCInteractionScreen(npc));
             NPCOpenAI.getLogger().info("Interacting with NPC: " + npc.getNPCName());
         } catch (IndexOutOfBoundsException e) {
