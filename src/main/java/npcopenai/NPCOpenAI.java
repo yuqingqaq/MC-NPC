@@ -37,34 +37,20 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import java.util.stream.Collectors;
 
-import static npcopenai.EntityRegistry.LIBRAIAN_ENTITY;
+import static npcopenai.EntityRegistry.LIBRARIAN_ENTITY;
 import static npcopenai.EntityRegistry.PROFESSOR_ENTITY;
 
 @Mod(NPCOpenAI.MODID)
 public class NPCOpenAI {
     public static final String MODID = "npcopenai";
     private static final Logger LOGGER = LogManager.getLogger();
-    //private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
-    //public static final RegistryObject<Item> CUSTOM_ITEM = ITEMS.register("task_book", CustomItem::new);
-//
-//    public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES,  MODID);
-//
-//    public static final RegistryObject<EntityType<LibrarianNPCEntity>> LIBRAIAN_ENTITY = ENTITIES.register("librarian_entity",
-//            () -> EntityType.Builder.of(LibrarianNPCEntity::new, MobCategory.MISC)
-//                    .sized(0.6F, 1.95F)
-//                    .build(new ResourceLocation(MODID, "librarian_entity").toString()));
-//
-//    public static final RegistryObject<EntityType<ProfessorNPCEntity>> PROFESSOR_ENTITY = ENTITIES.register("professor_entity",
-//            () -> EntityType.Builder.of(ProfessorNPCEntity::new, MobCategory.MISC)
-//                    .sized(0.6F, 1.95F)
-//                    .build(new ResourceLocation(MODID, "professor_entity").toString()));
+
 
     public NPCOpenAI()
     {
         // 初始化逻辑
         GameController.getInstance();
         LOGGER.info(" GameController: {}", GameController.getInstance().getNpcs());
-        //ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
         //ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
@@ -79,15 +65,10 @@ public class NPCOpenAI {
         return LOGGER;
     }
 
-    public static void logDebugInfo(String message) {
-        LOGGER.debug(message);
-    }
-
     private void setup(final FMLCommonSetupEvent event)
     {
         LOGGER.info("HELLO FROM PREINIT");
         LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
-
 
     }
 
@@ -138,7 +119,7 @@ public class NPCOpenAI {
 
         @SubscribeEvent
         public static void onEntityAttributeCreation(EntityAttributeCreationEvent event) {
-            event.put(LIBRAIAN_ENTITY.get(), LibrarianNPCEntity.createAttributes().build());
+            event.put(LIBRARIAN_ENTITY.get(), LibrarianNPCEntity.createAttributes().build());
             event.put(PROFESSOR_ENTITY.get(), ProfessorNPCEntity.createAttributes().build());
 
         }
@@ -149,7 +130,7 @@ public class NPCOpenAI {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
             event.enqueueWork(() -> {
-                EntityRenderers.register(LIBRAIAN_ENTITY.get(), LibrarianNPCEntityRenderer::new);
+                EntityRenderers.register(LIBRARIAN_ENTITY.get(), LibrarianNPCEntityRenderer::new);
                 EntityRenderers.register(PROFESSOR_ENTITY.get(), ProfessorNPCEntityRenderer::new); // 添加此行
 
             });

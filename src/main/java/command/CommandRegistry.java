@@ -68,7 +68,7 @@ public class CommandRegistry {
         switch (type) {
             case LIBRARIAN:
                 if (NPCDataManager.uniqueLibrarianUuid == null) {  // Check if an NPC already exists
-                    npc = new LibrarianNPCEntity(EntityRegistry.LIBRAIAN_ENTITY.get(), world);
+                    npc = new LibrarianNPCEntity(EntityRegistry.LIBRARIAN_ENTITY.get(), world);
                     npc.setUUID(UUID.randomUUID());
                     npc.setPos(pos.getX(), pos.getY(), pos.getZ());
                     world.addFreshEntity(npc);

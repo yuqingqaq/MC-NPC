@@ -28,7 +28,7 @@ public class EntityRegistry {
 
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES,  MODID);
 
-    public static final RegistryObject<EntityType<LibrarianNPCEntity>> LIBRAIAN_ENTITY = ENTITIES.register("librarian_entity",
+    public static final RegistryObject<EntityType<LibrarianNPCEntity>> LIBRARIAN_ENTITY = ENTITIES.register("librarian_entity",
             () -> EntityType.Builder.of(LibrarianNPCEntity::new, MobCategory.MISC)
                     .sized(0.6F, 1.95F)
                     .build(new ResourceLocation(MODID, "librarian_entity").toString()));
