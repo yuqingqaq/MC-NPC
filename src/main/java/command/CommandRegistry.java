@@ -125,49 +125,49 @@ public class CommandRegistry {
         System.out.println(npc);
         if (npc != null) {
             ServerPlayer player = source.getPlayerOrException();
-            BlockPos npcPos = npc.blockPosition();
-            // 计算玩家应该面对的方向
-            double dx = npcPos.getX() - player.getX();
-            double dz = npcPos.getZ() - player.getZ();
-            float angle = (float) Math.toDegrees(Math.atan2(dz, dx)) - 90; // 计算角度并转换为度
+            teleportPlayerToEntity(player, npc, 2.0, source);
 
-            // 设置玩家新的朝向
-            float newYaw = angle;
-            float newPitch = player.getXRot();
-
-            // 确定玩家站在 NPC 前面的位置，例如距离 NPC 2 个方块
-            double distance = 2.0;
-            double rad = Math.toRadians(angle - 90); // 转换角度为弧度并调整角度使玩家站在 NPC 前面
-            double newX = npcPos.getX() + distance * Math.cos(rad);
-            double newZ = npcPos.getZ() + distance * Math.sin(rad);
-
-            // 传送玩家并调整朝向
-            player.teleportTo(source.getLevel(), newX, npcPos.getY(), newZ, newYaw, newPitch);
             // NPC 找到，发送成功消息，并显示位置
             source.sendSuccess(new TextComponent(String.format("Found NPC at [%s].", npc.blockPosition().toShortString())), true);
         } else {
             // NPC 未找到，可能已被移除
-            source.sendFailure(new TextComponent("NPC is respawned."));
+            //source.sendFailure(new TextComponent("NPC is respawned."));
             ServerPlayer player = source.getPlayerOrException();
             BlockPos npcPos = NPCDataManager.getNPCLastPositionByIndex(world, index);
-            player.teleportTo(source.getLevel(), npcPos.getX(), npcPos.getY(), npcPos.getZ(), player.getYRot(), player.getXRot());
-            respawnNPC(source, world, index);
+            npc = respawnNPC(source, world, index);
+            teleportPlayerToEntity(player, npc, 2.0, source); // 传送到刚刚respawn的NPC位置
         }
         return 1;
     }
-    private static int respawnNPC(CommandSourceStack source, ServerLevel world, int index) {
+    private static void teleportPlayerToEntity(ServerPlayer player, Entity entity, double distance, CommandSourceStack source) {
+        BlockPos entityPos = entity.blockPosition();
+        double dx = entityPos.getX() - player.getX();
+        double dz = entityPos.getZ() - player.getZ();
+        float angle = (float) Math.toDegrees(Math.atan2(dz, dx)) - 90;
+
+        float newYaw = angle;
+        float newPitch = player.getXRot();
+
+        double rad = Math.toRadians(angle - 90);
+        double newX = entityPos.getX() + distance * Math.cos(rad);
+        double newZ = entityPos.getZ() + distance * Math.sin(rad);
+
+        player.teleportTo(source.getLevel(), newX, entityPos.getY(), newZ, newYaw, newPitch);
+    }
+
+    private static Entity respawnNPC(CommandSourceStack source, ServerLevel world, int index) {
         BlockPos lastKnownPos = NPCDataManager.getNPCLastPositionByIndex(world, index);
         String npcType = NPCDataManager.getNPCTypeByIndex(world,index);  // Assume this method exists and properly retrieves the type
 
         Entity npc = spawnNPCByType(world, npcType, lastKnownPos, index);
         if (npc == null) {
             source.sendFailure(new TextComponent("Failed to respawn NPC."));
-            return 0;
+            return null;
         }
 
         NPCDataManager.saveOrUpdateNPC(world, index, npc, npcType);
         source.sendSuccess(new TextComponent("NPC is respawned at the last known location."), true);
-        return 1;
+        return npc;
     }
 
     private static Entity spawnNPCByType(ServerLevel world, String type, BlockPos pos, int index) {

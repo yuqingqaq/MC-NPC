@@ -101,6 +101,7 @@ public class NPCInteractionScreen extends Screen {
     @Override
     public void onClose() {
         this.minecraft.setScreen(null);  // 关闭当前屏幕
+        toast.hide();
     }
 
     private void sendChatMessage() {
