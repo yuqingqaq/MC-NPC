@@ -46,6 +46,11 @@ public class NPCSystem {
         String cleanedResponse = cleanResponse(npcResponse);
 
         npc.addDialogueToHistory(new NPCMessage("assistant", cleanedResponse));
+
+        // Check if the dialogue completion condition is met
+        if (npc.checkDialogueCompletionCondition()) {
+            npc.completeAllTasks();
+        }
         return cleanedResponse;
     }
 

@@ -122,6 +122,7 @@ public class NPCInteractionScreen extends Screen {
             //toast.updateProgress(0.0F);
         }
     }
+
     private void getAdvice() {
         if (!chatHistory.isEmpty()) {
             String advice= GameController.getInstance().interactWithExpert(currentNPC,"从客观第三方的专家视角给出建议");

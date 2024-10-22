@@ -66,6 +66,29 @@ public class NPCModel {
     }
     public List<NPCMessage> getChatHistory() { return chatHistory; }
 
+    // New method to check completion conditions based on dialogue
+    public boolean checkDialogueCompletionCondition() {
+        int dialogueCount = 0;
+        boolean hasThankKeywords = false;
+
+        for (NPCMessage message : dialogueHistory) {
+            if ("assistant".equals(message.getSender())) {
+                if (message.getContent().contains("谢谢") || message.getContent().contains("Thank")) {
+                    hasThankKeywords = true;
+                }
+                dialogueCount++;
+            }
+        }
+
+        return dialogueCount > 3 || hasThankKeywords;
+    }
+
+    // Method to complete all tasks
+    public void completeAllTasks() {
+        for (TaskModel task : tasks) {
+            task.setCompleted(true);
+        }
+    }
     public String getChatHistoryAsString() {
         StringBuilder historyBuilder = new StringBuilder();
         for (NPCMessage message : this.chatHistory) {
@@ -76,6 +99,7 @@ public class NPCModel {
         }
         return historyBuilder.toString();
     }
+
     public void updateTaskStatus(String taskId, boolean completed) {
         for (TaskModel task : tasks) {
             if (task.getTaskId().equals(taskId)) {

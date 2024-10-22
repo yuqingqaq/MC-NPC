@@ -4,7 +4,9 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import controller.GameController;
 import model.NPCModel;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -21,15 +23,17 @@ public class NPCTaskScreen extends Screen {
     //private static final ResourceLocation BACKGROUND_TEXTURE = new ResourceLocation("yourmodid", "textures/gui/npc_task_gui.png");
     private static final ResourceLocation COMPLETED = new ResourceLocation("npcopenai", "textures/item/todo.png");
     private static final ResourceLocation PENDING = new ResourceLocation("npcopenai", "textures/item/to_do.png");
+    private boolean hasShownCompletionToast = false;
 
     public NPCTaskScreen() {
         super(new TextComponent("NPC Task Manager"));
     }
 
-
     @Override
     protected void init() {
         super.init();
+        hasShownCompletionToast = false;
+        checkCompletedNPCs();
     }
 
     private void teleportToNPC(int index) {
@@ -38,11 +42,35 @@ public class NPCTaskScreen extends Screen {
         }
     }
 
+
+    private void checkCompletedNPCs() {
+        if (!hasShownCompletionToast) {
+            List<NPCModel> npcs = GameController.getInstance().getNpcs();
+            long completedCount = npcs.stream().filter(NPCModel::areAllTasksCompleted).count();
+
+            if (completedCount >= 5) {
+                if (completedCount >= 10) {
+                    showCompletionToast("你人真好，帮助了所有同学！", "祝你未来一切顺利！");
+                } else if (completedCount >= 5) {
+                    showCompletionToast("恭喜！", "已经完成了本次实验。");
+                }
+                hasShownCompletionToast = true;  // Set flag to true after showing toast
+            }
+        }
+    }
+
+    private void showCompletionToast(String title, String description) {
+        Minecraft minecraft = Minecraft.getInstance();
+        MutableComponent text = new TextComponent(title);
+        MutableComponent desc = new TextComponent(description);
+        SystemToast.add(minecraft.getToasts(), SystemToast.SystemToastIds.TUTORIAL_HINT, text, desc);
+    }
+
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(poseStack);
         super.render(poseStack, mouseX, mouseY, partialTicks);
-        drawCenteredString(poseStack, this.font, "Task List", this.width / 2 - 180, 20, 0xFFFFFF);
+        drawCenteredString(poseStack, this.font, "任务清单", this.width / 2 - 180, 20, 0xFFFFFF);
 
         List<NPCModel> npcs = GameController.getInstance().getNpcs();
         int yOffset = 50;
