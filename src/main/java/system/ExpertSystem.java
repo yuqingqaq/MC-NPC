@@ -16,12 +16,19 @@ public class ExpertSystem {
         this.gptModel = gptModel;
     }
 
-    public String interact(NPCModel npc, String userInput) {
-        String systemPrompt = ExpertPromptConfig.SYSTEM_PROMPT;
+    public String interact(NPCModel npc, String userInput, String language) {
+        String systemPrompt;
+        if ("zh".equals(language)) {
+            systemPrompt = ExpertPromptConfig.SYSTEM_PROMPT_IN_CHINESE;
+        } else {
+            systemPrompt = ExpertPromptConfig.SYSTEM_PROMPT;
+        }
 
         List<NPCMessage> messageHistory = new ArrayList<>();
         messageHistory.add(new NPCMessage("system", systemPrompt));
-        messageHistory.add(new NPCMessage("user", npc.getChatHistoryAsString() + userInput));
+
+        String chatHistoryMarkdown = "```\n" + npc.getChatHistoryAsString() + "\n```";
+        messageHistory.add(new NPCMessage("user", chatHistoryMarkdown + userInput));
 
         System.out.println("Prompt to ExpertGPT:");
         messageHistory.forEach(m -> System.out.println(m.getSender() + ": " + m.getContent()));

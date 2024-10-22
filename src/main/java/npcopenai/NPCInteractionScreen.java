@@ -124,7 +124,7 @@ public class NPCInteractionScreen extends Screen {
     }
     private void getAdvice() {
         if (!chatHistory.isEmpty()) {
-            String advice= GameController.getInstance().interactWithExpert(currentNPC,"Give concise and professional advice from a third-party perspective to keep the conversation going");
+            String advice= GameController.getInstance().interactWithExpert(currentNPC,"从客观第三方的专家视角给出建议");
             // 更新聊天历史
             hintHistory.add(advice);
             hintHistory.add("");

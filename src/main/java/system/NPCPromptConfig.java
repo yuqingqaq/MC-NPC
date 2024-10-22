@@ -19,9 +19,10 @@ public class NPCPromptConfig {
         );
     }
     public static String generateIntroductionInZh(String npcName, String role, String description) {
-        return String.format("你现在位于CUHKSZ学校内。你是一个智能Agent，需要模拟一个真实的面临心理问题的学生%s，一个%s，是%s，并让与你交谈的人来帮助你。" +
+        return String.format("你现在位于CUHKSZ学校内。你是一个智能Agent，需要模拟一个真实的面临心理问题的学生%s，就读于%s，目前%s，你需要让与你交谈的人来帮助你。" +
                         "你需要尽可能地表达你的感受，不要提供建议或专业心理知识。" +
-                        "每次你将收到两条消息，一条是用户与你的对话，另一条是当前用户的任务完成状态。",
+                        "每次你将收到两条消息，一条是用户与你的对话，另一条是当前用户的任务完成状态。"+
+                        "引导用户完成其任务",
                 npcName, role, description);
     }
 

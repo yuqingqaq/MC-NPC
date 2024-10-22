@@ -81,17 +81,14 @@ public class GameController implements GameControllerInterface {
     @Override
     public String interactWithNPC(NPCModel npc, String userInput) {
         if (userInput == null || userInput.trim().isEmpty()) {
-            return "";  // 输入无效或为空，直接返回空字符串
+            return "";
         }
 
         // 判断输入是主要为中文还是英文
-        //String language = isMostlyChinese(userInput) ? "zh" : "en";
-        String language =  "zh" ;
+        String language = isMostlyChinese(userInput) ? "zh" : "en";
 
-        // 根据语言调用相应的交互逻辑
         String response = npcSystem.interact(npc, userInput, language);
 
-        // 可以在这里添加更多逻辑，如更新模型等
         return response;
     }
 
@@ -114,9 +111,14 @@ public class GameController implements GameControllerInterface {
 
         return chineseCount > otherCount;
     }
+
     public String interactWithExpert(NPCModel npc, String userInput) {
-            String advice = expertSystem.interact(npc,userInput);
-            return advice;
+        if (userInput == null || userInput.trim().isEmpty()) {
+            return "";
+        }
+        String language = isMostlyChinese(userInput) ? "zh" : "en";
+        String advice = expertSystem.interact(npc, userInput, language);
+        return advice;
     }
     
     public NPCModel getNPC(int index) {

@@ -75,6 +75,11 @@ public class NPCTaskScreen extends Screen {
             font.draw(poseStack, name, xName, yOffset, 0xFFFFFF);  // Left-aligned NPC name
             font.draw(poseStack, role, xRole, yOffset, 0xFFFFFF);  // Left-aligned NPC role
 
+            // Check if the mouse is over the NPC name or role
+            if ((mouseX >= xName && mouseX <= xName + font.width(name) && mouseY >= yOffset && mouseY <= yOffset + font.lineHeight) ||
+                    (mouseX >= xRole && mouseX <= xRole + font.width(role) && mouseY >= yOffset && mouseY <= yOffset + font.lineHeight)) {
+                renderTooltip(poseStack, new TextComponent(npc.getDialogues().get(0)), mouseX, mouseY);
+            }
             yOffset += 30;  // Increment the vertical offset for the next NPC
         }
 
