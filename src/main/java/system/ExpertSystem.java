@@ -35,6 +35,7 @@ public class ExpertSystem {
         System.out.println();
         String npcResponse = gptModel.call(messageHistory);
         String cleanedResponse = cleanResponse(npcResponse);
+        System.out.println(cleanedResponse);
 
         return cleanedResponse;
     }

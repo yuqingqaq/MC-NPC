@@ -20,10 +20,10 @@ public class NPCSystem {
         String introduction, cautionNote;
 
         if ("zh".equals(language)) {
-            introduction = NPCPromptConfig.generateIntroductionInZh(npc.getNPCName(), npc.getRole(), npc.getDescription());
+            introduction = NPCPromptConfig.generateIntroductionInZh(npc.getNPCName(), npc.getRole(), npc.getDescription(), npc.getRelationship());
             cautionNote = NPCPromptConfig.generateCautionNoteInZh();
         } else {
-            introduction = NPCPromptConfig.generateIntroduction(npc.getNPCName(), npc.getRole(), npc.getDescription());
+            introduction = NPCPromptConfig.generateIntroduction(npc.getNPCName(), npc.getRole(), npc.getDescription(), npc.getRelationship());
             cautionNote = NPCPromptConfig.generateCautionNote();
         }
 

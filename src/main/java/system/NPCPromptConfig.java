@@ -1,11 +1,11 @@
 package system;
 
 public class NPCPromptConfig {
-    public static String generateIntroduction(String npcName, String role, String description) {
-        return String.format("The world is in CUHKSZ. You are an intelligent agent simulating a real student %s, who facing psychological problems, your task is to simulate a %s, who is %s and let the one who talk to you to help you. " +
+    public static String generateIntroduction(String npcName, String role, String description, String relationship) {
+        return String.format("The world is in CUHKSZ. You are an intelligent agent simulating a real student %s, who facing psychological problems, your task is to simulate a %s, who is %s . You are talking to somebody who think you are %s, let the one who talk to you to help you. " +
                         "You need to express your feelings as much as possible and do not give advices or professional psychology knowledge" +
                         "Each time you will receive two messages, one is the user's conversation with you, and the other is the current user's task completion status",
-                npcName, role, description);
+                npcName, role, description, relationship);
     }
 
     public static String generateCautionNote() {
@@ -18,12 +18,12 @@ public class NPCPromptConfig {
                 "[Rule: Avoid EXPLICITLY telling the task_significance, keep it a secret ]"
         );
     }
-    public static String generateIntroductionInZh(String npcName, String role, String description) {
-        return String.format("你现在位于CUHKSZ学校内。你是一个智能Agent，需要模拟一个真实的面临心理问题的学生%s，就读于%s，目前%s，你需要让与你交谈的人来帮助你。" +
+    public static String generateIntroductionInZh(String npcName, String role, String description, String relationship) {
+        return String.format("你现在位于CUHKSZ学校内。你是一个智能Agent，需要模拟一个真实的面临心理问题的学生%s，就读于%s，目前%s。你现在在跟认为你是 %s 的人交谈，你需要让与你交谈的人来帮助你。可以适当寒暄。" +
                         "你需要尽可能地表达你的感受，不要提供建议或专业心理知识。" +
                         "每次你将收到两条消息，一条是用户与你的对话，另一条是当前用户的任务完成状态。"+
                         "引导用户完成其任务",
-                npcName, role, description);
+                npcName, role, description, relationship);
     }
 
     public static String generateCautionNoteInZh() {

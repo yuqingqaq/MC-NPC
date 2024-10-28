@@ -16,7 +16,23 @@ public class NPCModel {
     private List<NPCMessage> dialogueHistory;
     private List<NPCMessage> chatHistory; // Only dialogues shown in the GUI
     private List<ItemModel> items;
+    private String time;
+    private String relationship;
+    private String location;
 
+    public NPCModel(String name, String description, String role, List<String> dialogues, List<TaskModel> tasks, String time, String relationship, String location) {
+        this.name = name;
+        this.description = description;
+        this.role = role;
+        this.dialogues = new ArrayList<>(dialogues);
+        this.tasks = new ArrayList<>(tasks);
+        this.dialogueHistory = new ArrayList<>();
+        this.chatHistory = new ArrayList<>();
+        this.items = new ArrayList<>();
+        this.time = time;
+        this.relationship = relationship;
+        this.location = location;
+    }
     public NPCModel(String name, String description, String role, List<String> dialogues, List<TaskModel> tasks) {
         this.name = name;
         this.description = description;
@@ -39,7 +55,19 @@ public class NPCModel {
     public List<TaskModel> getTasks(){
         return tasks;
     }
+    public String getTime() {
+        return time;
+    }
+    public String getLocation(){
+        return location;
+    }
+    public String getRelationship() {
+        return relationship;
+    }
 
+    public void setRelationship(String relationship) {
+        this.relationship = relationship;
+    }
     // 判断此 NPC 的所有任务是否已完成
     public boolean areAllTasksCompleted() {
         return tasks.stream().allMatch(TaskModel::isCompleted);

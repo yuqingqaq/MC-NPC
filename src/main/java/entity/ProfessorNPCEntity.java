@@ -87,7 +87,7 @@ public class ProfessorNPCEntity extends Mob {
         if (!this.level.isClientSide) {
             System.out.println("Index of server: "+ index);
             NPCModel npc = GameController.getInstance().getNPC(index); // Use the stored index to get the NPC model
-            player.displayClientMessage(new TextComponent("Hello, I am " + npc.getNPCName()), false);
+            player.displayClientMessage(new TextComponent("你好，我是" + npc.getNPCName()), false);
             return InteractionResult.sidedSuccess(this.level.isClientSide);
         }
 

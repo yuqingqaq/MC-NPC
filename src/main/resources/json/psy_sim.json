@@ -1,11 +1,14 @@
 {
-  "chapter_title": "CUHK(SZ) Freshman Orientation - Campus Challenges and Mental Wellness",
-  "chapter_description": "新生们在香港中文大学（深圳）的校园生活中，将在不同的地点遇到面临各种心理挑战的同学。这些挑战与他们所在的具体场景密切相关，需要新生们通过互动帮助他们克服困难。",
+  "chapter_title": "CUHK(SZ) Freshman Orientation - A Day in the Life: Campus Challenges and Mental Wellness",
+  "chapter_description": "新生们在香港中文大学（深圳）的一天，从早到晚在校园的不同地点遇到面临各种心理挑战的同学。通过帮助这些同学，新生们不仅帮助他们克服挑战，也对处理自己未来可能遇到的问题有了更深的理解和准备。",
   "npcs": [
     {
       "name": "黄思",
-      "description": "在图书馆门前焦虑地徘徊，因为无法完成作业和赶上DDL。",
+      "description": "在图书馆门前焦虑地徘徊，因为无法完成作业和赶上DDL",
       "role": "SME-大一-国际商务",
+      "time": "Morning",
+      "location": "图书馆",
+      "relationship": "经常合作完成作业的小组项目伙伴",
       "dialogues": [
         "我真的不知道怎么在截止日期前完成这些作业。",
         "每次想写作业，我就感到无比焦虑。"
@@ -26,6 +29,9 @@
       "name": "刘晨",
       "description": "在教室前苦恼，因为听不懂老师的讲课内容感到困扰。",
       "role": "SSE-大二-物理学",
+      "time": "Morning",
+      "location": "TA101教室",
+      "relationship": "上学期物理课的同学",
       "dialogues": [
         "我真的很难跟上老师的课程节奏。",
         "听不懂课堂内容让我感到非常挫败。"
@@ -46,6 +52,9 @@
       "name": "赵雨",
       "description": "在池塘边无精打采，表现出无法适应学校生活的抑郁迹象。",
       "role": "HSS-大一-应用心理学",
+      "time": "Noon",
+      "location": "荷花池畔",
+      "relationship": "在新生欢迎活动上认识的朋友，你们当时度过了很开心的时光",
       "dialogues": [
         "我感觉自己完全融入不了这里的生活。",
         "这里的一切都让我感到很是压抑。"
@@ -64,21 +73,24 @@
     },
     {
       "name": "李明",
-      "description": "在体育馆门口焦虑，担心不能达到体育课的要求。",
+      "description": "在体育馆门口焦虑，担心不能达到羽毛球课的要求。",
       "role": "MED-大一-生物医学工程",
+      "time": "Afternoon",
+      "location": "综合体育馆",
+      "relationship": "室友，你们有不同的运动兴趣和能力",
       "dialogues": [
-        "我总是担心自己在体育课上表现不好。",
+        "我总是担心自己在羽毛球课上表现不好。",
         "我不擅长运动，感觉这会影响我的成绩。"
       ],
       "tasks": [
         {
           "task_id": "4",
-          "description": "帮助Ming Li提高体育课的自信和技能",
-          "completion_criteria": "进行一次体育训练和建议会话",
+          "description": "帮助Ming Li提高羽毛球课的自信和技能",
+          "completion_criteria": "进行一次体育-羽毛球训练和建议会话",
           "completed": false,
           "object": "Sports Confidence Boost",
           "reward": ["Health Promoter"],
-          "plot_significance": "通过体育训练，玩家帮助Student Li建立信心，同时也增进了自己的身体健康和运动技能。"
+          "plot_significance": "通过体育/羽毛球训练，玩家帮助Student Li建立信心，同时也增进了自己的身体健康和运动技能。"
         }
       ]
     },
@@ -86,6 +98,9 @@
       "name": "陈晓",
       "description": "在食堂内因为人际关系而感到孤独和压力。",
       "role": "SDS-大二-数据科学与大数据技术",
+      "time": "Noon",
+      "location": "快乐食间",
+      "relationship": "计算机俱乐部成员，以性格安静和难以结交新朋友而闻名。",
       "dialogues": [
         "我在食堂吃饭时总感觉孤单，和别人交流很困难。",
         "我怕和不熟悉的人说话，这让我很不舒服。"
@@ -106,6 +121,9 @@
       "name": "王芳",
       "description": "在宿舍区因为睡眠问题感到疲惫和焦虑。",
       "role": "MUS-大一-音乐表演",
+      "time": "Evening",
+      "location": "逸夫书院",
+      "relationship": "隔壁室友，经常抱怨睡眠不好",
       "dialogues": [
         "我晚上总是睡不好，白天就感觉很累。",
         "不知道为什么，最近总是失眠。"
@@ -126,6 +144,9 @@
       "name": "周波",
       "description": "在艺术工作室外因为创造力阻塞感到沮丧。",
       "role": "MUS-大三-作曲与作曲技术理论",
+      "time": "Afternoon",
+      "location": "TC101 SPACE",
+      "relationship": "因为新生晚会认识的朋友，常常遇到创作低迷的问题",
       "dialogues": [
         "我最近完全没有灵感，我的项目也停滞不前。",
         "你知道怎么克服创作的障碍吗？"
@@ -146,6 +167,9 @@
       "name": "刘璐",
       "description": "在演讲堂内因公众演讲的恐惧而感到焦虑。",
       "role": "HSS-大二-英语",
+      "time": "Morning",
+      "location": "礼文堂",
+      "relationship": "在辩论队相识；讨论过对公开演讲的恐惧。",
       "dialogues": [
         "每次上台就感觉腿软，心跳加速。",
         "我怕公众演讲，但我的课程需要这样做。"
@@ -153,7 +177,7 @@
       "tasks": [
         {
           "task_id": "8",
-          "description": "帮助Lu Liu克服公众演讲的恐惧",
+          "description": "帮助Lu Liu克服公众演讲的恐惗",
           "completion_criteria": "进行一次模拟演讲并给予反馈",
           "completed": false,
           "object": "Public Speaking Practice",
@@ -166,6 +190,9 @@
       "name": "孙静",
       "description": "在实验室门口因为研究项目的挫败感到绝望。",
       "role": "MED-研二-临床医学",
+      "time": "Afternoon",
+      "location": "科研楼",
+      "relationship": "研究项目的mentor；尽管遇到挫折，但总是鼓励别人。",
       "dialogues": [
         "我的研究项目一直没有进展，我感到非常沮丧。",
         "我不知道我是否还应该继续我的研究方向。"
@@ -186,6 +213,9 @@
       "name": "王雷",
       "description": "在健身房内因为身体形象问题感到自卑。",
       "role": "SDS-大一-计算机科学与技术",
+      "time": "Evening",
+      "location": "大学体育馆",
+      "relationship": "健身伙伴，经常在锻炼期间讨论个人的身体形象问题",
       "dialogues": [
         "我在镜子前看自己总感觉不满意。",
         "我怕别人在健身房看我，感觉自己不够好。"

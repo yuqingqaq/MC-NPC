@@ -25,6 +25,25 @@ public class LibrarianNPCEntity extends Mob {
     public LibrarianNPCEntity(EntityType<? extends Mob> type, Level world) {
         super(type, world);
     }
+    private String currentSpeechText = "我最近感觉有些焦虑，你能帮帮我吗";
+    private boolean isTalking = false;
+
+    public void startTalking(String text) {
+        this.currentSpeechText = text;
+        this.isTalking = true;
+    }
+
+    public void stopTalking() {
+        this.isTalking = false;
+    }
+
+    public String getCurrentSpeechText() {
+        return this.currentSpeechText;
+    }
+
+    public boolean isTalking() {
+        return this.isTalking;
+    }
 
     @Override
     public void addAdditionalSaveData(CompoundTag tag) {
@@ -58,9 +77,11 @@ public class LibrarianNPCEntity extends Mob {
         }
 
         NPCModel npc = GameController.getInstance().getNPC(this.entityData.get(NPC_INDEX));
+        this.currentSpeechText = npc.getDialogues().get(0);
         this.setCustomName(new TextComponent(npc.getNPCName()));
         this.setCustomNameVisible(true);
         this.registerGoals();
+
     }
 
     @Override
@@ -73,7 +94,7 @@ public class LibrarianNPCEntity extends Mob {
         if (!this.level.isClientSide) {
             System.out.println("Index of server: " + index);
             NPCModel npc = GameController.getInstance().getNPC(index);
-            player.displayClientMessage(new TextComponent("Hello, I am " + npc.getNPCName()), false);
+            player.displayClientMessage(new TextComponent("你好，我是" + npc.getNPCName()), false);
             return InteractionResult.sidedSuccess(this.level.isClientSide);
         }
 

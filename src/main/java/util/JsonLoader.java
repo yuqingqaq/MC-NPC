@@ -67,6 +67,9 @@ public class JsonLoader {
         String name = npcNode.path("name").asText();
         String description = npcNode.path("description").asText();
         String role = npcNode.path("role").asText();
+        String time = npcNode.path("time").asText();
+        String location = npcNode.path("location").asText();
+        String relationship = npcNode.path("relationship").asText();
         List<String> dialogues = new ArrayList<>();
         npcNode.path("dialogues").forEach(d -> dialogues.add(d.asText()));
 
@@ -88,7 +91,7 @@ public class JsonLoader {
                 tasks.add(new TaskModel(taskId, taskDescription, completionCriteria, objectName, reward, plotSignificance, completed));
             }
         }
-
-        return new NPCModel(name, description, role, dialogues, tasks);
+        return new NPCModel(name, description, role, dialogues, tasks, time, relationship, location);
+        //return new NPCModel(name, description, role, dialogues, tasks);
     }
 }

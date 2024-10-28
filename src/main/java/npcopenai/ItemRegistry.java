@@ -19,6 +19,7 @@ public class ItemRegistry {
     private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, NPCOpenAI.MODID);
 
     public static final RegistryObject<Item> CUSTOM_ITEM = ITEMS.register("task_book", CustomItem::new);
+    public static final RegistryObject<Item> CUSTOM_ITEM_TIMED = ITEMS.register("timed_book", TimedCustomItem::new);
     private static final Logger LOGGER = LogManager.getLogger();
 
     public static void init() {
@@ -35,6 +36,14 @@ public class ItemRegistry {
                     CUSTOM_ITEM.get()
             );
             LOGGER.info("Custom items registered.");
+
+            itemRegistryEvent.getRegistry().registerAll(
+                    CUSTOM_ITEM_TIMED.get()
+            );
+            LOGGER.info("Timed Custom items registered.");
         }
     }
+
+
+
 }
