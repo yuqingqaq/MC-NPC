@@ -26,7 +26,7 @@ public class LibrarianNPCEntity extends Mob {
         super(type, world);
     }
     private String currentSpeechText = "我最近感觉有些焦虑，你能帮帮我吗";
-    private boolean isTalking = false;
+    private boolean isTalking = true;
 
     public void startTalking(String text) {
         this.currentSpeechText = text;
@@ -70,16 +70,16 @@ public class LibrarianNPCEntity extends Mob {
         super.defineSynchedData();
         this.entityData.define(NPC_INDEX, 0);
     }
+
     // 初始化方法，用于设置索引
     public void initialize(int index) {
         if (!this.entityData.get(NPC_INDEX).equals(index)) {
             this.entityData.set(NPC_INDEX, index);
         }
-
-        NPCModel npc = GameController.getInstance().getNPC(this.entityData.get(NPC_INDEX));
-        this.currentSpeechText = npc.getDialogues().get(0);
+        this.npc = GameController.getInstance().getNPC(this.entityData.get(NPC_INDEX));
         this.setCustomName(new TextComponent(npc.getNPCName()));
         this.setCustomNameVisible(true);
+        this.currentSpeechText = this.npc.getDialogues().get(0);
         this.registerGoals();
 
     }
