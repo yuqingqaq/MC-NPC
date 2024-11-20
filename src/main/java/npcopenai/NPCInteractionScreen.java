@@ -15,11 +15,20 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.FormattedCharSequence;
+import speech.AudioPlayer;
+import speech.Example;
+import speech.SpeechToTextService;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import org.lwjgl.BufferUtils;
+import speech.TextToSpeechService;
+
+import javax.sound.sampled.*;
+import java.io.ByteArrayOutputStream;
 
 public class NPCInteractionScreen extends Screen {
     private EditBox inputField;
@@ -32,12 +41,18 @@ public class NPCInteractionScreen extends Screen {
     private ChatScrollPanel chatPanel;
     private TutorialToast toast;
 
+    private Button recordButton;
+    private AudioPlayer audioPlayer = new AudioPlayer();
+    private boolean isRecording = false;
+    private ByteArrayOutputStream out;
+
     public NPCInteractionScreen(NPCModel npc) {
         super(new TextComponent("NPC Interaction: " + npc.getNPCName()));
         this.currentNPC = npc;
         this.chatHistory = npc.getChatHistory();
         this.hintHistory = new ArrayList<>(Arrays.asList());
     }
+
     @Override
     protected void init() {
 
@@ -48,7 +63,16 @@ public class NPCInteractionScreen extends Screen {
 
         this.inputField = new EditBox(this.font, centerX - 190, centerY + 65, 200, 20, new TextComponent("Enter Message"));
         this.addWidget(this.inputField);
-
+        // 添加录音按钮
+        recordButton = this.addRenderableWidget(new Button(centerX - 100, centerY + 100, 200, 20, new TextComponent("Start Recording"), button -> {
+            if (!isRecording) {
+                startRecording();
+                recordButton.setMessage(new TextComponent("Stop Recording"));
+            } else {
+                stopRecording();
+                recordButton.setMessage(new TextComponent("Start Recording"));
+            }
+        }));
         this.hintButton = this.addRenderableWidget(new Button(centerX + 75, centerY + 65, 80, 20, new TextComponent("Hint"), button -> {
             getAdvice();
         }));
@@ -98,10 +122,71 @@ public class NPCInteractionScreen extends Screen {
         this.toast = new TutorialToast(TutorialToast.Icons.RECIPE_BOOK, title, messageContent, true);
 
     }
+
     @Override
     public void onClose() {
-        this.minecraft.setScreen(null);  // 关闭当前屏幕
+        this.minecraft.setScreen(null);
         toast.hide();
+    }
+
+    // 开始录音
+    private void startRecording() {
+        isRecording = true;
+        System.out.println("Recording started");
+
+        try {
+            AudioFormat format = new AudioFormat(16000.0f, 16, 1, true, false);
+            DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
+
+            final TargetDataLine line = (TargetDataLine) AudioSystem.getLine(info);
+            line.open(format);
+            line.start();
+            System.out.println("Microphone line opened and started");
+
+            Thread thread = new Thread(() -> {
+                out = new ByteArrayOutputStream();
+                byte[] buffer = new byte[2048];
+                try {
+                    while (isRecording) {
+                        int count = line.read(buffer, 0, buffer.length);
+                        if (count > 0) {
+                            out.write(buffer, 0, count);
+                        }
+                    }
+                    out.close();
+                    System.out.println("Audio data captured and stream closed");
+
+                } catch (Exception e) {
+                    System.err.println("Recording error: " + e.getMessage());
+                }
+            });
+            thread.start();
+        } catch (Exception e) {
+            System.err.println("Microphone not accessible: " + e.getMessage());
+        }
+    }
+
+    // 停止录音并处理录制的音频
+    private void stopRecording() {
+        isRecording = false;
+        try {
+            byte[] audioData = out.toByteArray();
+            System.out.println("Audio data size: " + audioData.length + " bytes");
+
+            System.out.println("Before calling recognizeAudio");
+            try {
+                String text = SpeechToTextService.recognizeAudio(audioData);
+                System.out.println("Recognized text: " + text);
+                inputField.setValue(text); // 将识别的文本设置到输入框中
+            } catch (Exception e) {
+                System.err.println("Error calling recognizeAudio: " + e.getMessage());
+                e.printStackTrace();
+            }
+            System.out.println("After calling recognizeAudio");
+
+        } catch (Exception e) {
+            System.err.println("Speech recognition error: " + e.getMessage());
+        }
     }
 
     private void sendChatMessage() {
@@ -109,6 +194,14 @@ public class NPCInteractionScreen extends Screen {
         if (!message.isEmpty()) {
             String response = GameController.getInstance().interactWithNPC(currentNPC, message);
             inputField.setValue(""); // Clear input field after sending
+
+            // 使用语音合成将NPC的回答转换为语音
+            try {
+                TextToSpeechService.synthesizeSpeechToFile(response, "npc_response.mp3");
+                audioPlayer.playAudio("npc_response.mp3");
+            } catch (Exception e) {
+                System.err.println("Text-to-speech error: " + e.getMessage());
+            }
 
             // 更新聊天历史
             chatHistory.add(new NPCMessage("player", message));
