@@ -254,8 +254,8 @@ public class NPCInteractionScreen extends Screen {
 
             // 使用语音合成将NPC的回答转换为语音
             try {
-                TextToSpeechService.synthesizeSpeechToFile(response, "npc_response.mp3");
-                audioPlayer.playAudio("npc_response.mp3");
+                String ttsPath = TextToSpeechService.OpenAITTS(response);
+                audioPlayer.playAudio(ttsPath);
             } catch (Exception e) {
                 System.err.println("Text-to-speech error: " + e.getMessage());
             }

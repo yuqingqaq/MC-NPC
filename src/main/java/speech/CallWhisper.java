@@ -79,7 +79,7 @@ public class CallWhisper {
             // Build the multipart form request body
             RequestBody fileBody = RequestBody.create(
                     audioFile,
-                    MediaType.parse("audio/wav") // Adjust the media type if necessary
+                    MediaType.parse("audio/wav")
             );
 
             // Build the multipart request body with the file and model name
