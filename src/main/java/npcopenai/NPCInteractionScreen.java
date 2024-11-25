@@ -20,6 +20,9 @@ import speech.Example;
 import speech.SpeechToTextService;
 
 import java.io.ByteArrayOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -167,27 +170,81 @@ public class NPCInteractionScreen extends Screen {
     }
 
     // 停止录音并处理录制的音频
+//    private void stopRecording() {
+//        isRecording = false;
+//        try {
+//            byte[] audioData = out.toByteArray();
+//            System.out.println("Audio data size: " + audioData.length + " bytes");
+//
+//            System.out.println("Before calling recognizeAudio");
+//            try {
+//                String text = SpeechToTextService.recognizeAudio(audioData);
+//                System.out.println("Recognized text: " + text);
+//                inputField.setValue(text); // 将识别的文本设置到输入框中
+//            } catch (Exception e) {
+//                System.err.println("Error calling recognizeAudio: " + e.getMessage());
+//                e.printStackTrace();
+//            }
+//            System.out.println("After calling recognizeAudio");
+//
+//        } catch (Exception e) {
+//            System.err.println("Speech recognition error: " + e.getMessage());
+//        }
+//    }
     private void stopRecording() {
         isRecording = false;
         try {
             byte[] audioData = out.toByteArray();
             System.out.println("Audio data size: " + audioData.length + " bytes");
 
-            System.out.println("Before calling recognizeAudio");
-            try {
-                String text = SpeechToTextService.recognizeAudio(audioData);
-                System.out.println("Recognized text: " + text);
-                inputField.setValue(text); // 将识别的文本设置到输入框中
-            } catch (Exception e) {
-                System.err.println("Error calling recognizeAudio: " + e.getMessage());
-                e.printStackTrace();
-            }
-            System.out.println("After calling recognizeAudio");
+            // Create a temporary WAV file
+            File wavFile = createWavFile(audioData);
 
+            if (wavFile != null) {
+                System.out.println("Audio recorded and stored in " + wavFile.getAbsolutePath());
+
+                try {
+                    // Pass the WAV file to speech recognition
+                    String text = SpeechToTextService.ASR(wavFile);
+                    System.out.println("Recognized text: " + text);
+                    inputField.setValue(text);
+
+                    // Optional: Delete the temporary file after processing
+                    wavFile.delete();
+                } catch (Exception e) {
+                    System.err.println("Error calling recognizeAudio: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
         } catch (Exception e) {
             System.err.println("Speech recognition error: " + e.getMessage());
         }
     }
+
+    private File createWavFile(byte[] audioData) {
+        try {
+            // Define the audio format used in startRecording()
+            AudioFormat format = new AudioFormat(16000.0f, 16, 1, true, false);
+
+            // Create a temporary file
+            File tempFile = File.createTempFile("recording", ".wav");
+            tempFile.deleteOnExit(); // Ensure file is deleted when JVM exits
+
+            // Create audio input stream from byte array
+            ByteArrayInputStream bais = new ByteArrayInputStream(audioData);
+            AudioInputStream audioInputStream = new AudioInputStream(bais, format, audioData.length / format.getFrameSize());
+
+            // Write to WAV file
+            AudioSystem.write(audioInputStream, AudioFileFormat.Type.WAVE, tempFile);
+
+            return tempFile;
+        } catch (IOException | IllegalArgumentException e) {
+            System.err.println("Error creating WAV file: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
     private void sendChatMessage() {
         String message = inputField.getValue().trim();

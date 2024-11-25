@@ -1,34 +1,26 @@
-package api;
+package speech;
 
-import api.metadata.Message;
-import api.metadata.RequestData;
-import api.metadata.ResponseData;
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import metadata.NPCMessage;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
+import okhttp3.*;
 import util.JsonLoader;
 import util.ResourcePathUtil;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.io.File;
 
-public class OpenAIGPT {
+
+
+public class CallWhisper {
     private String modelName;
     private List<String> keys;
     private Random random;
@@ -36,12 +28,13 @@ public class OpenAIGPT {
     private ObjectMapper mapper;
     private static final Logger LOGGER = Logger.getLogger(JsonLoader.class.getName());
 
-    public OpenAIGPT(String modelName, String keysPath) {
+    public CallWhisper(String modelName, String keysPath) {
         this.modelName = modelName;
         this.random = new Random();
         this.client = new OkHttpClient();
         this.mapper = new ObjectMapper();
 
+        //Extract API key
         try (InputStream is = ResourcePathUtil.getResourceAsStream(keysPath)) {
             if (is == null) {
                 LOGGER.log(Level.SEVERE, "API keys file not found: " + keysPath);
@@ -69,32 +62,42 @@ public class OpenAIGPT {
     }
 
     private String postProcess(String responseJson) throws IOException {
-        ResponseData response = mapper.readValue(responseJson, ResponseData.class);
-        return response.getChoices().get(0).getMessage().getContent();
+        // The response JSON is in the format of {"text": "..."}
+        JsonNode rootNode = mapper.readTree(responseJson);
+        String text = rootNode.get("text").asText();
+        return text;
     }
 
-    public String call(List<NPCMessage> npcMessageHistory) {
+    public String call(File audioFile) {
         if (this.keys.isEmpty()) {
             System.err.println("No API keys available.");
             return "Error: API key not available.";
         }
         try {
-            List<Message> messageHistory = npcMessageHistory.stream()
-                    .map(Message::fromNPCMessage)
-                    .collect(Collectors.toList());
-
             String currentKey = this.keys.get(random.nextInt(this.keys.size()));
-            String json = mapper.writeValueAsString(new RequestData(this.modelName, messageHistory, 0.6, 0.8, 0.6, 0.8, 1));
-            RequestBody body = RequestBody.create(json, okhttp3.MediaType.get("application/json; charset=utf-8"));
-            Request request = new Request.Builder()
-                    .url("https://apix.ai-gaochao.cn/v1/chat/" + "/completions")
-                    //.url("http://61.241.103.33:8900/v1/chat/completions")
-                    .header("Authorization", "Bearer " + currentKey)
-                    .header("Content-Type", "application/json")
-//                    .header("Accept", "application/json")
-//                    .header("Connection", "keep-alive")
-                    .post(body)
+
+            // Build the multipart form request body
+            RequestBody fileBody = RequestBody.create(
+                    audioFile,
+                    MediaType.parse("audio/wav") // Adjust the media type if necessary
+            );
+
+            // Build the multipart request body with the file and model name
+            MultipartBody requestBody = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("file", audioFile.getName(), fileBody)
+                    .addFormDataPart("model", "whisper-1")
                     .build();
+
+            // Build the POST request to the transcription endpoint
+            Request request = new Request.Builder()
+                    .url("https://apix.ai-gaochao.cn/v1/audio/transcriptions")
+                    .header("Authorization", "Bearer " + currentKey)
+                    .header("Content-Type", "multipart/form-data")
+                    .post(requestBody)
+                    .build();
+
+            // Execute the request and handle the response
             try (Response response = client.newCall(request).execute()) {
                 String responseBodyStr = response.body().string();
                 if (response.isSuccessful()) {
@@ -112,5 +115,4 @@ public class OpenAIGPT {
             return "Failed to generate response.";
         }
     }
-
 }

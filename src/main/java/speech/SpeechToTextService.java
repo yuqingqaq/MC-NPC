@@ -2,8 +2,13 @@ package speech;
 import com.google.cloud.speech.v1.*;
 //import com.google.cloud.speech.v1p1beta1.*;
 import com.google.protobuf.ByteString;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.File;
+import speech.CallWhisper;
+
 
 public class SpeechToTextService {
 
@@ -36,4 +41,20 @@ public class SpeechToTextService {
         }
         return "";
     }
+
+    public static  String ASR(File audioFile) throws Exception{
+        System.out.println("Entered recognizeAudio method");
+
+        CallWhisper ASRModel = new CallWhisper("whisper-1", "config/gpt3keys.txt");
+        String asrText = ASRModel.call(audioFile);
+        if (!asrText.isEmpty()) {
+            System.out.println("Transcription: " + asrText);
+            return asrText;
+        }
+        return "";
+
+
+    }
 }
+
+
