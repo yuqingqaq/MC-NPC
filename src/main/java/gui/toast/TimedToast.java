@@ -1,4 +1,4 @@
-package npcopenai;
+package gui.toast;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.toasts.Toast;
@@ -6,7 +6,6 @@ import net.minecraft.client.gui.components.toasts.ToastComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.client.gui.GuiComponent;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.resources.ResourceLocation;
 
 public class TimedToast implements Toast {
     private final TextComponent title;

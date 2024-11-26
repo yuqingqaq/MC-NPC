@@ -1,17 +1,16 @@
-package npcopenai;
+package registry;
 
-import entity.LibrarianNPCEntity;
-import entity.ProfessorNPCEntity;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.apache.commons.logging.Log;
+import item.CustomItem;
+import npcopenai.NPCOpenAI;
+import item.TimedCustomItem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

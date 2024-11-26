@@ -1,4 +1,4 @@
-package system;
+package prompt;
 
 public class ExpertPromptConfig {
     public static final String SYSTEM_PROMPT = "You are an third-person perspective expert in mental health, " +

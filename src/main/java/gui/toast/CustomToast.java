@@ -1,9 +1,7 @@
-package npcopenai;
+package gui.toast;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.Component;
 import net.minecraft.client.gui.components.toasts.SystemToast;
-import net.minecraft.client.gui.components.toasts.ToastComponent;
 import net.minecraft.network.chat.TextComponent;
 
 public class CustomToast {

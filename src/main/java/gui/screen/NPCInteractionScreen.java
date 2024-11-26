@@ -1,4 +1,5 @@
-package npcopenai;
+package gui.screen;
+
 import component.ChatScrollPanel;
 import component.HintScrollPanel;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -13,19 +14,12 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.TextComponent;
 import speech.AudioPlayer;
 import speech.SpeechHandler;
-import speech.SpeechToTextService;
 
-import java.io.ByteArrayOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import speech.TextToSpeechService;
-
-import javax.sound.sampled.*;
 
 public class NPCInteractionScreen extends Screen {
     private EditBox inputField;

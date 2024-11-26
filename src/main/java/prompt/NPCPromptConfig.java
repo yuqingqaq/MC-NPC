@@ -1,4 +1,4 @@
-package system;
+package prompt;
 
 public class NPCPromptConfig {
     public static String generateIntroduction(String npcName, String role, String description, String relationship) {

@@ -3,6 +3,7 @@ package system;
 import api.OpenAIGPT;
 import model.NPCModel;
 import metadata.NPCMessage;
+import prompt.NPCPromptConfig;
 
 import java.util.ArrayList;
 import java.util.Arrays;

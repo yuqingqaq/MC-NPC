@@ -1,7 +1,6 @@
 package npcopenai;
 
-import controller.GameController;
-import model.NPCModel;
+import gui.screen.NPCTaskScreen;
 import net.minecraftforge.client.event.RegisterClientCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;

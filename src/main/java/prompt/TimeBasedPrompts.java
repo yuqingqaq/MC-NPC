@@ -1,10 +1,10 @@
-package npcopenai;
+package prompt;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class TimeBasedPrompts {
-    enum TimePeriod {
+    public enum TimePeriod {
         MORNING, NOON, AFTERNOON, EVENING
     }
 

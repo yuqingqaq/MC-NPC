@@ -16,7 +16,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.Level;
 import net.minecraft.network.chat.TextComponent;
-import npcopenai.NPCInteractionScreen;
+import gui.screen.NPCInteractionScreen;
 import npcopenai.NPCOpenAI;
 
 public class LibrarianNPCEntity extends Mob {

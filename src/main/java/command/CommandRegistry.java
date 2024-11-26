@@ -8,11 +8,9 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import controller.GameController;
 import entity.LibrarianNPCEntity;
 import entity.NPCDataManager;
 import entity.ProfessorNPCEntity;
-import model.NPCModel;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.BlockPos;
@@ -23,9 +21,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import npcopenai.EntityRegistry;
+import registry.EntityRegistry;
 
-import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
