@@ -145,6 +145,7 @@ public class NPCInteractionScreen extends Screen {
             // 使用语音合成将NPC的回答转换为语音
             try {
                 String ttsPath = TextToSpeechService.RefTTS(response);
+                System.out.println(ttsPath);
                 audioPlayer.playAudio(ttsPath);
             } catch (Exception e) {
                 System.err.println("Text-to-speech error: " + e.getMessage());

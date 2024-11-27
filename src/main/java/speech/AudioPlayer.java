@@ -11,6 +11,7 @@ public class AudioPlayer {
 
     public void playAudio(String filename) {
         try {
+            System.out.println("Try playing audio file: " + filename);
             InputStream fileInputStream = new FileInputStream(filename);
             player = new Player(fileInputStream);
             playerThread = new Thread(() -> {

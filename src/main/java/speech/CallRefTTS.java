@@ -32,27 +32,26 @@ public class CallRefTTS {
             File refFile = new File(referencePath);
             if (!refFile.exists()) {
                 LOGGER.log(Level.WARNING, "Reference audio file does not exist: " + referencePath);
-                return null; // Or handle more gracefully as needed
             }
+
             references.add(new ServeReferenceAudio(referencePath, "Associated reference text"));
 
             ServeTTSRequest request = new ServeTTSRequest();
-            request.setText("文本");
+            request.setText(text);
             request.setChunkLength(200);
-            request.setFormat("wav");
+            request.setFormat("mp3");
             request.setMp3Bitrate(64);
-            request.setReferences(new ArrayList<>()); // 如果有参考音频，此处应填充相应对象
+            request.setReferences(new ArrayList<>());
             request.setReferenceId(null);
             request.setNormalize(true);
             request.setOpusBitrate(-1000);
             request.setLatency("normal");
             request.setStreaming(false);
-            request.setEmotion(null); // 如果有情感参数，需要设置具体的情感对象
+            request.setEmotion(null);
             request.setMaxNewTokens(1024);
             request.setTopP(0.7);
             request.setRepetitionPenalty(1.2);
             request.setTemperature(0.7);
-            // Other parameters can be set here
 
             byte[] requestBodyBytes = msgPackMapper.writeValueAsBytes(request);
             RequestBody requestBody = RequestBody.create(requestBodyBytes, MediaType.parse("application/msgpack"));
@@ -64,7 +63,6 @@ public class CallRefTTS {
                     .build();
 
             Response response = null;
-            System.out.println(response);
 
             try {
                 response = client.newCall(httpRequest).execute();
@@ -73,13 +71,11 @@ public class CallRefTTS {
                     LOGGER.log(Level.SEVERE, "Failed to call TTS API. Code: " + response.code() + ", Message: " + response.message());
                     return null;
                 }
-                System.out.println(response);
 
                 byte[] audioData = response.body().bytes();
                 Path tempDir = Files.createTempDirectory("tts_tmp");
-                String fileName = "tts_response_" + UUID.randomUUID().toString() + ".wav";
+                String fileName = "tts_response_" + UUID.randomUUID().toString() + ".mp3";
                 Path audioFilePath = tempDir.resolve(fileName);
-                System.out.println(audioFilePath);
                 File audioFile = audioFilePath.toFile();
                 System.out.println("Audio file created at: " + audioFilePath.toAbsolutePath());
                 System.out.println("Tmp Audio File:" + audioFile.getName());
