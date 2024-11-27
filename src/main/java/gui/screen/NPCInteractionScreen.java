@@ -31,6 +31,7 @@ public class NPCInteractionScreen extends Screen {
     private HintScrollPanel hintPanel;
     private ChatScrollPanel chatPanel;
     private TutorialToast toast;
+    private boolean isToastShown = false;
 
     private Button recordButton;
     private AudioPlayer audioPlayer = new AudioPlayer();
@@ -110,7 +111,10 @@ public class NPCInteractionScreen extends Screen {
     @Override
     public void onClose() {
         this.minecraft.setScreen(null);
-        toast.hide();
+        if (this.toast != null) {
+            this.toast.hide();
+            isToastShown = false;
+        }
     }
 
     private void toggleRecording() {
@@ -153,9 +157,10 @@ public class NPCInteractionScreen extends Screen {
             // 刷新聊天面板和提示面板
             this.chatPanel.refreshPanel();
 
-            Minecraft.getInstance().getToasts().addToast(toast);
-            // 初始化进度
-            //toast.updateProgress(0.0F);
+            if(!isToastShown){
+                Minecraft.getInstance().getToasts().addToast(toast);
+                isToastShown = true;
+            }
         }
     }
 
@@ -166,9 +171,8 @@ public class NPCInteractionScreen extends Screen {
             hintHistory.add(advice);
             hintHistory.add("");
             this.hintPanel.refreshPanel();
-            //CustomToast.show(Minecraft.getInstance(), "Hint", advice);
-            //toast.updateProgress(1.0F);
-            toast.hide();
+
+            if(isToastShown) toast.hide();
         }
     }
 
