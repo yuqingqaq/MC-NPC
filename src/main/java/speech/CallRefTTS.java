@@ -28,13 +28,13 @@ public class CallRefTTS {
     public File call(String text) {
         try {
             List<ServeReferenceAudio> references = new ArrayList<>();
-            String referencePath = "audio/demo2.mp3";
-            File refFile = new File(referencePath);
-            if (!refFile.exists()) {
-                LOGGER.log(Level.WARNING, "Reference audio file does not exist: " + referencePath);
-            }
-
-            references.add(new ServeReferenceAudio(referencePath, "Associated reference text"));
+//            String referencePath = "audio/demo2.mp3";
+//            File refFile = new File(referencePath);
+//            if (!refFile.exists()) {
+//                LOGGER.log(Level.WARNING, "Reference audio file does not exist: " + referencePath);
+//            }
+//
+//            references.add(new ServeReferenceAudio(referencePath, "Associated reference text"));
 
             ServeTTSRequest request = new ServeTTSRequest();
             request.setText(text);
@@ -47,7 +47,7 @@ public class CallRefTTS {
             request.setOpusBitrate(-1000);
             request.setLatency("normal");
             request.setStreaming(false);
-            request.setEmotion(null);
+            request.setEmotion(null); // 如果有情感参数，需要设置具体的情感对象
             request.setMaxNewTokens(1024);
             request.setTopP(0.7);
             request.setRepetitionPenalty(1.2);

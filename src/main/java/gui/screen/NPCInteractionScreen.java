@@ -130,6 +130,7 @@ public class NPCInteractionScreen extends Screen {
                 String audioDataText = speechHandler.stopRecording();
                 recordButton.setMessage(new TextComponent("Start Recording"));
                 inputField.setValue(new String(audioDataText));
+                sendChatMessage();
             } catch (Exception e) {
                 System.err.println("Error stopping recording: " + e.getMessage());
             }

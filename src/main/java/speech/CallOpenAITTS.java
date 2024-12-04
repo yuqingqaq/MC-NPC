@@ -1,7 +1,5 @@
 package speech;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
 import util.JsonLoader;
@@ -19,7 +17,7 @@ import java.util.logging.Logger;
 import java.util.UUID;
 
 
-public class CallTTS {
+public class CallOpenAITTS {
     private String modelName;
     private List<String> keys;
     private Random random;
@@ -27,7 +25,7 @@ public class CallTTS {
     private ObjectMapper mapper;
     private static final Logger LOGGER = Logger.getLogger(JsonLoader.class.getName());
 
-    public CallTTS(String modelName, String keysPath) {
+    public CallOpenAITTS(String modelName, String keysPath) {
         this.modelName = modelName;
         this.random = new Random();
         this.client = new OkHttpClient();

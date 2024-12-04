@@ -1,24 +1,15 @@
 package speech;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
-import util.JsonLoader;
-import util.ResourcePathUtil;
-import java.io.BufferedReader;
+
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.io.File;
-
-
 
 public class CallWhisper {
     private String modelName;
@@ -26,78 +17,61 @@ public class CallWhisper {
     private Random random;
     private OkHttpClient client;
     private ObjectMapper mapper;
-    private static final Logger LOGGER = Logger.getLogger(JsonLoader.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(CallWhisper.class.getName());
 
-    public CallWhisper(String modelName, String keysPath) {
+    public CallWhisper() {
         this.modelName = modelName;
+        this.keys = keys;
         this.random = new Random();
         this.client = new OkHttpClient();
         this.mapper = new ObjectMapper();
 
-        //Extract API key
-        try (InputStream is = ResourcePathUtil.getResourceAsStream(keysPath)) {
-            if (is == null) {
-                LOGGER.log(Level.SEVERE, "API keys file not found: " + keysPath);
-                this.keys = Collections.emptyList();
-                return;
-            }
-
-            // 使用 BufferedReader 来从 InputStream 读取
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
-                List<String> lines = reader.lines()
-                        .map(String::trim)
-                        .filter(line -> line.length() >= 4)
-                        .collect(Collectors.toList());
-                if (lines.isEmpty()) {
-                    System.err.println("No valid API keys found in the file.");
-                    this.keys = Collections.emptyList();
-                } else {
-                    this.keys = lines;
-                }
-            }
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Failed to read API keys from file: " + e.getMessage(), e);
-            this.keys = Collections.emptyList();
+        if (keys == null || keys.isEmpty()) {
+            LOGGER.log(Level.INFO, "No API keys provided.");
         }
     }
 
     private String postProcess(String responseJson) throws IOException {
-        // The response JSON is in the format of {"text": "..."}
+        // 解析 JSON 根节点
         JsonNode rootNode = mapper.readTree(responseJson);
-        String text = rootNode.get("text").asText();
-        return text;
+        // 访问 "result" 数组的第一个元素
+        JsonNode firstResult = rootNode.path("result").get(0);
+        if (firstResult != null) {
+            // 获取 "text" 字段的文本值
+            JsonNode textNode = firstResult.get("text");
+            if (textNode != null) {
+                return textNode.asText();
+            } else {
+                throw new IOException("The 'text' field is missing in the JSON response.");
+            }
+        } else {
+            throw new IOException("The 'result' array is empty or missing in the JSON response.");
+        }
     }
 
     public String call(File audioFile) {
-        if (this.keys.isEmpty()) {
-            System.err.println("No API keys available.");
-            return "Error: API key not available.";
-        }
         try {
-            String currentKey = this.keys.get(random.nextInt(this.keys.size()));
-
-            // Build the multipart form request body
             RequestBody fileBody = RequestBody.create(
                     audioFile,
                     MediaType.parse("audio/wav")
             );
 
-            // Build the multipart request body with the file and model name
+            // 确保使用正确的字段名和部分
             MultipartBody requestBody = new MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
-                    .addFormDataPart("file", audioFile.getName(), fileBody)
-                    .addFormDataPart("model", "whisper-1")
+                    .addFormDataPart("files", audioFile.getName(), fileBody)
+                    .addFormDataPart("keys", "audio.wav")
+                    .addFormDataPart("lang", "auto")
                     .build();
 
-            // Build the POST request to the transcription endpoint
+            // 构建 POST 请求
             Request request = new Request.Builder()
-                    .url("https://apix.ai-gaochao.cn/v1/audio/transcriptions")
-                    .header("Authorization", "Bearer " + currentKey)
-                    .header("Content-Type", "multipart/form-data")
+                    .url("http://10.27.127.33:50001/api/v1/asr")
+                    .header("Authorization", "Bearer " )
                     .post(requestBody)
                     .build();
 
-            // Execute the request and handle the response
+            // 执行请求并处理响应
             try (Response response = client.newCall(request).execute()) {
                 String responseBodyStr = response.body().string();
                 if (response.isSuccessful()) {
@@ -106,13 +80,15 @@ public class CallWhisper {
                     System.err.println("Server returned error: " + response.code() + " " + response.message());
                     return "Server error: " + response.message() + " with body: " + responseBodyStr;
                 }
-            } catch (JsonProcessingException e) {
-                System.err.println("JSON processing error: " + e.getMessage());
-                return "JSON processing error: " + e.getMessage();
             }
         } catch (IOException e) {
             System.err.println("Failed to generate response from OpenAI: " + e.getMessage());
             return "Failed to generate response.";
         }
+    }
+
+    private String getApiKey() {
+        // 实现从您的配置或存储中检索 API 密钥
+        return this.keys.get(0); // 示例假设使用列表中的第一个密钥
     }
 }

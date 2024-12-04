@@ -67,7 +67,7 @@ public class SpeechHandler {
 
                 try {
                     // Pass the WAV file to speech recognition
-                    text = SpeechToTextService.ASR(wavFile);
+                    text = SpeechToTextService.CallWhisper(wavFile);
                     System.out.println("Recognized text: " + text);
 
                     // Optional: Delete the temporary file after processing
