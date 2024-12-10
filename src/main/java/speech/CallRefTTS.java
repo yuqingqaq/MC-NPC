@@ -28,20 +28,20 @@ public class CallRefTTS {
     public File call(String text) {
         try {
             List<ServeReferenceAudio> references = new ArrayList<>();
-//            String referencePath = "audio/demo2.mp3";
+            String referencePath = "/home/sunzhu/Real-time-hyperpersonification/NPC_Ref_audio/采访声音/副校长（朱世平）.MP3";
 //            File refFile = new File(referencePath);
 //            if (!refFile.exists()) {
 //                LOGGER.log(Level.WARNING, "Reference audio file does not exist: " + referencePath);
 //            }
-//
-//            references.add(new ServeReferenceAudio(referencePath, "Associated reference text"));
+
+            references.add(new ServeReferenceAudio(referencePath, "啊，各位同学，我估计还有家长，各位家长这个非常开心，在这个特殊时期，用这种特殊方式，给同学们上堂课。我是香港中文大学深圳理工学院的教授，所以咱们呢，今天就谈谈理工那些事。这个高考啊，今年高考延迟了一个月，不过也快来了哈，就是"));
 
             ServeTTSRequest request = new ServeTTSRequest();
             request.setText(text);
             request.setChunkLength(200);
             request.setFormat("mp3");
             request.setMp3Bitrate(64);
-            request.setReferences(new ArrayList<>());
+            request.setReferences(references);
             request.setReferenceId(null);
             request.setNormalize(true);
             request.setOpusBitrate(-1000);
