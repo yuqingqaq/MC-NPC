@@ -143,6 +143,13 @@ public class NPCInteractionScreen extends Screen {
             String response = GameController.getInstance().interactWithNPC(currentNPC, message);
             inputField.setValue(""); // Clear input field after sending
 
+            // 更新聊天历史
+            chatHistory.add(new NPCMessage("player", message));
+            chatHistory.add(new NPCMessage(currentNPC.getNPCName(), response));
+
+            // 刷新聊天面板和提示面板
+            this.chatPanel.refreshPanel();
+
             // 使用语音合成将NPC的回答转换为语音
             try {
                 String ttsPath = TextToSpeechService.RefTTS(response);
@@ -151,13 +158,6 @@ public class NPCInteractionScreen extends Screen {
             } catch (Exception e) {
                 System.err.println("Text-to-speech error: " + e.getMessage());
             }
-
-            // 更新聊天历史
-            chatHistory.add(new NPCMessage("player", message));
-            chatHistory.add(new NPCMessage(currentNPC.getNPCName(), response));
-
-            // 刷新聊天面板和提示面板
-            this.chatPanel.refreshPanel();
 
             if(!isToastShown){
                 Minecraft.getInstance().getToasts().addToast(toast);
