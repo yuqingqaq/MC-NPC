@@ -2,7 +2,6 @@ package entity;
 
 import controller.GameController;
 import model.NPCModel;
-import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -16,7 +15,8 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.Level;
 import net.minecraft.network.chat.TextComponent;
-import gui.screen.NPCInteractionScreen;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 import npcopenai.NPCOpenAI;
 
 public class LibrarianNPCEntity extends Mob {
@@ -92,24 +92,20 @@ public class LibrarianNPCEntity extends Mob {
 
         int index = this.entityData.get(NPC_INDEX);
         if (!this.level.isClientSide) {
-            System.out.println("Index of server: " + index);
             NPCModel npc = GameController.getInstance().getNPC(index);
             player.displayClientMessage(new TextComponent("你好，我是" + npc.getNPCName()), false);
             return InteractionResult.sidedSuccess(this.level.isClientSide);
+        } else {
+            return DistExecutor.unsafeRunForDist(() -> () -> {
+                NPCModel npc = GameController.getInstance().getNPC(index);
+                NPCEntityClientHandler.handleInteraction(player, npc);
+                return InteractionResult.sidedSuccess(true);
+            }, () -> () -> InteractionResult.PASS);
         }
 
-        // 客户端逻辑
-        try {
-            System.out.println("Index of client: " + index);
-            NPCModel npc = GameController.getInstance().getNPC(index);
-            Minecraft.getInstance().setScreen(new NPCInteractionScreen(npc));
-            NPCOpenAI.getLogger().info("Interacting with NPC: " + npc.getNPCName());
-        } catch (IndexOutOfBoundsException e) {
-            NPCOpenAI.getLogger().error("No NPCs available for interaction.");
-            return InteractionResult.FAIL;
-        }
-
-        return InteractionResult.sidedSuccess(this.level.isClientSide);
+//        // 使用客户端处理类来处理交互逻辑
+//        DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> () -> NPCEntityClientHandler.interactWithNPC(player, npc));
+//        return InteractionResult.sidedSuccess(this.level.isClientSide);
     }
 
     @Override

@@ -8,8 +8,9 @@ import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.client.Minecraft;
+import net.minecraftforge.api.distmarker.Dist;
 
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = "npcopenai")
 public class ClientCommandRegistration {
 
     @SubscribeEvent
@@ -24,7 +25,6 @@ public class ClientCommandRegistration {
     }
 
     private static void openNpcGui() {
-        // 从你的游戏控制器获取NPC数据，这里只是一个示例
         Minecraft.getInstance().setScreen(new NPCTaskScreen()); // 打开具有NPC信息的任务界面
     }
 }

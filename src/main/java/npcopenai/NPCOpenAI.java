@@ -45,8 +45,14 @@ public class NPCOpenAI {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
 
         ItemRegistry.init();
+        LOGGER.info(" ItemRegistry Initialized" );
+
         EntityRegistry.init();
+        LOGGER.info(" EntityRegistry Initialized");
+
         MinecraftForge.EVENT_BUS.register(this);
+        LOGGER.info(" MinecraftForge.EVENT_BUS Registered");
+
     }
 
     public static Logger getLogger() {
@@ -89,7 +95,7 @@ public class NPCOpenAI {
         NPCDataManager.saveAllNPCs(world);  // 保存所有 NPC 数据
     }
 
-    @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+    @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistryEvents {
 
         @SubscribeEvent

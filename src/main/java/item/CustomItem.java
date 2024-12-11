@@ -1,15 +1,15 @@
 package item;
 
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 import controller.GameController;
 import model.NPCModel;
-import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.Level;
 import npcopenai.NPCOpenAI;
-import gui.screen.NPCTaskScreen;
 
 public class CustomItem extends Item {
     public CustomItem() {
@@ -24,12 +24,7 @@ public class CustomItem extends Item {
         if (world.isClientSide) {
             NPCOpenAI.getLogger().info("Executing on client side");
             if (context.getPlayer() != null) {
-                NPCModel npc = GameController.getInstance().getNpcs().get(0); // Fetch the first NPC for demonstration
-                NPCOpenAI.getLogger().info("item.CustomItem used on: " + npc.getNPCName());
-                //Minecraft.getInstance().setScreen(new NPCInteractionScreen(npc));
-                Minecraft.getInstance().setScreen(new NPCTaskScreen());
-                return InteractionResult.SUCCESS;
-            } else {
+                DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> CustomItemClientHandler::openNPCTaskScreen);            } else {
                 NPCOpenAI.getLogger().info("No player found");
             }
         } else {
@@ -37,4 +32,5 @@ public class CustomItem extends Item {
         }
         return InteractionResult.PASS;
     }
+
 }

@@ -1,13 +1,13 @@
 package item;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 import npcopenai.NPCOpenAI;
-import gui.screen.NPCTimeSortedScreen;
 
 public class TimedCustomItem extends Item {
     public TimedCustomItem() {
@@ -22,11 +22,7 @@ public class TimedCustomItem extends Item {
         if (world.isClientSide) {
             NPCOpenAI.getLogger().info("Executing on client side");
             if (context.getPlayer() != null) {
-                //NPCModel npc = GameController.getInstance().getNpcs().get(0); // Fetch the first NPC for demonstration
-                //NPCOpenAI.getLogger().info("item.TimedCustomItem used on: " + npc.getNPCName());
-                //Minecraft.getInstance().setScreen(new NPCInteractionScreen(npc));
-                Minecraft.getInstance().setScreen(new NPCTimeSortedScreen());
-                return InteractionResult.SUCCESS;
+                DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> TimedCustomItemClientHandler::openNPCTimeSortedScreen);                return InteractionResult.SUCCESS;
             } else {
                 NPCOpenAI.getLogger().info("No player found");
             }
