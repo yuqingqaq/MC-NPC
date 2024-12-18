@@ -17,7 +17,7 @@ public class AudioPlayer {
             playerThread = new Thread(() -> {
                 try {
                     player.play();
-                    //System.out.println("Audio playback started.");
+                    System.out.println("Audio playback started.");
                 } catch (Exception e) {
                     System.err.println("Error playing audio file: " + e.getMessage());
                 }

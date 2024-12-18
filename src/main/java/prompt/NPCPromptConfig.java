@@ -34,5 +34,6 @@ public class NPCPromptConfig {
                 "[规则：使用自然对话引导互动]"
         );
     }
+
 }
 

@@ -5,6 +5,7 @@ import controller.GameController;
 import interfaces.GameControllerInterface;
 import system.ExpertSystem;
 import system.NPCSystem;
+import clinic.huatuoAPI;
 import view.GameView;
 import com.fasterxml.jackson.core.type.TypeReference;
 import model.NPCModel;
@@ -28,6 +29,7 @@ public class GameController implements GameControllerInterface {
     private ExpertSystem expertSystem;
     private OpenAIGPT gptModel;
     private OpenAIGPT expertModel;
+    private huatuoAPI clinicModel;
 
     public static GameController getInstance() {
         if (instance == null) {
@@ -60,8 +62,9 @@ public class GameController implements GameControllerInterface {
         );
         gptModel = new OpenAIGPT("gpt-3.5-turbo","config/gpt3keys.txt");
         expertModel = new OpenAIGPT("gpt-3.5-turbo","config/gpt3keys.txt");
+        clinicModel = new huatuoAPI("huatuogpt-lg-main");
 
-        this.npcSystem = new NPCSystem(gptModel);
+        this.npcSystem = new NPCSystem(gptModel,clinicModel);
         this.expertSystem = new ExpertSystem(expertModel);
 
     }
@@ -88,6 +91,7 @@ public class GameController implements GameControllerInterface {
         String language = isMostlyChinese(userInput) ? "zh" : "en";
 
         String response = npcSystem.interact(npc, userInput, language);
+
 
         return response;
     }
