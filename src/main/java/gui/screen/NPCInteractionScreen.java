@@ -184,13 +184,14 @@ public class NPCInteractionScreen extends Screen {
     public boolean mouseScrolled(double mouseX, double mouseY, double scroll) {
         double screenWidth = this.width; // 假设 'this.width' 是屏幕宽度
 
-        if (mouseX < screenWidth * 2 / 3.0) {
+        if (mouseX < screenWidth * 3 / 3.0) {
             // 鼠标在屏幕左侧2/3区域内
             return chatPanel.mouseScrolled(mouseX, mouseY, scroll);
-        } else {
-            // 鼠标在屏幕右侧1/3区域内
-            return hintPanel.mouseScrolled(mouseX, mouseY, scroll);
         }
+//        else {
+//            // 鼠标在屏幕右侧1/3区域内
+//            return hintPanel.mouseScrolled(mouseX, mouseY, scroll);
+//        }
     }
 
     @Override
