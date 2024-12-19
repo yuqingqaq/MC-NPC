@@ -61,7 +61,7 @@ public class GameController implements GameControllerInterface {
                 "game_assets",
                 new TypeReference<List<ItemModel>>() {}
         );
-        gptModel = new OpenAIGPT("gpt-3.5-turbo","config/gpt3keys.txt");
+        gptModel = new OpenAIGPT("gpt-4o","config/gpt3keys.txt");
         expertModel = new OpenAIGPT("gpt-3.5-turbo","config/gpt3keys.txt");
         clinicModel = new huatuoAPI("huatuogpt-lg-main");
 

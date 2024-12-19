@@ -138,6 +138,7 @@ public class NPCInteractionScreenwithExpert extends Screen {
 
     private void sendChatMessage() {
         String message = inputField.getValue().trim();
+        String npcName = currentNPC.getNPCName();
         if (!message.isEmpty()) {
             String response = GameController.getInstance().interactWithNPC(currentNPC, message);
             inputField.setValue(""); // Clear input field after sending
@@ -151,7 +152,7 @@ public class NPCInteractionScreenwithExpert extends Screen {
 
             // 使用语音合成将NPC的回答转换为语音
             try {
-                String ttsPath = TextToSpeechService.RefTTS(response);
+                String ttsPath = TextToSpeechService.RefTTS(response,npcName);
                 System.out.println(ttsPath);
                 audioPlayer.playAudio(ttsPath);
             } catch (Exception e) {

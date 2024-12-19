@@ -6,7 +6,7 @@
       "name": "徐扬生",
       "description": "在礼文堂参加“与新生面对面”谈话活动，回答新生与家长的问题",
       "event": "与校长面对面",
-      "role": "香港中文大学（深圳）的校长，中国工程院院士",
+      "role": "一位中国工程院院士，同时担任香港中文大学（深圳）的校长。他早年在美国宾夕法尼亚大学获得博士学位，后在美国卡耐基梅隆大学和香港中文大学工作多年。自2013年起，他担任香港中文大学（深圳）的首任校长。徐教授在机器人和智能系统领域做出了重要贡献，专注于空间机器人、服务机器人、穿戴式人机界面、智慧汽车、动态稳定系统和机器学习等方面的研究。他已经发表了六部专著和300多篇国际学术论文。他是中国工程院院士、美国国家工程院外籍院士、欧洲科学院院士、国际宇航科学院院士、国际电机及电子工程师学会院士、国际欧亚科学院院士以及香港工程科学院院士。",
       "npcTask": "解答新生与家长们的问题，恭喜新生来到香港中文大学（深圳），鼓励他们开启人生的新篇章",
       "time": "Morning",
       "location": "礼文堂",
@@ -41,6 +41,126 @@
       "tasks": [
         {
           "task_id": "2",
+          "description": "帮助Chen Liu找到合适的学习资源和策略",
+          "completion_criteria": "提供有用的学习资源和策略，并进行一次学习会话",
+          "completed": false,
+          "object": "Academic Support",
+          "reward": ["Academic Helper"],
+          "plot_significance": "玩家通过提供学习资源帮助Student Liu改善学习效果，同时也增强了自己的学习能力。"
+        }
+      ]
+    },
+    {
+      "name": "唐文方",
+      "description": "在行政楼举办“新生第一课”。",
+      "event": "新生第一课",
+      "role": "香港中文大学（深圳）校长讲座教授、副校长和深圳先进高分子材料研究院院长",
+      "npcTask": "解答新生与家长们的问题，恭喜新生来到香港中文大学（深圳），鼓励他们开启人生的新篇章",
+      "time": "Morning",
+      "location": "礼文堂",
+      "relationship": "大学副校长、教授",
+      "dialogues": [
+        "同学们好，欢迎你们来到香港中文大学（深圳）。"
+      ],
+      "tasks": [
+        {
+          "task_id": "3",
+          "description": "帮助Chen Liu找到合适的学习资源和策略",
+          "completion_criteria": "提供有用的学习资源和策略，并进行一次学习会话",
+          "completed": false,
+          "object": "Academic Support",
+          "reward": ["Academic Helper"],
+          "plot_significance": "玩家通过提供学习资源帮助Student Liu改善学习效果，同时也增强了自己的学习能力。"
+        }
+      ]
+    },
+    {
+      "name": "戴建岗",
+      "description": "在行政楼举办“新生第一课”。",
+      "event": "新生第一课",
+      "role": "香港中文大学（深圳）校长讲座教授、副校长和深圳先进高分子材料研究院院长",
+      "npcTask": "解答新生与家长们的问题，恭喜新生来到香港中文大学（深圳），鼓励他们开启人生的新篇章",
+      "time": "Morning",
+      "location": "礼文堂",
+      "relationship": "大学副校长、教授",
+      "dialogues": [
+        "同学们好，欢迎你们来到香港中文大学（深圳）。"
+      ],
+      "tasks": [
+        {
+          "task_id": "4",
+          "description": "帮助Chen Liu找到合适的学习资源和策略",
+          "completion_criteria": "提供有用的学习资源和策略，并进行一次学习会话",
+          "completed": false,
+          "object": "Academic Support",
+          "reward": ["Academic Helper"],
+          "plot_significance": "玩家通过提供学习资源帮助Student Liu改善学习效果，同时也增强了自己的学习能力。"
+        }
+      ]
+    },
+    {
+      "name": " 熊伟",
+      "description": "在行政楼举办“新生第一课”。",
+      "event": "新生第一课",
+      "role": "香港中文大学（深圳）校长讲座教授、副校长和深圳先进高分子材料研究院院长",
+      "npcTask": "解答新生与家长们的问题，恭喜新生来到香港中文大学（深圳），鼓励他们开启人生的新篇章",
+      "time": "Morning",
+      "location": "礼文堂",
+      "relationship": "大学副校长、教授",
+      "dialogues": [
+        "同学们好，欢迎你们来到香港中文大学（深圳）。"
+      ],
+      "tasks": [
+        {
+          "task_id": "5",
+          "description": "帮助Chen Liu找到合适的学习资源和策略",
+          "completion_criteria": "提供有用的学习资源和策略，并进行一次学习会话",
+          "completed": false,
+          "object": "Academic Support",
+          "reward": ["Academic Helper"],
+          "plot_significance": "玩家通过提供学习资源帮助Student Liu改善学习效果，同时也增强了自己的学习能力。"
+        }
+      ]
+    },
+    {
+      "name": "郑仲煊",
+      "description": "在行政楼举办“新生第一课”。",
+      "event": "新生第一课",
+      "role": "香港中文大学（深圳）校长讲座教授、副校长和深圳先进高分子材料研究院院长",
+      "npcTask": "解答新生与家长们的问题，恭喜新生来到香港中文大学（深圳），鼓励他们开启人生的新篇章",
+      "time": "Morning",
+      "location": "礼文堂",
+      "relationship": "大学副校长、教授",
+      "dialogues": [
+        "同学们好，欢迎你们来到香港中文大学（深圳）。"
+      ],
+      "tasks": [
+        {
+          "task_id": "6",
+          "description": "帮助Chen Liu找到合适的学习资源和策略",
+          "completion_criteria": "提供有用的学习资源和策略，并进行一次学习会话",
+          "completed": false,
+          "object": "Academic Support",
+          "reward": ["Academic Helper"],
+          "plot_significance": "玩家通过提供学习资源帮助Student Liu改善学习效果，同时也增强了自己的学习能力。"
+        }
+      ]
+    },
+    {
+      "name": "叶小钢",
+      "description": "在行政楼举办“新生第一课”。",
+      "event": "新生第一课",
+      "role": "香港中文大学（深圳）校长讲座教授、副校长和深圳先进高分子材料研究院院长",
+      "npcTask": "解答新生与家长们的问题，恭喜新生来到香港中文大学（深圳），鼓励他们开启人生的新篇章",
+      "time": "Morning",
+      "location": "礼文堂",
+      "relationship": "大学副校长、教授",
+      "dialogues": [
+        "同学们好，欢迎你们来到香港中文大学（深圳）。"
+      ],
+      "tasks": [
+        {
+          "task_id": "7",
           "description": "帮助Chen Liu找到合适的学习资源和策略",
           "completion_criteria": "提供有用的学习资源和策略，并进行一次学习会话",
           "completed": false,

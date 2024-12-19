@@ -139,6 +139,7 @@ public class NPCInteractionScreen extends Screen {
 
     private void sendChatMessage() {
         String message = inputField.getValue().trim();
+        String npcName = currentNPC.getNPCName();
         if (!message.isEmpty()) {
             String response = GameController.getInstance().interactWithNPC(currentNPC, message);
             inputField.setValue(""); // Clear input field after sending
@@ -146,13 +147,14 @@ public class NPCInteractionScreen extends Screen {
             // 更新聊天历史
             chatHistory.add(new NPCMessage("player", message));
             chatHistory.add(new NPCMessage(currentNPC.getNPCName(), response));
+            System.out.println("Response is:" + response);
 
             // 刷新聊天面板和提示面板
             this.chatPanel.refreshPanel();
 
             // 使用语音合成将NPC的回答转换为语音
             try {
-                String ttsPath = TextToSpeechService.RefTTS(response);
+                String ttsPath = TextToSpeechService.RefTTS(response,npcName);
                 System.out.println(ttsPath);
                 audioPlayer.playAudio(ttsPath);
             } catch (Exception e) {

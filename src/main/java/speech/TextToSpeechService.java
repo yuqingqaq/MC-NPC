@@ -11,10 +11,10 @@ public class TextToSpeechService {
         return ttsFile.getAbsolutePath();
     }
 
-    public static String RefTTS(String text) throws Exception {
+    public static String RefTTS(String text,String npcName) throws Exception {
         CallRefTTS TTSRefModel = new CallRefTTS("http://10.27.127.33:60002/v1/tts", "YOUR_API_KEY");
-        File ttsFile = TTSRefModel.call(text);
-        System.out.println("Audio File without Reference：" + ttsFile.getAbsolutePath());
+        File ttsFile = TTSRefModel.call(text,npcName);
+        System.out.println("Audio File with Reference：" + ttsFile.getAbsolutePath());
         return ttsFile.getAbsolutePath();
     }
 }
