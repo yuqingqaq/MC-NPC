@@ -62,7 +62,7 @@ public class NPCInteractionScreen extends Screen {
 //            getAdvice();
 //        }));
 
-        this.sendButton = this.addRenderableWidget(new Button(centerX + 150, centerY + 65, 50, 20, new TextComponent("Send"), button -> {
+        this.sendButton = this.addRenderableWidget(new Button(centerX + 145, centerY + 65, 50, 20, new TextComponent("Send"), button -> {
             sendChatMessage();
         }));
 
