@@ -98,6 +98,8 @@ public class ResponseData {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Choice {
+        private Map<String, Object> additionalProperties = new HashMap<>();
+
         @JsonProperty("index")
         private int index;
 
@@ -110,16 +112,16 @@ public class ResponseData {
         @JsonProperty("finish_reason")
         private String finishReason;
 
-        @JsonProperty("content_filter_results")
-        private String content_filter_results;
-
-        public String getContentFilterResults() {
-            return content_filter_results;
+        @JsonAnyGetter
+        public Map<String, Object> getAdditionalProperties() {
+            return this.additionalProperties;
         }
 
-        public void setContentFilterResults(String content_filter_results) {
-            this.content_filter_results = content_filter_results;
+        @JsonAnySetter
+        public void setAdditionalProperty(String name, Object value) {
+            this.additionalProperties.put(name, value);
         }
+
 
         public int getIndex() {
             return index;

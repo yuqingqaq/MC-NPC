@@ -28,7 +28,7 @@ public class CallRefTTS {
     public File call(String text) {
         try {
             List<ServeReferenceAudio> references = new ArrayList<>();
-            String referencePath = "/home/sunzhu/Real-time-hyperpersonification/NPC_Ref_audio/采访声音/副校长（朱世平）.MP3";
+            String referencePath = "/home/sunzhu/Real-time-hyperpersonification/NPC_Ref_audio/采访声音/副校长（朱世平）.mp3";
 //            File refFile = new File(referencePath);
 //            if (!refFile.exists()) {
 //                LOGGER.log(Level.WARNING, "Reference audio file does not exist: " + referencePath);

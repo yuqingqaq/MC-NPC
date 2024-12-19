@@ -1,27 +1,26 @@
 package gui.screen;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import component.ChatScrollPanel;
 import component.HintScrollPanel;
-import com.mojang.blaze3d.vertex.PoseStack;
 import controller.GameController;
 import metadata.NPCMessage;
 import model.NPCModel;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.toasts.TutorialToast;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.toasts.TutorialToast;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TextComponent;
 import speech.AudioPlayer;
 import speech.SpeechHandler;
+import speech.TextToSpeechService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import speech.TextToSpeechService;
-
-public class NPCInteractionScreen extends Screen {
+public class NPCInteractionScreenwithExpert extends Screen {
     private EditBox inputField;
     private Button sendButton;
     private Button hintButton;
@@ -37,7 +36,7 @@ public class NPCInteractionScreen extends Screen {
     private AudioPlayer audioPlayer = new AudioPlayer();
     private SpeechHandler speechHandler = new SpeechHandler();
 
-    public NPCInteractionScreen(NPCModel npc) {
+    public NPCInteractionScreenwithExpert(NPCModel npc) {
         super(new TextComponent("NPC Interaction: " + npc.getNPCName()));
         this.currentNPC = npc;
         this.chatHistory = npc.getChatHistory();
@@ -52,17 +51,17 @@ public class NPCInteractionScreen extends Screen {
         int centerY = this.height / 2;
         int centerX = this.width  / 2;
 
-        this.inputField = new EditBox(this.font, centerX - 190, centerY + 65, 220, 20, new TextComponent("Enter Message"));
+        this.inputField = new EditBox(this.font, centerX - 190, centerY + 65, 200, 20, new TextComponent("Enter Message"));
         this.addWidget(this.inputField);
         // 添加录音按钮
-        recordButton = this.addRenderableWidget(new Button(centerX + 40, centerY + 65, 100, 20, new TextComponent("Start Recording"), button -> {
+        recordButton = this.addRenderableWidget(new Button(centerX - 190, centerY + 90, 110, 20, new TextComponent("Start Recording"), button -> {
             toggleRecording();
         }));
-//        this.hintButton = this.addRenderableWidget(new Button(centerX + 75, centerY + 65, 80, 20, new TextComponent("Hint"), button -> {
-//            getAdvice();
-//        }));
+        this.hintButton = this.addRenderableWidget(new Button(centerX + 75, centerY + 65, 80, 20, new TextComponent("Hint"), button -> {
+            getAdvice();
+        }));
 
-        this.sendButton = this.addRenderableWidget(new Button(centerX + 150, centerY + 65, 50, 20, new TextComponent("Send"), button -> {
+        this.sendButton = this.addRenderableWidget(new Button(centerX - 70, centerY + 90, 80, 20, new TextComponent("Send"), button -> {
             sendChatMessage();
         }));
 
@@ -71,18 +70,18 @@ public class NPCInteractionScreen extends Screen {
         // 计算 ScrollPanel 的顶部位置
         int panelTop = centerY - 87; // ScrollPanel 的顶部位置
 
-//        // ScrollPanel 的其他参数
-//        int hintPanelWidth = 150;  // 面板宽度
-//        int hintPanelHeight = 140; // 面板高度
-//        int hintPanelLeft = 250;    // 面板左侧位置
-//        int hintPanelBorder = 5;   // 面板边框大小
+        // ScrollPanel 的其他参数
+        int hintPanelWidth = 150;  // 面板宽度
+        int hintPanelHeight = 140; // 面板高度
+        int hintPanelLeft = 250;    // 面板左侧位置
+        int hintPanelBorder = 5;   // 面板边框大小
         int scrollBarWidth = 5; // 滚动条宽度
-//
-//        // 在 NPCInteractionScreen 的 init 方法中
-//        this.hintPanel = new HintScrollPanel(mc, hintPanelWidth, hintPanelHeight, panelTop, hintPanelLeft, hintPanelBorder, scrollBarWidth, hintHistory);
+
+        // 在 NPCInteractionScreen 的 init 方法中
+        this.hintPanel = new HintScrollPanel(mc, hintPanelWidth, hintPanelHeight, panelTop, hintPanelLeft, hintPanelBorder, scrollBarWidth, hintHistory);
 
         // ScrollPanel 的其他参数
-        int chatPanelWidth = 440;  // 面板宽度
+        int chatPanelWidth = 250;  // 面板宽度
         int chatPanelHeight = 140; // 面板高度
         int chatPanelLeft = 15;    // 面板左侧位置
         int chatPanelBorder = 5;   // 面板边框大小
@@ -96,15 +95,15 @@ public class NPCInteractionScreen extends Screen {
         }));
 
         this.chatPanel.refreshPanel();
-        //this.hintPanel.refreshPanel();
+        this.hintPanel.refreshPanel();
 
         //this.toast = new PersistentToast(TutorialToast.Icons.RECIPE_BOOK,"Title","Please ask expert for advices",true);
         //Minecraft.getInstance().getToasts().addToast(toast);
-//        TextComponent title = new TextComponent("Don't know how to reply？");
-//        TextComponent messageContent = new TextComponent("Ask expert for advice！");
-//
-//        // 创建 TutorialToast 实例
-//        this.toast = new TutorialToast(TutorialToast.Icons.RECIPE_BOOK, title, messageContent, true);
+        TextComponent title = new TextComponent("Don't know how to reply？");
+        TextComponent messageContent = new TextComponent("Ask expert for advice！");
+
+        // 创建 TutorialToast 实例
+        this.toast = new TutorialToast(TutorialToast.Icons.RECIPE_BOOK, title, messageContent, true);
 
     }
 
@@ -159,10 +158,10 @@ public class NPCInteractionScreen extends Screen {
                 System.err.println("Text-to-speech error: " + e.getMessage());
             }
 
-//            if(!isToastShown){
-//                Minecraft.getInstance().getToasts().addToast(toast);
-//                isToastShown = true;
-//            }
+            if(!isToastShown){
+                Minecraft.getInstance().getToasts().addToast(toast);
+                isToastShown = true;
+            }
         }
     }
 
@@ -196,10 +195,10 @@ public class NPCInteractionScreen extends Screen {
         this.renderBackground(poseStack);
         super.render(poseStack, mouseX, mouseY, partialTicks);
         this.inputField.render(poseStack, mouseX, mouseY, partialTicks);
-        //this.hintPanel.render(poseStack, mouseX, mouseY, partialTicks); // Render ScrollPanel
+        this.hintPanel.render(poseStack, mouseX, mouseY, partialTicks); // Render ScrollPanel
         this.chatPanel.render(poseStack, mouseX, mouseY, partialTicks); // Render ScrollPanel
-        drawCenteredString(poseStack, this.font, "新生第一课", this.width / 2 - 170, 20, 0xFFFFFF);
-        //drawCenteredString(poseStack, this.font, "Expert", this.width / 2 + 65, 20, 0xFFFFFF);
+        drawCenteredString(poseStack, this.font, "对话", this.width / 2 - 150, 20, 0xFFFFFF);
+        drawCenteredString(poseStack, this.font, "Expert", this.width / 2 + 65, 20, 0xFFFFFF);
 
     }
 
