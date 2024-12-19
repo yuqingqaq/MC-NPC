@@ -198,7 +198,7 @@ public class NPCInteractionScreen extends Screen {
         this.inputField.render(poseStack, mouseX, mouseY, partialTicks);
         this.hintPanel.render(poseStack, mouseX, mouseY, partialTicks); // Render ScrollPanel
         this.chatPanel.render(poseStack, mouseX, mouseY, partialTicks); // Render ScrollPanel
-        drawCenteredString(poseStack, this.font, "NPC Interaction", this.width / 2 - 150, 20, 0xFFFFFF);
+        drawCenteredString(poseStack, this.font, "对话", this.width / 2 - 150, 20, 0xFFFFFF);
         drawCenteredString(poseStack, this.font, "Expert", this.width / 2 + 65, 20, 0xFFFFFF);
 
     }

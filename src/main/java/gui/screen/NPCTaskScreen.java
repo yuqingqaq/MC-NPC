@@ -85,13 +85,16 @@ public class NPCTaskScreen extends Screen {
             }
             NPCModel npc = npcs.get(i);
             String name = npc.getNPCName();
-            String role = npc.getRole();
+//            String role = npc.getRole();
+            String event = npc.getEvent();
+
             int xBase = columnWidth * column + 30; // Set base x position for left alignment
             int xName = xBase;
-            int xRole = xName + font.width(name) + 5;
+//            int xRole = xName + font.width(name) + 5;
+            int xEvent = xName + font.width(name) + 5;
 
             // Calculate the total width of the NPC block
-            int blockWidth = font.width(name) + 5 + font.width(role);
+            int blockWidth = font.width(name) + 5 + font.width(event);
             maxWidth = Math.max(maxWidth, blockWidth);
 
             ResourceLocation icon = npc.areAllTasksCompleted() ? COMPLETED : PENDING;
@@ -99,11 +102,16 @@ public class NPCTaskScreen extends Screen {
             blit(poseStack, xName - 20, yOffset - 4, 0, 0, 16, 16, 16, 16);
 
             font.draw(poseStack, name, xName, yOffset, 0xFFFFFF);  // Left-aligned NPC name
-            font.draw(poseStack, role, xRole, yOffset, 0xFFFFFF);  // Left-aligned NPC role
+//            font.draw(poseStack, event, xRole, yOffset, 0xFFFFFF);  // Left-aligned NPC role
+            font.draw(poseStack, event, xEvent, yOffset, 0xFFFFFF);  // Left-aligned NPC role
 
             // Check if the mouse is over the NPC name or role
+//            if ((mouseX >= xName && mouseX <= xName + font.width(name) && mouseY >= yOffset && mouseY <= yOffset + font.lineHeight) ||
+//                    (mouseX >= xRole && mouseX <= xRole + font.width(role) && mouseY >= yOffset && mouseY <= yOffset + font.lineHeight)) {
+//                renderTooltip(poseStack, new TextComponent(npc.getDialogues().get(0)), mouseX, mouseY);
+//            }
             if ((mouseX >= xName && mouseX <= xName + font.width(name) && mouseY >= yOffset && mouseY <= yOffset + font.lineHeight) ||
-                    (mouseX >= xRole && mouseX <= xRole + font.width(role) && mouseY >= yOffset && mouseY <= yOffset + font.lineHeight)) {
+                    (mouseX >= xEvent && mouseX <= xEvent + font.width(event) && mouseY >= yOffset && mouseY <= yOffset + font.lineHeight)) {
                 renderTooltip(poseStack, new TextComponent(npc.getDialogues().get(0)), mouseX, mouseY);
             }
             yOffset += 30;  // Increment the vertical offset for the next NPC

@@ -44,7 +44,8 @@ public class GameController implements GameControllerInterface {
 
     private void loadGameData() {
 
-        npcs = JsonLoader.loadNPCsFromJson("json/psy_sim.json");
+//        npcs = JsonLoader.loadNPCsFromJson("json/psy_sim.json");
+        npcs = JsonLoader.loadNPCsFromJson("json/campus_tour.json");
         backpackItems = JsonLoader.loadObjectListFromJson(
                 "json/playerBackpack.json",
                 "player_backpack",

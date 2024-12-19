@@ -187,6 +187,10 @@ dependencies {
     // implementation fg.deobf("blank:coolmod-${mc_version}:${coolmod_version}")
 
     // For more info...
+    implementation 'dev.langchain4j:langchain4j-open-ai:0.36.2'
+    implementation 'dev.langchain4j:langchain4j:0.36.2'
+    implementation 'dev.langchain4j:langchain4j-easy-rag:0.36.2'
+    implementation 'dev.langchain4j:langchain4j-chroma:0.36.2'
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 }

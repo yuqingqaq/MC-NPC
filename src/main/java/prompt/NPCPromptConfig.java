@@ -35,5 +35,12 @@ public class NPCPromptConfig {
         );
     }
 
+    public static String campusTourIntroInZh(String npcName, String role, String description, String relationship, String task){
+        return String.format("你现在位于香港中文大学（深圳）内。你是一个智能Agent，需要模拟%s这个人，他/她是%s，目前%s。你现在在跟认为你是 %s 的人交谈，你的任务是%s。可以适当寒暄。" +
+                        "每次你将收到两条消息，一条是用户与你的对话，另一条是当前用户的任务完成状态。"+
+                        "引导用户完成其任务",
+                npcName, role, description, relationship, task);
+    }
+
 }
 

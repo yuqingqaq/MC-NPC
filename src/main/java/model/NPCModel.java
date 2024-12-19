@@ -11,6 +11,8 @@ public class NPCModel {
     private String name;
     private String description;
     private String role;
+    private String npcTask;
+    private String event;
     private List<String> dialogues;
     private List<TaskModel> tasks;
     private List<NPCMessage> dialogueHistory;
@@ -20,10 +22,12 @@ public class NPCModel {
     private String relationship;
     private String location;
 
-    public NPCModel(String name, String description, String role, List<String> dialogues, List<TaskModel> tasks, String time, String relationship, String location) {
+    public NPCModel(String name, String description, String role, String event, String npcTask, List<String> dialogues, List<TaskModel> tasks, String time, String relationship, String location) {
         this.name = name;
         this.description = description;
         this.role = role;
+        this.event = event;
+        this.npcTask = npcTask;
         this.dialogues = new ArrayList<>(dialogues);
         this.tasks = new ArrayList<>(tasks);
         this.dialogueHistory = new ArrayList<>();
@@ -33,15 +37,18 @@ public class NPCModel {
         this.relationship = relationship;
         this.location = location;
     }
-    public NPCModel(String name, String description, String role, List<String> dialogues, List<TaskModel> tasks) {
+    public NPCModel(String name, String description, String role, String event, String npcTask, List<String> dialogues, List<TaskModel> tasks) {
         this.name = name;
         this.description = description;
         this.role = role;
+        this.event = event;
+        this.npcTask = npcTask;
         this.dialogues = new ArrayList<>(dialogues);
         this.tasks = new ArrayList<>(tasks);
         this.dialogueHistory = new ArrayList<>();
         this.chatHistory = new ArrayList<>();
         this.items = new ArrayList<>();
+        this.npcTask = npcTask;
     }
     public String getNPCName(){
         return name;
@@ -52,6 +59,8 @@ public class NPCModel {
     public String getRole(){
         return role;
     }
+    public String getEvent(){return event;}
+    public String getNpcTask(){return npcTask;}
     public List<TaskModel> getTasks(){
         return tasks;
     }

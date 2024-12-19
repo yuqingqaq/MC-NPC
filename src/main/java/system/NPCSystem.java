@@ -37,7 +37,7 @@ public class NPCSystem {
         }
         else {
             if ("zh".equals(language)) {
-                introduction = NPCPromptConfig.generateIntroductionInZh(npc.getNPCName(), npc.getRole(), npc.getDescription(), npc.getRelationship());
+                introduction = NPCPromptConfig.campusTourIntroInZh(npc.getNPCName(), npc.getRole(), npc.getDescription(), npc.getRelationship(),npc.getNpcTask());
                 cautionNote = NPCPromptConfig.generateCautionNoteInZh();
             } else {
                 introduction = NPCPromptConfig.generateIntroduction(npc.getNPCName(), npc.getRole(), npc.getDescription(), npc.getRelationship());
