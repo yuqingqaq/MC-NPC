@@ -32,6 +32,17 @@ public class ResponseData {
     @JsonProperty("error")
     private Error error;
 
+    private Map<String, Object> additionalProperties = new HashMap<>();
+    @JsonAnyGetter
+    public Map<String, Object> getAdditionalProperties() {
+        return this.additionalProperties;
+    }
+
+    @JsonAnySetter
+    public void setAdditionalProperty(String name, Object value) {
+        this.additionalProperties.put(name, value);
+    }
+
     public String getId() {
         return id;
     }
