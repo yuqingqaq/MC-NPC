@@ -25,7 +25,7 @@ public class LibrarianNPCEntity extends Mob {
     public LibrarianNPCEntity(EntityType<? extends Mob> type, Level world) {
         super(type, world);
     }
-    private String currentSpeechText = "我最近感觉有些焦虑，你能帮帮我吗";
+    private String currentSpeechText = "同学们好，欢迎你们来到香港中文大学（深圳）!";
     private boolean isTalking = true;
 
     public void startTalking(String text) {

@@ -1,9 +1,6 @@
 package api.metadata;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -99,6 +96,7 @@ public class ResponseData {
         this.error = error;
     }
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Choice {
         @JsonProperty("index")
         private int index;
@@ -111,6 +109,17 @@ public class ResponseData {
 
         @JsonProperty("finish_reason")
         private String finishReason;
+
+        @JsonProperty("content_filter_results")
+        private String content_filter_results;
+
+        public String getContentFilterResults() {
+            return content_filter_results;
+        }
+
+        public void setContentFilterResults(String content_filter_results) {
+            this.content_filter_results = content_filter_results;
+        }
 
         public int getIndex() {
             return index;
