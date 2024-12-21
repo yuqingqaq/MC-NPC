@@ -141,7 +141,7 @@ public class NPCInteractionScreen extends Screen {
     }
 
     private void clearChatHistory() {
-            this.chatHistory.removeIf(message -> !message.getSender().equals("system"));
+            this.chatHistory.clear();
 
 //            for (NPCMessage message : chatHistory) {
 //                System.out.println(message.getSender());
