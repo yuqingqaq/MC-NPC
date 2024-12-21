@@ -191,6 +191,7 @@ dependencies {
     implementation 'dev.langchain4j:langchain4j:0.36.2'
     implementation 'dev.langchain4j:langchain4j-easy-rag:0.36.2'
     implementation 'dev.langchain4j:langchain4j-chroma:0.36.2'
+    implementation 'com.volcengine:volcengine-java-sdk-ark-runtime:0.1.142'
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 }

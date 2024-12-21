@@ -95,6 +95,18 @@ public class OpenAIGPT {
 //                    .header("Connection", "keep-alive")
                     .post(body)
                     .build();
+//            String currentKey = this.keys.get(random.nextInt(this.keys.size()));
+//            String json = mapper.writeValueAsString(new RequestData(this.modelName, messageHistory, 0.6, 0.8, 0.6, 0.8, 1));
+//            RequestBody body = RequestBody.create(json, okhttp3.MediaType.get("application/json; charset=utf-8"));
+//            Request request = new Request.Builder()
+//                    .url("https://ark.cn-beijing.volces.com/api/v3/bots/chat" + "/completions")
+//                    //.url("http://61.241.103.33:8900/v1/chat/completions")
+//                    .header("Authorization", "Bearer " + currentKey)
+//                    .header("Content-Type", "application/json")
+////                    .header("Accept", "application/json")
+////                    .header("Connection", "keep-alive")
+//                    .post(body)
+//                    .build();
             try (Response response = client.newCall(request).execute()) {
                 String responseBodyStr = response.body().string();
                 if (response.isSuccessful()) {

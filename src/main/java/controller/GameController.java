@@ -3,6 +3,7 @@ package controller;
 import api.OpenAIGPT;
 import controller.GameController;
 import interfaces.GameControllerInterface;
+import metadata.NPCMessage;
 import system.ExpertSystem;
 import system.NPCSystem;
 import clinic.huatuoAPI;
@@ -61,7 +62,8 @@ public class GameController implements GameControllerInterface {
                 "game_assets",
                 new TypeReference<List<ItemModel>>() {}
         );
-        gptModel = new OpenAIGPT("gpt-3.5-turbo","config/gpt3keys.txt");
+        gptModel = new OpenAIGPT("gpt-4o","config/gpt3keys.txt");
+//        gptModel = new OpenAIGPT("bot-20241220150201-tvbhd","config/doubao.txt");  // Doubao API
         expertModel = new OpenAIGPT("gpt-3.5-turbo","config/gpt3keys.txt");
         clinicModel = new huatuoAPI("huatuogpt-lg-main");
 

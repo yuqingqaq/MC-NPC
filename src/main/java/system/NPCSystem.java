@@ -44,12 +44,12 @@ public class NPCSystem {
                 cautionNote = NPCPromptConfig.generateCautionNote();
             }
 
-            String systemPrompt = String.format("IMPORTANT Rules:%s %s", introduction, cautionNote);
+            String systemPrompt = String.format("IMPORTANT Rules: %s", cautionNote);
 
             String taskDetails = generateTaskDetails(npc); // This method can stay here as it is specific to NPC
 
-            npc.addDialogueToHistory(new NPCMessage("user", taskDetails));
-            npc.addDialogueToHistory(new NPCMessage("user", userInput));
+//            npc.addDialogueToHistory(new NPCMessage("user", taskDetails));
+            npc.addDialogueToHistory(new NPCMessage("user", NPCPromptConfig.context() + userInput));
             List<NPCMessage> messageHistory = new ArrayList<>();
             messageHistory.add(new NPCMessage("system", systemPrompt));
             messageHistory.addAll(npc.getDialogueHistory());

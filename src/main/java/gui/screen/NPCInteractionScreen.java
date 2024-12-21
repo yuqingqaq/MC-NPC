@@ -25,6 +25,7 @@ public class NPCInteractionScreen extends Screen {
     private EditBox inputField;
     private Button sendButton;
     private Button hintButton;
+    private Button clearButton;
     private NPCModel currentNPC;
     private List<NPCMessage> chatHistory;
     private List<String> hintHistory;
@@ -61,9 +62,11 @@ public class NPCInteractionScreen extends Screen {
 //        this.hintButton = this.addRenderableWidget(new Button(centerX + 75, centerY + 65, 80, 20, new TextComponent("Hint"), button -> {
 //            getAdvice();
 //        }));
-
+        clearButton = this.addRenderableWidget(new Button(centerX + 145, centerY + 95, 50, 20, new TextComponent("Clear"), button -> {
+            clearChatHistory();
+        }));
         this.sendButton = this.addRenderableWidget(new Button(centerX + 145, centerY + 65, 50, 20, new TextComponent("Send"), button -> {
-            sendChatMessage();
+             sendChatMessage();
         }));
 
         Minecraft mc = Minecraft.getInstance();
@@ -137,6 +140,24 @@ public class NPCInteractionScreen extends Screen {
         }
     }
 
+    private void clearChatHistory() {
+            this.chatHistory.removeIf(message -> !message.getSender().equals("system"));
+
+//            for (NPCMessage message : chatHistory) {
+//                System.out.println(message.getSender());
+//            }
+
+
+        // 刷新聊天面板和提示面板
+            this.chatPanel.refreshPanel();
+
+//            if(!isToastShown){
+//                Minecraft.getInstance().getToasts().addToast(toast);
+//                isToastShown = true;
+//            }
+
+    }
+
     private void sendChatMessage() {
         String message = inputField.getValue().trim();
         String npcName = currentNPC.getNPCName();
@@ -184,10 +205,10 @@ public class NPCInteractionScreen extends Screen {
     public boolean mouseScrolled(double mouseX, double mouseY, double scroll) {
         double screenWidth = this.width; // 假设 'this.width' 是屏幕宽度
 
-        if (mouseX < screenWidth * 3 / 3.0) {
-            // 鼠标在屏幕左侧2/3区域内
-            return chatPanel.mouseScrolled(mouseX, mouseY, scroll);
-        }
+//        if (mouseX < screenWidth * 3 / 3.0) {
+//            // 鼠标在屏幕左侧2/3区域内
+        return chatPanel.mouseScrolled(mouseX, mouseY, scroll);
+//        }
 //        else {
 //            // 鼠标在屏幕右侧1/3区域内
 //            return hintPanel.mouseScrolled(mouseX, mouseY, scroll);
