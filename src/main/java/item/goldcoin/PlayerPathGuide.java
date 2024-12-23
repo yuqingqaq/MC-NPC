@@ -11,6 +11,12 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = "npcopenai", bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class PlayerPathGuide {
 
+    // 当前目标金币位置
+    private static BlockPos currentTarget = null;
+
+    public static BlockPos getCurrentTarget() {
+        return currentTarget;
+    }
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
         Player player = event.player;
@@ -25,8 +31,11 @@ public class PlayerPathGuide {
             // 找到最近的金币
             BlockPos nearestCoin = GoldCoinTracker.findNearestCoin(player.blockPosition());
             if (nearestCoin != null) {
+                currentTarget = nearestCoin; // 更新目标位置
                 // 生成粒子路径
                 PathFinding.generatePathParticles(serverLevel, playerPos, nearestCoin);
+            } else {
+                currentTarget = null; // 没有目标时清空
             }
         }
     }
