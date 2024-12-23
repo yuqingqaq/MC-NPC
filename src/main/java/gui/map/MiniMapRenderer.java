@@ -257,7 +257,7 @@ public class MiniMapRenderer {
         // 绘制玩家位置（用橙色点表示）
         int playerPixelX = centerX + mapSize / 2;
         int playerPixelY = centerY + mapSize / 2;
-        GuiComponent.fill(poseStack, playerPixelX - 2, playerPixelY - 2, playerPixelX + 1, playerPixelY + 1, 0xFF00FF00); // 橙色
+        GuiComponent.fill(poseStack, playerPixelX - 2, playerPixelY - 2, playerPixelX + 1, playerPixelY + 1, 0xFF00FF00); // 绿色
 
         // 根据玩家的朝向绘制箭头
         float yaw = player.getYRot(); // 玩家朝向
@@ -271,7 +271,7 @@ public class MiniMapRenderer {
         int arrowY = (int) (playerPixelY + Math.cos(arrowAngle) * arrowSize);
 
         // 绘制箭头头部（绿色点）
-        GuiComponent.fill(poseStack, arrowX - 2, arrowY - 2, arrowX + 2, arrowY + 2, 0xFF00FF00); // 橙色箭头头部
+        GuiComponent.fill(poseStack, arrowX - 2, arrowY - 2, arrowX + 2, arrowY + 2, 0xFF00FF00); // 绿色箭头头部
 
         // 计算箭头尾部的位置
         int tailX = (int) (playerPixelX + Math.sin(arrowAngle) * (arrowSize / 2));

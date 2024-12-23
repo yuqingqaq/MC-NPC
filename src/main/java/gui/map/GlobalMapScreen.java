@@ -92,20 +92,22 @@ public class GlobalMapScreen extends Screen {
             GuiComponent.fill(poseStack, screenX, screenY, screenX + 1, screenY + 1, color);
         }
 
-        // 绘制玩家位置（固定在屏幕中心）
-        GuiComponent.fill(poseStack, centerX - 2, centerY - 2, centerX + 2, centerY + 2, 0xFFFFA500); // 橙色
+        GuiComponent.fill(poseStack, centerX - 2, centerY - 2, centerX + 1, centerY + 1, 0xFF00FF00); // 橙色
 
-        // 根据玩家的朝向绘制箭头
         float yaw = player.getYRot(); // 获取玩家的旋转角度（朝向）
-        double arrowAngle = Math.toRadians(-yaw); // 将角度转为弧度，并反转方向以匹配屏幕坐标系
-        int arrowSize = 6; // 箭头大小
+        double arrowAngle = Math.toRadians(yaw + 180); // 将角度转为弧度，并反转方向以匹配屏幕坐标系
 
-        // 计算箭头的位置
-        int arrowX = (int) (centerX + Math.sin(arrowAngle) * arrowSize); // X 方向偏移
-        int arrowY = (int) (centerY - Math.cos(arrowAngle) * arrowSize); // Y 方向偏移（注意坐标系反转）
+        int arrowSize = 6; // 箭头大小可根据全局地图调整
 
-        // 绘制箭头（蓝色）
-        GuiComponent.fill(poseStack, arrowX - 1, arrowY - 1, arrowX + 1, arrowY + 1, 0xFF0000FF); // 蓝色箭头
+        int arrowX = (int) (centerX + Math.sin(arrowAngle) * arrowSize); // 前进方向 X 偏移
+        int arrowY = (int) (centerY - Math.cos(arrowAngle) * arrowSize); // 前进方向 Y 偏移
+
+        GuiComponent.fill(poseStack, arrowX - 2, arrowY - 2, arrowX + 2, arrowY + 2, 0xFF00FF00); // 绿色箭头头部
+
+        int tailX = (int) (centerX - Math.sin(arrowAngle) * (arrowSize / 2)); // 尾部 X 偏移
+        int tailY = (int) (centerY + Math.cos(arrowAngle) * (arrowSize / 2)); // 尾部 Y 偏移
+
+        GuiComponent.fill(poseStack, tailX - 1, tailY - 1, tailX + 1, tailY + 1, 0xFF00FF00); // 绿色箭头尾部
     }
 
     private void loadMapDataAsync() {
