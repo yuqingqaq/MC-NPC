@@ -1,4 +1,4 @@
-package item;
+package item.goldcoin;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.CreativeModeTab;

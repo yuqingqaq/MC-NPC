@@ -1,0 +1,33 @@
+package item.goldcoin;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+
+@Mod.EventBusSubscriber(modid = "npcopenai", bus = Mod.EventBusSubscriber.Bus.FORGE)
+public class PlayerPathGuide {
+
+    @SubscribeEvent
+    public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
+        Player player = event.player;
+
+        // 确保逻辑只在服务器端执行
+        if (!player.level.isClientSide && event.phase == TickEvent.Phase.END) {
+            ServerLevel serverLevel = (ServerLevel) player.level;
+
+            // 获取玩家位置
+            Vec3 playerPos = player.position();
+
+            // 找到最近的金币
+            BlockPos nearestCoin = GoldCoinTracker.findNearestCoin(player.blockPosition());
+            if (nearestCoin != null) {
+                // 生成粒子路径
+                PathFinding.generatePathParticles(serverLevel, playerPos, nearestCoin);
+            }
+        }
+    }
+}

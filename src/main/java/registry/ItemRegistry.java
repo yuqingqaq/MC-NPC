@@ -11,7 +11,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import item.CustomItem;
 import npcopenai.NPCOpenAI;
 import item.TimedCustomItem;
-import item.GoldCoinItem;
+import item.goldcoin.GoldCoinItem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
