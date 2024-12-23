@@ -253,20 +253,67 @@ public class MiniMapRenderer {
                 }
             }
         }
+
         // 绘制玩家位置（用橙色点表示）
         int playerPixelX = centerX + mapSize / 2;
         int playerPixelY = centerY + mapSize / 2;
-        GuiComponent.fill(poseStack, playerPixelX - 2, playerPixelY - 2, playerPixelX + 2, playerPixelY + 2, 0xFFFFA500); // 橙色
+        GuiComponent.fill(poseStack, playerPixelX - 2, playerPixelY - 2, playerPixelX + 1, playerPixelY + 1, 0xFF00FF00); // 橙色
 
         // 根据玩家的朝向绘制箭头
         float yaw = player.getYRot(); // 玩家朝向
         double arrowAngle = Math.toRadians(yaw);
-        int arrowSize = 6; // 箭头大小
 
-        // 修正箭头位置（反转方向偏移）
+        // 箭头大小
+        int arrowSize = 5;
+
+        // 计算箭头头部的位置（反转方向偏移）
         int arrowX = (int) (playerPixelX - Math.sin(arrowAngle) * arrowSize);
         int arrowY = (int) (playerPixelY + Math.cos(arrowAngle) * arrowSize);
-        GuiComponent.fill(poseStack, arrowX - 1, arrowY - 1, arrowX + 1, arrowY + 1, 0xFF0000FF); // 蓝色箭头
+
+        // 绘制箭头头部（绿色点）
+        GuiComponent.fill(poseStack, arrowX - 2, arrowY - 2, arrowX + 2, arrowY + 2, 0xFF00FF00); // 橙色箭头头部
+
+        // 计算箭头尾部的位置
+        int tailX = (int) (playerPixelX + Math.sin(arrowAngle) * (arrowSize / 2));
+        int tailY = (int) (playerPixelY - Math.cos(arrowAngle) * (arrowSize / 2));
+
+        // 绘制箭头尾部（线条）
+        GuiComponent.fill(poseStack, tailX - 1, tailY - 1, tailX + 1, tailY + 1, 0xFF00FF00); // 绿色箭头尾部
+
+        renderEntitiesOnMiniMap(poseStack, player, centerX, centerY);
+
+    }
+
+    private static void renderEntitiesOnMiniMap(PoseStack poseStack, Player player, int centerX, int centerY) {
+        Minecraft mc = Minecraft.getInstance();
+        Level level = player.level;
+
+        // 小地图中心位置
+        int mapCenterX = centerX + mapSize / 2;
+        int mapCenterY = centerY + mapSize / 2;
+
+        // 获取所有附近的实体
+        level.getEntities(player, player.getBoundingBox().inflate(radius), entity -> true).forEach(entity -> {
+
+            // 获取实体的相对位置
+            double relativeX = entity.getX() - player.getX();
+            double relativeZ = entity.getZ() - player.getZ();
+            double distance = Math.sqrt(relativeX * relativeX + relativeZ * relativeZ);
+
+            // 如果实体超出小地图范围，则跳过
+            if (distance > radius) return;
+
+            // 将实体位置映射到小地图的像素位置
+            int entityPixelX = (int) (mapCenterX + (relativeX / radius) * (mapSize / 2));
+            int entityPixelY = (int) (mapCenterY + (relativeZ / radius) * (mapSize / 2));
+
+            // 绘制实体
+            if (entity instanceof net.minecraft.world.entity.item.ItemEntity) {
+                GuiComponent.fill(poseStack, entityPixelX - 1, entityPixelY - 1, entityPixelX + 1, entityPixelY + 1, 0xFFFFFF00); // 黄色点（物品实体）
+            } else {
+                GuiComponent.fill(poseStack, entityPixelX - 2, entityPixelY - 2, entityPixelX + 2, entityPixelY + 2, 0xFF0000FF); // 蓝色点（普通实体）
+            }
+        });
     }
 
     private static void updateMiniMapData(Player player) {

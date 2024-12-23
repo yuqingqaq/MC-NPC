@@ -1,12 +1,9 @@
 package gui.map;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -22,19 +19,18 @@ public class GlobalMapScreen extends Screen {
     private static int RADIUS = 256;     // 地图半径（以方块为单位）
     private static int SAMPLE_INTERVAL_X = 2; // 横向采样间隔
     private static int SAMPLE_INTERVAL_Z = 2; // 纵向采样间隔
-    private static int RENDER_OFFSET_X = 64; // 渲染偏移（X）
-    private static int RENDER_OFFSET_Y = 0;    // 渲染偏移（Y）
 
-    private static Map<BlockPos, Integer> globalMapDataCache = new HashMap<>(); // 缓存的全局地图数据
     private boolean isLoading = true; // 是否正在加载地图数据
+    private Map<BlockPos, Integer> currentMapData = new HashMap<>(); // 当前帧的地图数据
 
-    private EditBox widthBox, heightBox, radiusBox, sampleXBox, sampleZBox, offsetXBox, offsetYBox;
-    private Button applyButton;
+    private int centerBlockX; // 地图中心点 X（玩家打开地图时的位置）
+    private int centerBlockZ; // 地图中心点 Z（玩家打开地图时的位置）
+
+    private Button refreshButton;
 
     public GlobalMapScreen() {
         super(new TextComponent("Global Map"));
     }
-
 
     @Override
     protected void init() {
@@ -43,15 +39,14 @@ public class GlobalMapScreen extends Screen {
         // 刷新按钮（放在屏幕左下角）
         int buttonWidth = 80;
         int buttonHeight = 20;
-        applyButton = new Button(10, this.height - buttonHeight - 10, buttonWidth, buttonHeight, new TextComponent("Refresh"), button -> {
-
+        refreshButton = new Button(10, this.height - buttonHeight - 10, buttonWidth, buttonHeight, new TextComponent("Refresh"), button -> {
             // 重新加载地图数据
             isLoading = true;
             loadMapDataAsync();
         });
-        this.addRenderableWidget(applyButton);
+        this.addRenderableWidget(refreshButton);
 
-        // 每次打开地图时刷新数据
+        // 打开地图时立即加载数据
         loadMapDataAsync();
     }
 
@@ -61,7 +56,7 @@ public class GlobalMapScreen extends Screen {
         this.renderBackground(poseStack);
 
         // 绘制标题
-        drawCenteredString(poseStack, this.font, "全局地图", this.width / 2 - 120, 20, 0xFFFFFF);
+        drawCenteredString(poseStack, this.font, "全局地图", this.width / 2 -100, 20, 0xFFFFFF);
 
         if (isLoading) {
             // 如果地图正在加载中，显示“加载中”提示
@@ -78,47 +73,50 @@ public class GlobalMapScreen extends Screen {
     }
 
     private void drawGlobalMap(PoseStack poseStack, int centerX, int centerY) {
-        if (globalMapDataCache != null) {
-            Player player = minecraft.player;
+        Player player = minecraft.player;
 
-            // 玩家当前位置的世界坐标
-            int playerX = (int) player.getX();
-            int playerZ = (int) player.getZ();
+        // 遍历当前帧的地图数据
+        for (Map.Entry<BlockPos, Integer> entry : currentMapData.entrySet()) {
+            BlockPos pos = entry.getKey();
+            int color = entry.getValue();
 
-            // 遍历缓存的地图数据
-            for (Map.Entry<BlockPos, Integer> entry : globalMapDataCache.entrySet()) {
-                BlockPos pos = entry.getKey();
-                int color = entry.getValue();
+            // 计算相对于地图中心 (centerBlockX, centerBlockZ) 的局部坐标
+            int relativeX = (pos.getX() - centerBlockX) / SAMPLE_INTERVAL_X;
+            int relativeZ = (pos.getZ() - centerBlockZ) / SAMPLE_INTERVAL_Z;
 
-                // 计算相对于地图中心的局部坐标
-                int relativeX = (pos.getX() - centerBlockX) / SAMPLE_INTERVAL_X;
-                int relativeZ = (pos.getZ() - centerBlockZ) / SAMPLE_INTERVAL_Z;
+            // 将局部坐标映射到屏幕坐标，以屏幕中心为地图中心
+            int screenX = centerX + relativeX * (MAP_WIDTH / (2 * RADIUS)); // 横向比例
+            int screenY = centerY + relativeZ * (MAP_HEIGHT / (2 * RADIUS)); // 纵向比例
 
-                // 将局部坐标映射到屏幕坐标，以屏幕中心为地图中心
-                int screenX = centerX - RENDER_OFFSET_X  + relativeX * (MAP_WIDTH / (2 * RADIUS)); // 横向比例
-                int screenY = centerY + relativeZ * (MAP_HEIGHT / (2 * RADIUS)); // 纵向比例
-
-                // 绘制像素点
-                GuiComponent.fill(poseStack, screenX, screenY, screenX + 1, screenY + 1, color);
-            }
-
-            // 绘制玩家位置（固定在屏幕中心）
-            GuiComponent.fill(poseStack, centerX - 2, centerY - 2, centerX + 2, centerY + 2, 0xFFFFA500); // 橙色
+            // 绘制像素点
+            GuiComponent.fill(poseStack, screenX, screenY, screenX + 1, screenY + 1, color);
         }
-    }
 
-    private int centerBlockX; // 地图固定中心点 X
-    private int centerBlockZ; // 地图固定中心点 Z
+        // 绘制玩家位置（固定在屏幕中心）
+        GuiComponent.fill(poseStack, centerX - 2, centerY - 2, centerX + 2, centerY + 2, 0xFFFFA500); // 橙色
+
+        // 根据玩家的朝向绘制箭头
+        float yaw = player.getYRot(); // 获取玩家的旋转角度（朝向）
+        double arrowAngle = Math.toRadians(-yaw); // 将角度转为弧度，并反转方向以匹配屏幕坐标系
+        int arrowSize = 6; // 箭头大小
+
+        // 计算箭头的位置
+        int arrowX = (int) (centerX + Math.sin(arrowAngle) * arrowSize); // X 方向偏移
+        int arrowY = (int) (centerY - Math.cos(arrowAngle) * arrowSize); // Y 方向偏移（注意坐标系反转）
+
+        // 绘制箭头（蓝色）
+        GuiComponent.fill(poseStack, arrowX - 1, arrowY - 1, arrowX + 1, arrowY + 1, 0xFF0000FF); // 蓝色箭头
+    }
 
     private void loadMapDataAsync() {
         Player player = minecraft.player;
         Level level = player.level;
 
         // 设置地图中心点为玩家打开地图时的位置
-        centerBlockX = (int) player.getX();
-        centerBlockZ = (int) player.getZ();
-
-        isLoading = true; // 标记为加载中
+        if (centerBlockX == 0 && centerBlockZ == 0) { // 仅初始化一次
+            centerBlockX = (int) player.getX();
+            centerBlockZ = (int) player.getZ();
+        }
 
         // 异步加载地图数据
         CompletableFuture.runAsync(() -> {
@@ -139,26 +137,28 @@ public class GlobalMapScreen extends Screen {
                         int color = MiniMapRenderer.getBlockColor(level, blockPos); // 获取方块颜色
 
                         if (color != 0x00000000) { // 找到非空气方块
-                            tempMapData.put(new BlockPos(x, y, z), color); // 缓存方块颜色
+                            tempMapData.put(new BlockPos(centerBlockX + x, y, centerBlockZ + z), color); // 缓存方块颜色
                             foundBlock = true;
                             break; // 停止向下搜索
                         }
                     }
 
                     // 如果没有找到任何非空气方块，设置默认颜色（透明）
+                    // 有缓存的话可以加载
                     if (!foundBlock) {
-                        tempMapData.put(new BlockPos(x, minY, z), 0x00000000);
+                        tempMapData.put(new BlockPos(centerBlockX + x, minY, centerBlockZ + z), 0x00B0B0B0);
                     }
                 }
             }
 
             // 数据加载完成后更新到主线程
             minecraft.execute(() -> {
-                globalMapDataCache = tempMapData; // 更新缓存
+                currentMapData = tempMapData; // 更新当前帧的地图数据
                 isLoading = false; // 标记加载完成
             });
         });
     }
+
     @Override
     public boolean isPauseScreen() {
         return false; // 不暂停游戏
