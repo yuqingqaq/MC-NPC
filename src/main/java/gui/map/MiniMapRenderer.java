@@ -240,18 +240,19 @@ public class MiniMapRenderer {
 
         // 绘制缓存的小地图数据
         if (cachedMiniMapData != null) {
+            int samplingFactor = 2; // 与 updateMiniMapData 中的采样频率保持一致
             for (int x = 0; x < cachedMiniMapData.length; x++) {
                 for (int z = 0; z < cachedMiniMapData[x].length; z++) {
                     int color = cachedMiniMapData[x][z];
                     if (color != 0) { // 只绘制非空数据
-                        int pixelX = centerX + x * (mapSize / (2 * radius));
-                        int pixelY = centerY + z * (mapSize / (2 * radius));
+                        // 调整绘制比例，根据采样频率计算像素位置
+                        int pixelX = centerX + x * (mapSize / (2 * radius)) * samplingFactor;
+                        int pixelY = centerY + z * (mapSize / (2 * radius)) * samplingFactor;
                         GuiComponent.fill(poseStack, pixelX, pixelY, pixelX + 2, pixelY + 2, color);
                     }
                 }
             }
         }
-
         // 绘制玩家位置（用橙色点表示）
         int playerPixelX = centerX + mapSize / 2;
         int playerPixelY = centerY + mapSize / 2;
@@ -282,9 +283,11 @@ public class MiniMapRenderer {
         // 用于统计方块种类
         Map<String, Integer> blockTypeCount = new HashMap<>();
 
+        int samplingFactor = 2; // 采样频率倍数（1 = 全采样，2 = 每隔1个方块采样，3 = 每隔2个方块采样）
+
         // 遍历小地图范围内的方块
-        for (int x = -radius; x <= radius; x++) {
-            for (int z = -radius; z <= radius; z++) {
+        for (int x = -radius; x <= radius; x += samplingFactor) { // 使用采样频率
+            for (int z = -radius; z <= radius; z += samplingFactor) {
                 boolean blockFound = false; // 标记是否找到第一个非空气方块
 
                 // 从高到低遍历高度范围
@@ -302,7 +305,7 @@ public class MiniMapRenderer {
                             blockColorMap.put(blockName, 0xFF808080); // 默认颜色（可以替换为实际颜色）
                         }
                         // 获取方块颜色并缓存到小地图数据
-                        cachedMiniMapData[x + radius][z + radius] = blockColorMap.get(blockName);
+                        cachedMiniMapData[(x + radius) / samplingFactor][(z + radius) / samplingFactor] = blockColorMap.get(blockName);
 
                         // 统计方块类型数量
                         blockTypeCount.put(blockName, blockTypeCount.getOrDefault(blockName, 0) + 1);
@@ -314,11 +317,12 @@ public class MiniMapRenderer {
 
                 // 如果没有找到任何非空气方块，设置默认颜色（如透明）
                 if (!blockFound) {
-                    cachedMiniMapData[x + radius][z + radius] = 0x00000000; // 透明
+                    cachedMiniMapData[(x + radius) / samplingFactor][(z + radius) / samplingFactor] = 0x00000000; // 透明
                 }
             }
         }
     }
+
     private static int getBlockColorWithCache(Level level, BlockPos blockPos) {
         // 检查缓存中是否已有颜色
         if (blockColorCache.containsKey(blockPos)) {
