@@ -46,7 +46,7 @@ public class CallOpenAITTS {
                         .filter(line -> line.length() >= 4)
                         .collect(Collectors.toList());
                 if (lines.isEmpty()) {
-                    System.err.println("No valid API keys found in the file.");
+                    System.out.println("No valid API keys found in the file.");
                     this.keys = Collections.emptyList();
                 } else {
                     this.keys = lines;
@@ -59,10 +59,10 @@ public class CallOpenAITTS {
     }
 
     public File call(String inputText, String voice) {
-        if (this.keys.isEmpty()) {
-            System.err.println("No API keys available.");
-            return null;
-        }
+//        if (this.keys.isEmpty()) {
+//            System.out.println("No API keys available.");
+//            return null;
+//        }
         try {
             String currentKey = this.keys.get(random.nextInt(this.keys.size()));
 
@@ -98,13 +98,13 @@ public class CallOpenAITTS {
 
                 } else {
                     String responseBodyStr = response.body().string();
-                    System.err.println("Server returned error: " + response.code() + " " + response.message());
-                    System.err.println("Response body: " + responseBodyStr);
+                    System.out.println("Server returned error: " + response.code() + " " + response.message());
+                    System.out.println("Response body: " + responseBodyStr);
                     return null;
                 }
             }
         } catch (IOException e) {
-            System.err.println("Failed to generate speech from OpenAI: " + e.getMessage());
+            System.out.println("Failed to generate speech from OpenAI: " + e.getMessage());
             return null;
         }
     }

@@ -122,7 +122,7 @@ public class NPCInteractionScreenwithExpert extends Screen {
                 speechHandler.startRecording();
                 recordButton.setMessage(new TextComponent("Stop Recording"));
             } catch (Exception e) {
-                System.err.println("Error starting recording: " + e.getMessage());
+                System.out.println("Error starting recording: " + e.getMessage());
             }
         } else {
             try {
@@ -131,7 +131,7 @@ public class NPCInteractionScreenwithExpert extends Screen {
                 inputField.setValue(new String(audioDataText));
                 sendChatMessage();
             } catch (Exception e) {
-                System.err.println("Error stopping recording: " + e.getMessage());
+                System.out.println("Error stopping recording: " + e.getMessage());
             }
         }
     }
@@ -156,7 +156,7 @@ public class NPCInteractionScreenwithExpert extends Screen {
                 System.out.println(ttsPath);
                 audioPlayer.playAudio(ttsPath);
             } catch (Exception e) {
-                System.err.println("Text-to-speech error: " + e.getMessage());
+                System.out.println("Text-to-speech error: " + e.getMessage());
             }
 
             if(!isToastShown){

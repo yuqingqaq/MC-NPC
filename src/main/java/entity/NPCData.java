@@ -17,11 +17,13 @@ public class NPCData extends SavedData {
         public UUID uuid;
         public BlockPos position;
         public String type; // 添加类型字段
+        public boolean isLoaded;
 
         public NPCDetails(UUID uuid, BlockPos position, String type) {
             this.uuid = uuid;
             this.position = position;
             this.type = type; // 初始化类型
+            this.isLoaded = false;
         }
     }
     @Override
@@ -33,6 +35,7 @@ public class NPCData extends SavedData {
             npcTag.putUUID("UUID", details.uuid);
             npcTag.putLong("Pos", details.position.asLong());
             npcTag.putString("Type", details.type); // 保存类型信息
+            npcTag.putBoolean("IsLoaded", details.isLoaded); // 保存加载状态
             list.add(npcTag);
         });
         tag.put("NPCs", list);
@@ -48,7 +51,11 @@ public class NPCData extends SavedData {
             UUID uuid = npcTag.getUUID("UUID");
             BlockPos position = BlockPos.of(npcTag.getLong("Pos"));
             String type = npcTag.getString("Type"); // 加载类型信息
-            data.npcDetailsMap.put(index, new NPCDetails(uuid, position, type));
+
+            boolean isLoaded = npcTag.getBoolean("IsLoaded");
+            NPCDetails details = new NPCDetails(uuid, position, type);
+            details.isLoaded = isLoaded; // 加载时恢复加载状态
+            data.npcDetailsMap.put(index, details);
         });
         return data;
     }
@@ -65,6 +72,14 @@ public class NPCData extends SavedData {
 
     public static NPCData forLevel(ServerLevel world) {
         return world.getDataStorage().computeIfAbsent(NPCData::load, NPCData::new, DATA_NAME);
+    }
+
+    public void updateNPCLoadState(int index, boolean isLoaded) {
+        NPCDetails details = npcDetailsMap.get(index);
+        if (details != null) {
+            details.isLoaded = isLoaded;
+            setDirty();
+        }
     }
 
     private static BlockPos getNpcPositionByUUID(ServerLevel world, UUID uuid) {

@@ -66,15 +66,15 @@ public class huatuoAPI {
                 if (response.isSuccessful()) {
                     return postProcess(responseBodyStr);
                 } else {
-                    System.err.println("Server returned error: " + response.code() + " " + response.message());
+                    System.out.println("Server returned error: " + response.code() + " " + response.message());
                     return "Server error: " + response.message() + " with body: " + responseBodyStr;
                 }
             } catch (JsonProcessingException e) {
-                System.err.println("JSON processing error: " + e.getMessage());
+                System.out.println("JSON processing error: " + e.getMessage());
                 return "JSON processing error: " + e.getMessage();
             }
         } catch (IOException e) {
-            System.err.println("Failed to generate response from OpenAI: " + e.getMessage());
+            System.out.println("Failed to generate response from OpenAI: " + e.getMessage());
             return "Failed to generate response.";
         }
     }

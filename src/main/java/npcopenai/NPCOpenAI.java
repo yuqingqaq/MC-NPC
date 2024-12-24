@@ -95,7 +95,7 @@ public class NPCOpenAI {
         NPCDataManager.saveAllNPCs(world);  // 保存所有 NPC 数据
     }
 
-    @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
+    @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistryEvents {
 
         @SubscribeEvent

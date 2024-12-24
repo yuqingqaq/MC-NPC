@@ -12,11 +12,12 @@ import java.util.UUID;
 public class NPCDataManager {
     // 用于存储每个NPC的index和其UUID
     public static Map<Integer, UUID> activeNPCs = new HashMap<>();
+
     public static void saveOrUpdateNPC(ServerLevel world, int index, Entity npc, String type) {
         NPCData data = NPCData.forLevel(world);
         data.registerNPC(index, npc.getUUID(), npc.blockPosition(), type);
         activeNPCs.put(index, npc.getUUID());
-        data.setDirty();  // 标记为需要保存
+        data.setDirty();
     }
     // 通过index返回对应的UUID
     public static UUID getUUIDByIndex(int index) {
@@ -48,11 +49,6 @@ public class NPCDataManager {
         }
         return null;
     }
-//    public static void deleteNPCData(ServerLevel world, int index) {
-//        NPCData data = NPCData.forLevel(world);
-//        data.removeNPC(index);
-//        activeNPCs.remove(index);
-//    }
 
     public static void clearAllNPCData(ServerLevel world) {
         NPCData data = NPCData.forLevel(world);
@@ -84,19 +80,22 @@ public class NPCDataManager {
             BlockPos pos = details.position; // 直接从 NPCDetails 获取位置
             activeNPCs.put(index, uuid);
 
-//            // 确保区块已加载
-//            if (world.isLoaded(pos)) {
-//                Entity npc = findNPCByUUID(world, uuid);
-//                if (npc != null) {
-//                    activeNPCs.put(index, uuid);
-//                    System.out.println("NPC with index " + index + " and UUID " + uuid + " found on world load.");
-//                } else {
-//                    System.out.println("NPC with index " + index + " and UUID " + uuid + " not found on world load.");
-//                    // 这里可以考虑重新创建NPC或进行其他处理
-//                }
-//            } else {
-//                System.out.println("Chunk not loaded for NPC with index " + index);
-//            }
+            // 强制加载区块
+            if (!world.isLoaded(pos)) {
+                world.getChunk(pos.getX() >> 4, pos.getZ() >> 4); // 强制加载区块
+                System.out.println("Chunk loaded for NPC at index " + index);
+            }
+
+            // 检查实体是否存在
+            Entity npc = world.getEntity(uuid);
+            if (npc != null) {
+                activeNPCs.put(index, uuid);
+                data.updateNPCLoadState(index, true); // 更新为已加载
+                System.out.println("NPC with index " + index + " and UUID " + uuid + " is active.");
+            } else {
+                data.updateNPCLoadState(index, false); // 更新为未加载
+                System.out.println("NPC with index " + index + " and UUID " + uuid + " not found.");
+            }
         }
     }
 

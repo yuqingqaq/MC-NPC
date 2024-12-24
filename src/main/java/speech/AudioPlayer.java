@@ -19,12 +19,12 @@ public class AudioPlayer {
                     player.play();
                     System.out.println("Audio playback started.");
                 } catch (Exception e) {
-                    System.err.println("Error playing audio file: " + e.getMessage());
+                    System.out.println("Error playing audio file: " + e.getMessage());
                 }
             });
             playerThread.start();
         } catch (Exception e) {
-            System.err.println("Error setting up audio file: " + e.getMessage());
+            System.out.println("Error setting up audio file: " + e.getMessage());
         }
     }
 

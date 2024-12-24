@@ -35,12 +35,12 @@ public class SpeechHandler {
                     System.out.println("Audio data captured and stream closed");
 
                 } catch (Exception e) {
-                    System.err.println("Recording error: " + e.getMessage());
+                    System.out.println("Recording error: " + e.getMessage());
                 }
             });
             thread.start();
         } catch (Exception e) {
-            System.err.println("Microphone not accessible: " + e.getMessage());
+            System.out.println("Microphone not accessible: " + e.getMessage());
         }
     }
 
@@ -73,12 +73,14 @@ public class SpeechHandler {
                     // Optional: Delete the temporary file after processing
                     wavFile.delete();
                 } catch (Exception e) {
-                    System.err.println("Error calling recognizeAudio: " + e.getMessage());
+                    text = "ASR错误: " + e.getMessage();
+                    System.out.println("Error calling recognizeAudio: " + e.getMessage());
                     e.printStackTrace();
                 }
             }
         } catch (Exception e) {
-            System.err.println("Speech recognition error: " + e.getMessage());
+            text = "Speech recognition error: " + e.getMessage();
+            System.out.println("Speech recognition error: " + e.getMessage());
         }
         
         return text;
@@ -102,7 +104,7 @@ public class SpeechHandler {
 
             return tempFile;
         } catch (IOException | IllegalArgumentException e) {
-            System.err.println("Error creating WAV file: " + e.getMessage());
+            System.out.println("Error creating WAV file: " + e.getMessage());
             e.printStackTrace();
             return null;
         }

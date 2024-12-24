@@ -91,21 +91,27 @@ public class LibrarianNPCEntity extends Mob {
         }
 
         int index = this.entityData.get(NPC_INDEX);
+
         if (!this.level.isClientSide) {
+            // 服务端逻辑：直接发送消息给玩家
             NPCModel npc = GameController.getInstance().getNPC(index);
-            player.displayClientMessage(new TextComponent("你好，我是" + npc.getNPCName()), false);
-            return InteractionResult.sidedSuccess(this.level.isClientSide);
-        } else {
-            return DistExecutor.unsafeRunForDist(() -> () -> {
-                NPCModel npc = GameController.getInstance().getNPC(index);
-                NPCEntityClientHandler.handleInteraction(player, npc);
-                return InteractionResult.sidedSuccess(true);
-            }, () -> () -> InteractionResult.PASS);
+            if (npc != null) {
+                player.displayClientMessage(new TextComponent("你好，我是" + npc.getNPCName()), false);
+            } else {
+                player.displayClientMessage(new TextComponent("无法找到 NPC 数据。"), false);
+            }
+            return InteractionResult.sidedSuccess(false);
         }
 
-//        // 使用客户端处理类来处理交互逻辑
-//        DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> () -> NPCEntityClientHandler.interactWithNPC(player, npc));
-//        return InteractionResult.sidedSuccess(this.level.isClientSide);
+        // 客户端逻辑
+        return DistExecutor.unsafeRunForDist(() -> () -> {
+            NPCModel npc = GameController.getInstance().getNPC(index);
+            if (npc != null) {
+                NPCEntityClientHandler.handleInteraction(player, npc);
+            }
+            return InteractionResult.sidedSuccess(true);
+        }, () -> () -> InteractionResult.PASS);
+
     }
 
     @Override

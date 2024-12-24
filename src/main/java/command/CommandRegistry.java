@@ -27,7 +27,7 @@ import registry.EntityRegistry;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = "npcopenai")
+@Mod.EventBusSubscriber(modid = "npcopenai")
 public class CommandRegistry {
 
     private static CompletableFuture<Suggestions> suggestNPCType(CommandContext<CommandSourceStack> context, SuggestionsBuilder builder) {
@@ -60,7 +60,7 @@ public class CommandRegistry {
 
         dispatcher.register(
                 Commands.literal("findnpc")
-                        .requires(cs -> cs.hasPermission(2))
+                        .requires(cs -> cs.hasPermission(0))
                         .then(Commands.argument("index", IntegerArgumentType.integer(0, 10))
                                 .executes(context -> findNPC(
                                         context.getSource(),

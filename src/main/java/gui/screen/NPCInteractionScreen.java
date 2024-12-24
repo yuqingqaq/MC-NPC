@@ -114,6 +114,7 @@ public class NPCInteractionScreen extends Screen {
     @Override
     public void onClose() {
         this.minecraft.setScreen(null);
+        audioPlayer.stopAudio();
         if (this.toast != null) {
             this.toast.hide();
             isToastShown = false;
@@ -126,7 +127,7 @@ public class NPCInteractionScreen extends Screen {
                 speechHandler.startRecording();
                 recordButton.setMessage(new TextComponent("Stop Recording"));
             } catch (Exception e) {
-                System.err.println("Error starting recording: " + e.getMessage());
+                System.out.println("Error starting recording: " + e.getMessage());
             }
         } else {
             try {
@@ -135,7 +136,7 @@ public class NPCInteractionScreen extends Screen {
                 inputField.setValue(new String(audioDataText));
                 sendChatMessage();
             } catch (Exception e) {
-                System.err.println("Error stopping recording: " + e.getMessage());
+                System.out.println("Error stopping recording: " + e.getMessage());
             }
         }
     }
@@ -143,18 +144,8 @@ public class NPCInteractionScreen extends Screen {
     private void clearChatHistory() {
             this.chatHistory.clear();
 
-//            for (NPCMessage message : chatHistory) {
-//                System.out.println(message.getSender());
-//            }
-
-
         // 刷新聊天面板和提示面板
             this.chatPanel.refreshPanel();
-
-//            if(!isToastShown){
-//                Minecraft.getInstance().getToasts().addToast(toast);
-//                isToastShown = true;
-//            }
 
     }
 
@@ -179,13 +170,9 @@ public class NPCInteractionScreen extends Screen {
                 System.out.println(ttsPath);
                 audioPlayer.playAudio(ttsPath);
             } catch (Exception e) {
-                System.err.println("Text-to-speech error: " + e.getMessage());
+                System.out.println("Text-to-speech error: " + e.getMessage());
             }
 
-//            if(!isToastShown){
-//                Minecraft.getInstance().getToasts().addToast(toast);
-//                isToastShown = true;
-//            }
         }
     }
 

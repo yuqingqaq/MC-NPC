@@ -56,7 +56,7 @@ public class OpenAIGPT {
                         .filter(line -> line.length() >= 4)
                         .collect(Collectors.toList());
                 if (lines.isEmpty()) {
-                    System.err.println("No valid API keys found in the file.");
+                    System.out.println("No valid API keys found in the file.");
                     this.keys = Collections.emptyList();
                 } else {
                     this.keys = lines;
@@ -75,7 +75,7 @@ public class OpenAIGPT {
 
     public String call(List<NPCMessage> npcMessageHistory) {
         if (this.keys.isEmpty()) {
-            System.err.println("No API keys available.");
+            System.out.println("No API keys available.");
             return "Error: API key not available.";
         }
         try {
@@ -112,15 +112,15 @@ public class OpenAIGPT {
                 if (response.isSuccessful()) {
                     return postProcess(responseBodyStr);
                 } else {
-                    System.err.println("Server returned error: " + response.code() + " " + response.message());
+                    System.out.println("Server returned error: " + response.code() + " " + response.message());
                     return "Server error: " + response.message() + " with body: " + responseBodyStr;
                 }
             } catch (JsonProcessingException e) {
-                System.err.println("JSON processing error: " + e.getMessage());
+                System.out.println("JSON processing error: " + e.getMessage());
                 return "JSON processing error: " + e.getMessage();
             }
         } catch (IOException e) {
-            System.err.println("Failed to generate response from OpenAI: " + e.getMessage());
+            System.out.println("Failed to generate response from OpenAI: " + e.getMessage());
             return "Failed to generate response.";
         }
     }
