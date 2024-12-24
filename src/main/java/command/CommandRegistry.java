@@ -47,7 +47,7 @@ public class CommandRegistry {
                         .requires(cs -> cs.hasPermission(2))
                         .then(Commands.argument("type", StringArgumentType.word())
                                 .suggests(CommandRegistry::suggestNPCType)
-                                .then(Commands.argument("index", IntegerArgumentType.integer(0, 10))
+                                .then(Commands.argument("index", IntegerArgumentType.integer(0, 12))
                                         .executes(context -> spawnNPC(
                                         context.getSource(),
                                         StringArgumentType.getString(context, "type"),
@@ -60,7 +60,7 @@ public class CommandRegistry {
         dispatcher.register(
                 Commands.literal("findnpc")
                         .requires(cs -> cs.hasPermission(0))
-                        .then(Commands.argument("index", IntegerArgumentType.integer(0, 10))
+                        .then(Commands.argument("index", IntegerArgumentType.integer(0, 12))
                                 .executes(context -> findNPC(
                                         context.getSource(),
                                         IntegerArgumentType.getInteger(context, "index")
