@@ -1,5 +1,6 @@
 package entity;
 
+import gui.screen.NPCDetailScreen;
 import gui.screen.NPCInteractionScreen;
 import model.NPCModel;
 import net.minecraft.client.Minecraft;
@@ -15,7 +16,7 @@ public class NPCEntityClientHandler {
     public static void interactWithNPC(Player player, NPCModel npc) {
         try {
             // 显示交互界面
-            Minecraft.getInstance().setScreen(new NPCInteractionScreen(npc));
+            Minecraft.getInstance().setScreen(new NPCDetailScreen(npc));
             NPCOpenAI.getLogger().info("Interacting with NPC: " + npc.getNPCName());
         } catch (Exception e) {
             NPCOpenAI.getLogger().error("Failed to interact with NPC: " + npc.getNPCName(), e);

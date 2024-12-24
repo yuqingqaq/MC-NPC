@@ -12,20 +12,48 @@ public class NPCDetailScreen extends Screen {
 
     private NPCModel npc;
     private ResourceLocation npcImage;
-
+    private boolean showHint = false;
     public NPCDetailScreen(NPCModel npc) {
-        super(new TextComponent("NPC Details"));
+        super(new TextComponent(npc.getEvent()));
         this.npc = npc;
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+
+        int buttonWidth = 120;
+        int buttonHeight = 20;
+        int buttonSpacing = 10;
+        int centerX = this.width / 2;
+        int buttonY = this.height - 50;
+
+        // "跟 xxx 聊聊" 按钮
+        this.addRenderableWidget(new Button(centerX - buttonWidth - buttonSpacing, buttonY, buttonWidth, buttonHeight,
+                new TextComponent("跟 " + npc.getNPCName() + " 聊聊"), button -> {
+            // 打开 NPCInteractionScreen
+            this.minecraft.setScreen(new NPCInteractionScreen(npc));
+        }
+        ));
+
+        // "查看线索" 按钮
+        this.addRenderableWidget(new Button(centerX + buttonSpacing, buttonY, buttonWidth, buttonHeight,
+                new TextComponent("查看线索"), button -> {
+            // 切换显示对话内容
+            this.showHint = true;
+        }
+        ));
+
+        // 关闭按钮
+        this.addRenderableWidget(new Button(this.width - 30, 15, 20, 20, new TextComponent("X"), button -> {
+            onClose();
+        }));
     }
 
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(poseStack);
         super.render(poseStack, mouseX, mouseY, partialTicks);
-
-        //ResourceLocation icon = COMPLETED;
-        //RenderSystem.setShaderTexture(0, icon);
-        //blit(poseStack, this.width / 2 - 64, 50, 0, 0, 128, 128, 128, 128);
 
         // Render NPC details
         int leftAlignX = this.width / 2 - 150;
@@ -34,22 +62,17 @@ public class NPCDetailScreen extends Screen {
         // Render NPC details
         drawString(poseStack, this.minecraft.font, "你在这里遇到了  " + npc.getNPCName(), leftAlignX, yPos+=20, 0xFFAAFF);
         drawString(poseStack, this.minecraft.font, "专业：" + npc.getRole(), leftAlignX+10, yPos+=20, 0xFFFFFF);
-        drawString(poseStack, this.minecraft.font, "关系：" + npc.getRelationship(), leftAlignX+10, yPos+=20, 0xFFFFFF);
         yPos += 10 ;
-        // 添加引导语
-        String dialogueIntroduction = "最近他/她常常在讲：";
-        drawString(poseStack, this.minecraft.font, dialogueIntroduction, leftAlignX, yPos+=20, 0xFFAAFF);
-        yPos += 20;
-        for (String dialogue : npc.getDialogues()) {
-            String dialogueText = "\"" + dialogue + "\"";
-            drawString(poseStack, this.minecraft.font, dialogueText, leftAlignX+10, yPos, 0xFFFFFF);
-            yPos += 20;
-        }
 
-        // 添加关闭按钮
-        this.addRenderableWidget(new Button(this.width - 30, 15, 20, 20, new TextComponent("X"), button -> {
-            onClose();
-        }));
+        // 根据按钮选择渲染对话内容
+        String dialogueText = showHint
+                ? npc.getDialogues().get(1) // 显示第二条对话内容
+                : npc.getDialogues().get(0); // 显示第一条对话内容
+        drawString(poseStack, this.minecraft.font, "\"" + dialogueText + "\"", leftAlignX + 10, yPos += 20, 0xFFFFFF);
+
+        // 引导语
+        String dialogueIntroduction = "你想要：";
+        drawString(poseStack, this.minecraft.font, dialogueIntroduction, leftAlignX, yPos += 40, 0xFFAAFF);
     }
 
     @Override

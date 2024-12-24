@@ -90,7 +90,7 @@ public class NPCTimeSortedScreen extends Screen {
                 this.init(); // 重新初始化界面以更新 UI 元素
             } else {
                 if (!hasShownCompletionToast) {
-                    showCompletionToast("恭喜！", "你在港中深度过了充实的一天！");
+                    showCompletionToast("恭喜！", "你已经集齐了所有碎片！");
                     hasShownCompletionToast = true; // 确保通知只显示一次
                 }
             }
@@ -130,7 +130,7 @@ public class NPCTimeSortedScreen extends Screen {
                 this.minecraft.player.chat("/time set 9000");
                 break;
             case EVENING:
-                this.minecraft.player.chat("/time set 18000");
+                this.minecraft.player.chat("/time set 15000");
                 break;
         }
     }

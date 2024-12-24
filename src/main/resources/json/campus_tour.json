@@ -1,232 +1,230 @@
 {
-  "chapter_title": "CUHK(SZ) Freshman Orientation - A Day in  CUHK(SZ): Meeting with new friends and professors.",
+  "chapter_title": "CUHK(SZ) Freshman Orientation - A Day in CUHK(SZ): Meeting with new friends and professors.",
   "chapter_description": "新生们来到香港中文大学（深圳）的一天，浏览校园，在校园的不同地点认识学校的教师，结识新朋友。",
   "npcs": [
     {
       "name": "徐扬生教授",
-      "description": "在礼文堂参加“与新生面对面”谈话活动，回答新生与家长的问题",
-      "event": "与校长面对面",
-      "role": "一位中国工程院院士，同时担任香港中文大学（深圳）的校长。他早年在美国宾夕法尼亚大学获得博士学位，后在美国卡耐基梅隆大学和香港中文大学工作多年。自2013年起，他担任香港中文大学（深圳）的首任校长。徐教授在机器人和智能系统领域做出了重要贡献，专注于空间机器人、服务机器人、穿戴式人机界面、智慧汽车、动态稳定系统和机器学习等方面的研究。他已经发表了六部专著和300多篇国际学术论文。他是中国工程院院士、美国国家工程院外籍院士、欧洲科学院院士、国际宇航科学院院士、国际电机及电子工程师学会院士、国际欧亚科学院院士以及香港工程科学院院士。",
-      "npcTask": "解答新生与家长们的问题，恭喜新生来到香港中文大学（深圳），鼓励他们开启人生的新篇章",
+      "description": "香港中文大学（深圳）的校长，他在行政楼内迎接新生并布置探索任务。徐校长是一位中国工程院院士，机器人与智能系统领域的专家。他致力于空间机器人、智慧汽车、机器学习等方向的研究，并发表了300多篇国际学术论文。",
+      "event": "序幕：风启新程",
+      "npcTask": "找到第一块校徽碎片",
+      "role": "香港中文大学（深圳）校长、教授，中国工程院院士",
       "time": "Morning",
-      "location": "礼文堂",
-      "relationship": "大学校长、教授",
+      "location": "Admin",
+      "relationship": "大学校长, 欢迎新生、介绍学校传统与特色，并布置九块校徽碎片的探索任务。",
       "dialogues": [
-        "同学们好，欢迎你们来到香港中文大学（深圳）。"
+        "欢迎来到香港中文大学（深圳）！这里不仅是一座校园，更是你梦想开始的地方。",
+        "我为你设计了一个特别任务。我已将校徽分为九块碎片，散落在校园的重要地点。第一块碎片，就藏在这栋行政楼中，祝你好运！"
       ],
       "tasks": [
         {
           "task_id": "1",
-          "description": "帮助Si Huang制定一个实际的学习和作业计划",
-          "completion_criteria": "创建并讨论一个详细的时间管理计划",
+          "description": "找到第一块校徽碎片。",
+          "completion_criteria": "在行政楼一楼大厅找到校徽碎片。",
           "completed": false,
-          "object": "Assignment Planning",
-          "reward": ["Time Management Wizard"],
-          "plot_significance": "通过帮助Si Huang制定学习计划，玩家学习了如何有效管理时间并减轻学术压力。"
+          "object": "校徽碎片",
+          "reward": ["校徽碎片（1/9）"],
+          "plot_significance": "开启象征探索旅程的起点，传递校徽精神与学校故事。"
         }
       ]
     },
     {
-      "name": "罗智泉教授",
-      "description": "在礼文堂参加“与新生面对面”谈话活动，回答新生与家长的问题",
-      "event": "大学的学术与科研",
-      "role": "一位中国工程院院士，同时担任香港中文大学（深圳）的校长。他早年在美国宾夕法尼亚大学获得博士学位，后在美国卡耐基梅隆大学和香港中文大学工作多年。自2013年起，他担任香港中文大学（深圳）的首任校长。徐教授在机器人和智能系统领域做出了重要贡献，专注于空间机器人、服务机器人、穿戴式人机界面、智慧汽车、动态稳定系统和机器学习等方面的研究。他已经发表了六部专著和300多篇国际学术论文。他是中国工程院院士、美国国家工程院外籍院士、欧洲科学院院士、国际宇航科学院院士、国际电机及电子工程师学会院士、国际欧亚科学院院士以及香港工程科学院院士。",
-      "npcTask": "解答新生与家长们的问题，恭喜新生来到香港中文大学（深圳），鼓励他们开启人生的新篇章",
-      "time": "Morning",
-      "location": "礼文堂",
-      "relationship": "大学校长、教授",
+      "name": "熊伟教授",
+      "description": "经管学院院长，他在TA教学楼门口迎接新生，并向他们介绍经管学院的学术成就与资源。熊教授致力于商业管理与经济研究，是一位经验丰富的学术带头人。",
+      "role": "经管学院院长，教授",
+      "event": "序幕：风启新程",
+      "npcTask": "找到第二块校徽碎片",
+      "time": "Noon",
+      "location": "TA",
+      "relationship": "学院院长, 介绍经管学院的特色，并提供第二块校徽碎片的线索。",
       "dialogues": [
-        "同学们好，欢迎你们来到香港中文大学（深圳）。"
+        "欢迎来到香港中文大学（深圳）！我是经管学院的院长熊伟，很高兴今天能在这里见到你。",
+        "听说你正在寻找校徽的碎片？第二块碎片就在这栋教学楼一楼的教室里！不过，找到它可能需要一些仔细的观察。加油！"
       ],
       "tasks": [
         {
           "task_id": "2",
-          "description": "帮助Si Huang制定一个实际的学习和作业计划",
-          "completion_criteria": "创建并讨论一个详细的时间管理计划",
+          "description": "找到第二块校徽碎片。",
+          "completion_criteria": "在TA教学楼一楼教室的某个座位上找到碎片。",
           "completed": false,
-          "object": "Assignment Planning",
-          "reward": ["Time Management Wizard"],
-          "plot_significance": "通过帮助Si Huang制定学习计划，玩家学习了如何有效管理时间并减轻学术压力。"
-        }
-      ]
-    },
-    {
-      "name": "朱世平教授",
-      "description": "在行政楼举办“新生第一课”。",
-      "event": "新生第一课",
-      "role": "香港中文大学（深圳）校长讲座教授、副校长和深圳先进高分子材料研究院院长",
-      "npcTask": "解答新生与家长们的问题，恭喜新生来到香港中文大学（深圳），鼓励他们开启人生的新篇章",
-      "time": "Morning",
-      "location": "礼文堂",
-      "relationship": "大学副校长、教授",
-      "dialogues": [
-        "同学们好，欢迎你们来到香港中文大学（深圳）。"
-      ],
-      "tasks": [
-        {
-          "task_id": "3",
-          "description": "帮助Chen Liu找到合适的学习资源和策略",
-          "completion_criteria": "提供有用的学习资源和策略，并进行一次学习会话",
-          "completed": false,
-          "object": "Academic Support",
-          "reward": ["Academic Helper"],
-          "plot_significance": "玩家通过提供学习资源帮助Student Liu改善学习效果，同时也增强了自己的学习能力。"
-        }
-      ]
-    },
-    {
-      "name": "唐本忠教授",
-      "description": "在行政楼举办“新生第一课”。",
-      "event": "理工学院",
-      "role": "香港中文大学（深圳）校长讲座教授、副校长和深圳先进高分子材料研究院院长",
-      "npcTask": "解答新生与家长们的问题，恭喜新生来到香港中文大学（深圳），鼓励他们开启人生的新篇章",
-      "time": "Morning",
-      "location": "礼文堂",
-      "relationship": "大学副校长、教授",
-      "dialogues": [
-        "同学们好，欢迎你们来到香港中文大学（深圳）。"
-      ],
-      "tasks": [
-        {
-          "task_id": "4",
-          "description": "帮助Chen Liu找到合适的学习资源和策略",
-          "completion_criteria": "提供有用的学习资源和策略，并进行一次学习会话",
-          "completed": false,
-          "object": "Academic Support",
-          "reward": ["Academic Helper"],
-          "plot_significance": "玩家通过提供学习资源帮助Student Liu改善学习效果，同时也增强了自己的学习能力。"
-        }
-      ]
-    },
-    {
-      "name": "戴建岗教授",
-      "description": "在行政楼举办“新生第一课”。",
-      "event": "数据科学学院",
-      "role": "香港中文大学（深圳）校长讲座教授、副校长和深圳先进高分子材料研究院院长",
-      "npcTask": "解答新生与家长们的问题，恭喜新生来到香港中文大学（深圳），鼓励他们开启人生的新篇章",
-      "time": "Morning",
-      "location": "礼文堂",
-      "relationship": "大学副校长、教授",
-      "dialogues": [
-        "同学们好，欢迎你们来到香港中文大学（深圳）。"
-      ],
-      "tasks": [
-        {
-          "task_id": "5",
-          "description": "帮助Chen Liu找到合适的学习资源和策略",
-          "completion_criteria": "提供有用的学习资源和策略，并进行一次学习会话",
-          "completed": false,
-          "object": "Academic Support",
-          "reward": ["Academic Helper"],
-          "plot_significance": "玩家通过提供学习资源帮助Student Liu改善学习效果，同时也增强了自己的学习能力。"
-        }
-      ]
-    },
-    {
-      "name": " 熊伟教授",
-      "description": "在行政楼举办“新生第一课”。",
-      "event": "经管学院",
-      "role": "香港中文大学（深圳）校长讲座教授、副校长和深圳先进高分子材料研究院院长",
-      "npcTask": "解答新生与家长们的问题，恭喜新生来到香港中文大学（深圳），鼓励他们开启人生的新篇章",
-      "time": "Morning",
-      "location": "礼文堂",
-      "relationship": "大学副校长、教授",
-      "dialogues": [
-        "同学们好，欢迎你们来到香港中文大学（深圳）。"
-      ],
-      "tasks": [
-        {
-          "task_id": "6",
-          "description": "帮助Chen Liu找到合适的学习资源和策略",
-          "completion_criteria": "提供有用的学习资源和策略，并进行一次学习会话",
-          "completed": false,
-          "object": "Academic Support",
-          "reward": ["Academic Helper"],
-          "plot_significance": "玩家通过提供学习资源帮助Student Liu改善学习效果，同时也增强了自己的学习能力。"
+          "object": "校徽碎片",
+          "reward": ["校徽碎片（2/9）"],
+          "plot_significance": "通过探索学院区域，感受经管学院的学术氛围和传统。"
         }
       ]
     },
     {
       "name": "唐文方教授",
-      "description": "在行政楼举办“新生第一课”。",
-      "event": "人文社科学院",
-      "role": "香港中文大学（深圳）校长讲座教授、副校长和深圳先进高分子材料研究院院长",
-      "npcTask": "解答新生与家长们的问题，恭喜新生来到香港中文大学（深圳），鼓励他们开启人生的新篇章",
-      "time": "Morning",
-      "location": "礼文堂",
-      "relationship": "大学副校长、教授",
+      "description": "人文社科学院院长，他在TB教学楼门口迎接新生，向他们介绍学院的研究领域与人文学科的意义。唐教授在翻译、应用心理学和全球研究领域有丰富的研究成果。",
+      "role": "人文社科学院院长，教授",
+      "event": "序幕：风启新程",
+      "npcTask": "找到第三块校徽碎片",
+      "time": "Noon",
+      "location": "TB",
+      "relationship": "学院院长, 介绍人文社科学院特色，并提供第三块校徽碎片的线索。",
       "dialogues": [
-        "同学们好，欢迎你们来到香港中文大学（深圳）。"
+        "欢迎来到香港中文大学（深圳）！我是人文社科学院的院长唐文方。",
+        "对了，听说你正在寻找校徽碎片？其中一块就藏在TB201教室的讲台上。快去看看吧！"
       ],
       "tasks": [
         {
-          "task_id": "7",
-          "description": "帮助Chen Liu找到合适的学习资源和策略",
-          "completion_criteria": "提供有用的学习资源和策略，并进行一次学习会话",
+          "task_id": "3",
+          "description": "找到第三块校徽碎片。",
+          "completion_criteria": "在TB教学楼201教室的讲台上找到碎片。",
           "completed": false,
-          "object": "Academic Support",
-          "reward": ["Academic Helper"],
-          "plot_significance": "玩家通过提供学习资源帮助Student Liu改善学习效果，同时也增强了自己的学习能力。"
+          "object": "校徽碎片",
+          "reward": ["校徽碎片（3/9）"],
+          "plot_significance": "通过探索，感受人文与社科领域的独特魅力与知识传递的意义。"
         }
       ]
     },
     {
       "name": "郑仲煊教授",
-      "description": "在行政楼举办“新生第一课”。",
-      "event": "医学院",
-      "role": "香港中文大学（深圳）校长讲座教授、副校长和深圳先进高分子材料研究院院长",
-      "npcTask": "解答新生与家长们的问题，恭喜新生来到香港中文大学（深圳），鼓励他们开启人生的新篇章",
-      "time": "Morning",
-      "location": "礼文堂",
-      "relationship": "大学副校长、教授",
+      "description": "医学院院长，他在TC教学楼门口迎接新生，并向他们介绍医学院的使命与教学资源。郑教授在生物医学工程、公共卫生和临床技能培训领域有着卓越的贡献。",
+      "role": "医学院院长，教授",
+      "event": "序幕：风启新程",
+      "npcTask": "找到第四块校徽碎片",
+      "time": "Noon",
+      "location": "TC",
+      "relationship": "学院院长, 介绍医学院特色，并提供第四块校徽碎片的线索。",
       "dialogues": [
-        "同学们好，欢迎你们来到香港中文大学（深圳）。"
+        "欢迎来到香港中文大学（深圳）医学院！我是医学院的郑仲煊，很高兴能在这里见到你。",
+        "听说你们正在寻找校徽碎片？我给你们一个提示：其中一块就藏在TC和TD教学楼之间的连廊处。快去看看吧！"
+      ],
+      "tasks": [
+        {
+          "task_id": "4",
+          "description": "找到第四块校徽碎片。",
+          "completion_criteria": "在TC和TD教学楼之间的连廊处找到碎片。",
+          "completed": false,
+          "object": "校徽碎片",
+          "reward": ["校徽碎片（4/9）"],
+          "plot_significance": "通过探索，理解医学中责任与实践的核心价值。"
+        }
+      ]
+    },
+    {
+      "name": "唐本忠教授",
+      "description": "理工学院院长，他在TD教学楼门口迎接新生，并向他们介绍学院的学术资源与科研机会。唐教授是材料科学和新能源工程领域的专家，曾主持多个国际级研究项目。",
+      "event": "序幕：风启新程",
+      "npcTask": "找到第五块校徽碎片",
+      "time": "Afternoon",
+      "location": "TD",
+      "relationship": "学院院长, 介绍理工学院特色，并提供第五块校徽碎片的线索。",
+      "dialogues": [
+        "欢迎来到香港中文大学（深圳）！我是理工学院的院长唐本忠。",
+        "听说你正在找校徽碎片？碎片就在TD教学楼三楼的计算机教室，第一排计算机旁边。"
+      ],
+      "tasks": [
+        {
+          "task_id": "5",
+          "description": "找到第五块校徽碎片。",
+          "completion_criteria": "在TD教学楼三楼的计算机教室找到碎片。",
+          "completed": false,
+          "object": "校徽碎片",
+          "reward": ["校徽碎片（5/9）"],
+          "plot_significance": "通过探索，感受科技领域的创新与实践精神。"
+        }
+      ]
+    },
+    {
+      "name": "戴建岗教授",
+      "description": "数据科学学院院长，他在道远楼迎接新生，向他们介绍学院的前沿研究与学术资源。戴教授是机器学习、大数据和统计学领域的权威，致力于培养创新型数据科学人才。",
+      "role": "数据科学学院院长，教授",
+      "event": "序幕：风启新程",
+      "npcTask": "找到第六块校徽碎片",
+      "time": "Afternoon",
+      "location": "DAOYUAN",
+      "relationship": "学院院长, 介绍数据科学学院特色，并提供第六块校徽碎片的线索。",
+      "dialogues": [
+        "欢迎来到香港中文大学（深圳）数据科学学院！我是戴建岗。",
+        "校徽的第六块碎片就在道远楼大堂的显示屏附近，仔细看看那里吧！"
+      ],
+      "tasks": [
+        {
+          "task_id": "6",
+          "description": "找到第六块校徽碎片。",
+          "completion_criteria": "在道远楼显示屏旁找到碎片。",
+          "completed": false,
+          "object": "校徽碎片",
+          "reward": ["校徽碎片（6/9）"],
+          "plot_significance": "体会数据科学如何将复杂问题转化为可解读的信息。"
+        }
+      ]
+    },
+    {
+      "name": "叶小钢教授",
+      "description": "音乐学院院长，他在逸夫国际会议中心迎接新生，并向他们介绍音乐学院的教学理念与目标：学院以培养兼具艺术造诣和社会责任的音乐家为目标，既注重传统，也致力于创新。叶教授是一位著名的作曲家，致力于培养兼具艺术造诣和社会责任的音乐家。",
+      "role": "音乐学院院长，教授",
+      "event": "序幕：风启新程",
+      "npcTask": "找到第七块校徽碎片",
+      "time": "Afternoon",
+      "location": "Conference",
+      "relationship": "学院院长, 介绍音乐学院特色并提供校徽碎片。",
+      "dialogues": [
+        "欢迎来到香港中文大学（深圳）音乐学院！我是叶小钢，非常高兴在这里见到你。",
+        "对了，听说你在寻找校徽的碎片？或许你可以去礼文堂那里看看，希望你能像音乐一样，在节奏与和谐中找到属于自己的旋律！"
+      ],
+      "tasks": [
+        {
+          "task_id": "7",
+          "description": "获得第七块校徽碎片。",
+          "completion_criteria": "与叶小钢教授对话后直接获得碎片。",
+          "completed": false,
+          "object": "校徽碎片",
+          "reward": ["校徽碎片（7/9）"],
+          "plot_significance": "象征突破界限、连接世界，音乐学院的教育理念融入探索旅程。"
+        }
+      ]
+    },
+    {
+      "name": "图书馆工作人员",
+      "description": "图书馆的工作人员，他们在门口迎接新生并介绍图书馆的资源与功能。",
+      "event": "序幕：风启新程",
+      "npcTask": "找到第八块校徽碎片",
+      "time": "Evening",
+      "location": "LIBRARY",
+      "relationship": "校园职员，介绍图书馆资源并提供校徽碎片的线索。",
+      "dialogues": [
+        "欢迎来到图书馆！这里是你们学习和探索的最佳场所。",
+        "对了，我听说你正在寻找校徽的碎片？悄悄告诉你一个线索，它藏在四楼书墙的旁边。快去看看吧，说不定还会发现更多值得探索的宝藏！"
       ],
       "tasks": [
         {
           "task_id": "8",
-          "description": "帮助Chen Liu找到合适的学习资源和策略",
-          "completion_criteria": "提供有用的学习资源和策略，并进行一次学习会话",
+          "description": "找到第八块校徽碎片。",
+          "completion_criteria": "在图书馆四楼的书墙旁找到碎片。",
           "completed": false,
-          "object": "Academic Support",
-          "reward": ["Academic Helper"],
-          "plot_significance": "玩家通过提供学习资源帮助Student Liu改善学习效果，同时也增强了自己的学习能力。"
+          "object": "校徽碎片",
+          "reward": ["校徽碎片（8/9）"],
+          "plot_significance": "象征知识与智慧的传承，强调图书馆作为学习与思考的中心。"
         }
       ]
     },
     {
-      "name": "叶小钢",
-      "description": "在行政楼举办“新生第一课”。",
-      "event": "音乐学院",
-      "role": "香港中文大学（深圳）校长讲座教授、副校长和深圳先进高分子材料研究院院长",
-      "npcTask": "解答新生与家长们的问题，恭喜新生来到香港中文大学（深圳），鼓励他们开启人生的新篇章",
-      "time": "Morning",
-      "location": "礼文堂",
-      "relationship": "大学副校长、教授",
+      "name": "体育馆工作人员",
+      "description": "体育馆的工作人员，他们在入口处迎接新生并介绍体育馆的设施与服务。",
+      "role": "体育馆工作人员",
+      "event": "序幕：风启新程",
+      "npcTask": "找到第九块校徽碎片",
+      "time": "Evening",
+      "location": "GYM",
+      "relationship": "校园职员，介绍体育馆设施并提供校徽碎片的线索",
       "dialogues": [
-        "同学们好，欢迎你们来到香港中文大学（深圳）。"
+        "欢迎来到体育馆！这里是一个充满活力的地方。",
+        "对了，我听说你正在寻找校徽的碎片？不过这次任务可有点特别！碎片藏在泳池底下。来挑战一下吧，运动和冒险总能带来意想不到的惊喜。"
       ],
       "tasks": [
         {
           "task_id": "9",
-          "description": "帮助Chen Liu找到合适的学习资源和策略",
-          "completion_criteria": "提供有用的学习资源和策略，并进行一次学习会话",
+          "description": "找到最后一块校徽碎片。",
+          "completion_criteria": "潜入泳池底下找到碎片。",
           "completed": false,
-          "object": "Academic Support",
-          "reward": ["Academic Helper"],
-          "plot_significance": "玩家通过提供学习资源帮助Student Liu改善学习效果，同时也增强了自己的学习能力。"
+          "object": "校徽碎片",
+          "reward": ["校徽碎片（9/9）"],
+          "plot_significance": "象征勇气与挑战自我，体育馆成为探索之旅的终点站。"
         }
-      ]
-    },
-    {
-      "name": "张医生",
-      "description": "在下园校医务室内接诊。",
-      "role": "下园校医务室-全科医生",
-      "time": "Afternoon",
-      "dialogues": [
-        "同学你有什么哪里不舒服的吗？"
       ]
     }
   ],
-  "chapter_end_description": "通过与各种背景和挑战的同学互动，新生们不仅帮助他们克服心理健康挑战，也对处理自己未来可能遇到的问题有了更深的理解和准备。"
+  "chapter_end_description": "在收集完所有校徽碎片后，你带着兴奋与期待返回了行政楼。徐扬生校长正站在大堂中央等待你的归来。他将完整的校徽赠予你，象征着你的智慧、勇气和坚持。掌心的校徽温暖而有分量，像是一颗星辰，点亮了你的前路。从这一刻开始，新的篇章，已悄然展开。"
 }
