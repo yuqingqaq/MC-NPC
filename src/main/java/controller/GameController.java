@@ -7,6 +7,7 @@ import metadata.NPCMessage;
 import system.ExpertSystem;
 import system.NPCSystem;
 import clinic.huatuoAPI;
+import system.TaskSystem;
 import view.GameView;
 import com.fasterxml.jackson.core.type.TypeReference;
 import model.NPCModel;
@@ -28,6 +29,7 @@ public class GameController implements GameControllerInterface {
     private List<ItemModel> gameAssets;
     private NPCSystem npcSystem;
     private ExpertSystem expertSystem;
+    private TaskSystem taskSystem;
     private OpenAIGPT gptModel;
     private OpenAIGPT expertModel;
     private huatuoAPI clinicModel;
@@ -69,7 +71,14 @@ public class GameController implements GameControllerInterface {
 
         this.npcSystem = new NPCSystem(gptModel,clinicModel);
         this.expertSystem = new ExpertSystem(expertModel);
+        this.taskSystem = new TaskSystem();
 
+        for (NPCModel npc : npcs) {
+            for (TaskModel task : npc.getTasks()) {
+                this.taskSystem.addTask(task);
+            }
+            this.taskSystem.addNPCToStage(npc.getLocation(), npc);
+        }
     }
 
     private void initializeView() {
@@ -149,5 +158,10 @@ public class GameController implements GameControllerInterface {
 
     public List<ItemModel> getGameAssets() {
         return gameAssets;
+    }
+
+
+    public TaskSystem getTaskSystem() {
+        return this.taskSystem;
     }
 }
