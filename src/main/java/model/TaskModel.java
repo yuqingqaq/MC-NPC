@@ -12,6 +12,7 @@ public class TaskModel {
     private OnTaskCompleteListener onCompleteListener;
     private List<String> reward; // 修改为 List<String> 类型
     private String plotSignificance;
+    private String npcLocation; // 任务对应的位置
 
     public TaskModel(String taskId, String description, String completionCriteria, String objectName, List<String> reward, String plotSignificance, boolean completed) {
         this.taskId = taskId;
@@ -70,5 +71,11 @@ public class TaskModel {
         return onCompleteListener;
     }
 
+    public String getCoinLocation() {
+        return npcLocation;
+    }
 
+    public void setCoinLocation(String npcLocation) {
+        this.npcLocation = npcLocation;
+    }
 }

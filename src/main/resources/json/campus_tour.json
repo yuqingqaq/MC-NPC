@@ -20,7 +20,7 @@
           "task_id": "1",
           "description": "找到第一块校徽碎片。",
           "completion_criteria": "在行政楼一楼大厅找到校徽碎片。",
-          "completed": true,
+          "completed": false,
           "object": "校徽碎片",
           "reward": ["校徽碎片（1/9）"],
           "plot_significance": "开启象征探索旅程的起点，传递校徽精神与学校故事。"
@@ -45,7 +45,7 @@
           "task_id": "2",
           "description": "找到第二块校徽碎片。",
           "completion_criteria": "在TA教学楼一楼教室的某个座位上找到碎片。",
-          "completed": true,
+          "completed": false,
           "object": "校徽碎片",
           "reward": ["校徽碎片（2/9）"],
           "plot_significance": "通过探索学院区域，感受经管学院的学术氛围和传统。"

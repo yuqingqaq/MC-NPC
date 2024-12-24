@@ -7,7 +7,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -95,5 +97,31 @@ public class JsonLoader {
         }
         return new NPCModel(name, description, role, event, npcTask, dialogues, tasks, time, relationship, location);
         //return new NPCModel(name, description, role, dialogues, tasks);
+    }
+
+    public static Map<String, String> loadTaskCoinLocations(String filePath) {
+        Map<String, String> taskCoinLocations = new HashMap<>();
+
+        try (InputStream is = ResourcePathUtil.getResourceAsStream(filePath)) {
+            if (is == null) {
+                LOGGER.log(Level.SEVERE, "Resource not found: " + filePath);
+                return taskCoinLocations;
+            }
+
+            // 解析 JSON 文件
+            JsonNode root = mapper.readTree(is);
+
+            // 遍历顶层对象中的键值对
+            root.fields().forEachRemaining(entry -> {
+                String taskId = entry.getKey();
+                String location = entry.getValue().asText();
+                taskCoinLocations.put(taskId, location);
+            });
+
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Failed to load task coin locations from JSON: " + e.getMessage(), e);
+        }
+
+        return taskCoinLocations;
     }
 }

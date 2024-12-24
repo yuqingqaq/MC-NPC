@@ -19,13 +19,13 @@ public class PlayerPathGuide {
     private static long lastParticleTime = 0;
 
     // 冷却时间（毫秒）
-    private static final long PARTICLE_COOLDOWN = 1000; // 1秒
+    private static final long PARTICLE_COOLDOWN = 3000; // 1秒
 
     // 上一次玩家的位置
     private static Vec3 lastPlayerPos = null;
 
     // 玩家移动的距离阈值
-    private static final double MOVE_THRESHOLD = 1.5; // 1.5格
+    private static final double MOVE_THRESHOLD = 5; // 1.5格
 
     public static BlockPos getCurrentTarget() {
         return currentTarget;

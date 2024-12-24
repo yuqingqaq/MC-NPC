@@ -19,14 +19,14 @@ public class PlayerCoinGuide {
             BlockPos playerPos = player.blockPosition();
             BlockPos nearestCoin = GoldCoinTracker.findNearestCoin(playerPos);
 
-            if (nearestCoin != null) {
-                // 显示最近金币的位置到动作栏
-                player.displayClientMessage(
-                        new TextComponent("Nearest gold coin at: " + nearestCoin.toShortString()), true
-                );
-            } else {
-                player.displayClientMessage(new TextComponent("No gold coins nearby!"), true);
-            }
+//            if (nearestCoin != null) {
+//                // 显示最近金币的位置到动作栏
+//                player.displayClientMessage(
+//                        new TextComponent("Nearest gold coin at: " + nearestCoin.toShortString()), true
+//                );
+//            } else {
+//                player.displayClientMessage(new TextComponent("No gold coins nearby!"), true);
+//            }
         }
     }
 

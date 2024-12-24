@@ -1,11 +1,15 @@
 package gui.screen;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import component.ColoredText;
+import component.TextUtils;
 import model.NPCModel;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
+
+import java.util.List;
 
 public class NPCDetailScreen extends Screen {
     private static final ResourceLocation COMPLETED = new ResourceLocation("npcopenai", "textures/item/todo.png");
@@ -61,14 +65,20 @@ public class NPCDetailScreen extends Screen {
 
         // Render NPC details
         drawString(poseStack, this.minecraft.font, "你在这里遇到了  " + npc.getNPCName(), leftAlignX, yPos+=20, 0xFFAAFF);
-        drawString(poseStack, this.minecraft.font, "专业：" + npc.getRole(), leftAlignX+10, yPos+=20, 0xFFFFFF);
+        drawString(poseStack, this.minecraft.font, "身份：" + npc.getRole(), leftAlignX+10, yPos+=20, 0xFFFFFF);
         yPos += 10 ;
 
         // 根据按钮选择渲染对话内容
         String dialogueText = showHint
                 ? npc.getDialogues().get(1) // 显示第二条对话内容
                 : npc.getDialogues().get(0); // 显示第一条对话内容
-        drawString(poseStack, this.minecraft.font, "\"" + dialogueText + "\"", leftAlignX + 10, yPos += 20, 0xFFFFFF);
+
+        yPos += 20;
+        List<ColoredText> contentLines = TextUtils.wrapText(dialogueText, (int) (this.width / 1.3f), true);
+        for (ColoredText line : contentLines) {
+            drawString(poseStack, this.font, line.text,leftAlignX + 10, yPos, line.color);
+            yPos += 10;
+        }
 
         // 引导语
         String dialogueIntroduction = "你想要：";

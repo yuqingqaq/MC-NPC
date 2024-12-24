@@ -38,7 +38,6 @@ public class CommandRegistry {
         return builder.buildFuture();
     }
 
-
     @SubscribeEvent
     public static void onCommandRegister(RegisterCommandsEvent event) {
         CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();

@@ -53,8 +53,8 @@ public class HUDPathRenderer {
         int screenWidth = mc.getWindow().getGuiScaledWidth();
         int screenHeight = mc.getWindow().getGuiScaledHeight();
 
-        int arrowX = screenWidth / 2;
-        int arrowY = screenHeight / 2 + 10; // 箭头在屏幕中心上方
+        int arrowX = screenWidth / 2 + 150;
+        int arrowY = screenHeight / 2; // 箭头在屏幕中心上方
 
         // 使用 PoseStack 管理矩阵变换
         poseStack.pushPose();
@@ -70,7 +70,7 @@ public class HUDPathRenderer {
         poseStack.popPose(); // 恢复矩阵状态
 
         // 渲染距离
-        String distanceText = String.format("Distance: %.1f blocks", distance);
-        mc.font.draw(poseStack, distanceText, screenWidth / 2 - mc.font.width(distanceText) / 2, screenHeight / 2 + 30, 0xFFFFFF);
+        //String distanceText = String.format("Distance: %.1f blocks", distance);
+        //mc.font.draw(poseStack, distanceText, screenWidth / 2 - mc.font.width(distanceText) / 2, screenHeight / 2 + 30, 0xFFFFFF);
     }
 }

@@ -17,6 +17,7 @@ import util.JsonLoader;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class GameController implements GameControllerInterface {
@@ -33,6 +34,8 @@ public class GameController implements GameControllerInterface {
     private OpenAIGPT gptModel;
     private OpenAIGPT expertModel;
     private huatuoAPI clinicModel;
+
+    private Map<String, String> taskCoinLocations; // 任务 ID 和位置的映射
 
     public static GameController getInstance() {
         if (instance == null) {
@@ -71,16 +74,33 @@ public class GameController implements GameControllerInterface {
 
         this.npcSystem = new NPCSystem(gptModel,clinicModel);
         this.expertSystem = new ExpertSystem(expertModel);
-        this.taskSystem = new TaskSystem();
 
-        for (NPCModel npc : npcs) {
-            for (TaskModel task : npc.getTasks()) {
-                this.taskSystem.addTask(task);
-            }
-            this.taskSystem.addNPCToStage(npc.getLocation(), npc);
-        }
+        this.taskSystem = new TaskSystem();
+        taskCoinLocations = JsonLoader.loadTaskCoinLocations("json/task_coin_location.json");
+        initializeTasksAndNPCs(this.npcs);
     }
 
+    public void initializeTasksAndNPCs(List<NPCModel> npcs) {
+        for (NPCModel npc : npcs) {
+            // 获取 NPC 的位置
+            String npcLocation = npc.getLocation();
+            System.out.println("NPC Location: " + npcLocation);
+
+            for (TaskModel task : npc.getTasks()) {
+                String taskLocation = taskCoinLocations.get(npcLocation);
+                if (taskLocation != null) {
+                    task.setCoinLocation(taskLocation);
+                    //System.out.println("Task ID: " + task.getTaskId() + ", Location: " + taskLocation);
+                } else {
+                    System.out.println("No location found for NPC Location: " + npcLocation);
+                }
+
+                this.taskSystem.addTask(task);
+            }
+
+            this.taskSystem.addNPCToStage(npcLocation, npc);
+        }
+    }
     private void initializeView() {
         for (NPCModel npc : npcs) {
             view.addNpcTab(npc);
