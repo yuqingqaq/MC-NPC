@@ -1,8 +1,10 @@
 package command;
 
+import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -36,21 +38,25 @@ public class ClearGoldCoinsCommandRegistry {
      * @return 被清除的金币数量
      */
     private static int clearGoldCoins(CommandSourceStack source) {
-        ServerLevel level = source.getLevel(); // 获取当前世界
+        ServerLevel world = source.getLevel(); // 获取当前世界
         int removedCount = 0; // 统计清除的金币数量
 
-        // 遍历当前世界中的所有实体
-        for (Entity entity : level.getEntities().getAll()) {
-            // 判断实体是否是金币实体
+        // 遍历世界中的所有实体
+        Iterable<Entity> entities = world.getAllEntities();
+        for (Entity entity : entities) {
+            // 检查实体是否是 ItemEntity 且为黄金金币
             if (entity instanceof ItemEntity itemEntity &&
                     itemEntity.getItem().getItem() == ItemRegistry.GOLD_COIN.get()) {
+
                 entity.remove(Entity.RemovalReason.DISCARDED); // 移除实体
+                System.out.println("Removed Gold Coin with UUID: " + entity.getUUID()); // 调试信息
                 removedCount++;
             }
         }
 
-        // 向命令执行者反馈结果
-        System.out.println("Removed " + removedCount + " gold coins from the world.");
-        return removedCount; // 返回移除的实体数量
+        // 发送反馈消息
+        source.sendSuccess(new TextComponent("Removed " + removedCount + " gold coins from the world."), true);
+
+        return Command.SINGLE_SUCCESS; // 返回成功状态
     }
 }

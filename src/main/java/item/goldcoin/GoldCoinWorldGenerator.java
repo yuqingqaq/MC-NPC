@@ -1,7 +1,9 @@
 package item.goldcoin;
 
 import controller.GameController;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -17,6 +19,8 @@ public class GoldCoinWorldGenerator {
     public static void onWorldLoad(WorldEvent.Load event) {
         if (event.getWorld() instanceof ServerLevel serverLevel && !hasGenerated) {
             hasGenerated = true; // 确保只生成一次
+
+            executeClearGoldCoinsCommand(serverLevel);
 
             // 获取 TaskSystem
             TaskSystem taskSystem = GameController.getInstance().getTaskSystem();
@@ -39,5 +43,21 @@ public class GoldCoinWorldGenerator {
                 }
             }
         }
+    }
+    /**
+     * 调用 /cleargoldcoins 命令清除所有金币
+     *
+     * @param serverLevel 当前服务器世界
+     */
+    private static void executeClearGoldCoinsCommand(ServerLevel serverLevel) {
+        MinecraftServer server = serverLevel.getServer(); // 获取服务器实例
+
+        // 创建命令源（这里使用控制台作为源）
+        CommandSourceStack commandSourceStack = server.createCommandSourceStack()
+                .withLevel(serverLevel) // 设置命令执行的目标世界
+                .withPermission(4); // 设置权限等级（4 = 管理员）
+
+        // 调用命令
+        server.getCommands().performCommand(commandSourceStack, "cleargoldcoins");
     }
 }

@@ -3,6 +3,7 @@ package npcopenai;
 import controller.GameController;
 import entity.*;
 import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
@@ -22,7 +23,7 @@ import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import registry.EntityRegistry;
 import registry.ItemRegistry;
-
+import command.ClearGoldCoinsCommandRegistry;
 import java.util.stream.Collectors;
 
 import static registry.EntityRegistry.LIBRARIAN_ENTITY;
@@ -93,6 +94,21 @@ public class NPCOpenAI {
     public void onServerStopping(ServerStoppingEvent event) {
         ServerLevel world = event.getServer().overworld();  // 获取主世界
         NPCDataManager.saveAllNPCs(world);  // 保存所有 NPC 数据
+
+        // 创建命令源（控制台作为源）
+        CommandSourceStack commandSourceStack = event.getServer().createCommandSourceStack()
+                .withLevel(world) // 设置命令执行的目标世界
+                .withPermission(4); // 设置管理员权限（4 为最高权限）
+
+        // 执行命令，并获取返回值
+        int success = event.getServer().getCommands().performCommand(commandSourceStack, "cleargoldcoins");
+
+        // 输出命令执行结果
+        if (success > 0) {
+            System.out.println("Successfully executed /cleargoldcoins during server stopping. Result: " + success);
+        } else {
+            System.out.println("Failed to execute /cleargoldcoins during server stopping. Result: " + success);
+        }
     }
 
     @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
