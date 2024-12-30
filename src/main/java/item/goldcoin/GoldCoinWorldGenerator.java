@@ -13,14 +13,14 @@ import system.TaskSystem;
 @Mod.EventBusSubscriber(modid = "npcopenai", bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class GoldCoinWorldGenerator {
 
-    private static boolean hasGenerated = false; // 防止重复生成
+    public static boolean hasGenerated = false; // 防止重复生成
 
     @SubscribeEvent
     public static void onWorldLoad(WorldEvent.Load event) {
         if (event.getWorld() instanceof ServerLevel serverLevel && !hasGenerated) {
             hasGenerated = true; // 确保只生成一次
 
-            executeClearGoldCoinsCommand(serverLevel);
+            //executeClearGoldCoinsCommand(serverLevel);
 
             // 获取 TaskSystem
             TaskSystem taskSystem = GameController.getInstance().getTaskSystem();

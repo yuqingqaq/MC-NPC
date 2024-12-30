@@ -23,7 +23,7 @@ import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import registry.EntityRegistry;
 import registry.ItemRegistry;
-import command.ClearGoldCoinsCommandRegistry;
+import item.goldcoin.GoldCoinWorldGenerator;
 import java.util.stream.Collectors;
 
 import static registry.EntityRegistry.LIBRARIAN_ENTITY;
@@ -95,7 +95,7 @@ public class NPCOpenAI {
         ServerLevel world = event.getServer().overworld();  // 获取主世界
         NPCDataManager.saveAllNPCs(world);  // 保存所有 NPC 数据
 
-        // 创建命令源（控制台作为源）
+        // 创建命令源（控制台作为源） - 需要改写
         CommandSourceStack commandSourceStack = event.getServer().createCommandSourceStack()
                 .withLevel(world) // 设置命令执行的目标世界
                 .withPermission(4); // 设置管理员权限（4 为最高权限）
@@ -105,6 +105,7 @@ public class NPCOpenAI {
 
         // 输出命令执行结果
         if (success > 0) {
+            GoldCoinWorldGenerator.hasGenerated = false; // 重置为 false，确保下次进入世界时可以重新生成金币
             System.out.println("Successfully executed /cleargoldcoins during server stopping. Result: " + success);
         } else {
             System.out.println("Failed to execute /cleargoldcoins during server stopping. Result: " + success);

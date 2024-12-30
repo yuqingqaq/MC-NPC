@@ -103,7 +103,6 @@ public class NPCTaskScreen extends Screen {
 
             font.draw(poseStack, name, xName, yOffset, 0xFFFFFF);  // Left-aligned NPC name
 //            font.draw(poseStack, event, xRole, yOffset, 0xFFFFFF);  // Left-aligned NPC role
-            font.draw(poseStack, event, xEvent, yOffset, 0xFFFFFF);  // Left-aligned NPC role
 
             // Check if the mouse is over the NPC name or role
 //            if ((mouseX >= xName && mouseX <= xName + font.width(name) && mouseY >= yOffset && mouseY <= yOffset + font.lineHeight) ||
