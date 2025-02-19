@@ -1,5 +1,6 @@
 package registry;
 
+import item.CustomTaskOverviewItem;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -19,6 +20,7 @@ public class ItemRegistry {
     private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, NPCOpenAI.MODID);
 
     public static final RegistryObject<Item> CUSTOM_ITEM = ITEMS.register("task_book", CustomItem::new);
+    public static final RegistryObject<Item> CUSTOM_Overview_ITEM = ITEMS.register("task_overview_book", CustomTaskOverviewItem::new);
     public static final RegistryObject<Item> CUSTOM_ITEM_TIMED = ITEMS.register("timed_book", TimedCustomItem::new);
     public static final RegistryObject<Item> GOLD_COIN = ITEMS.register("phoenix", GoldCoinItem::new);
     private static final Logger LOGGER = LogManager.getLogger();
@@ -42,6 +44,11 @@ public class ItemRegistry {
                     CUSTOM_ITEM_TIMED.get()
             );
             LOGGER.info("Timed Custom items registered.");
+
+            itemRegistryEvent.getRegistry().registerAll(
+                    CUSTOM_Overview_ITEM.get()
+            );
+            LOGGER.info("Task Overview Custom items registered.");
         }
     }
 

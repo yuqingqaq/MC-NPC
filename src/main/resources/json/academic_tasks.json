@@ -1,0 +1,38 @@
+{
+  "academic_tasks": [
+    {
+      "taskId": "task1",
+      "title": "参考文献",
+      "category": "Academic",
+      "description": "研究虚拟校园图书馆的使用方法",
+      "target": "搜集有关大语言模型的5条参考文献",
+      "resources": ["参考书籍", "在线文章"],
+      "location": "图书馆",
+      "estimatedTime": "10分钟",
+      "strategies": ["组队", "问专家", "自行规划"],
+      "summary": {
+        "进展": "已完成大部分资料搜集",
+        "困难": "部分参考文献无法获取",
+        "下一步": "前往图书管理员咨询"
+      },
+      "completed": false
+    },
+    {
+      "taskId": "task2",
+      "title": "NLP 模型分析",
+      "category": "Academic",
+      "description": "分析自然语言处理模型的优缺点",
+      "target": "完成一份详细的报告",
+      "resources": ["NLP 教材", "研究论文"],
+      "location": "实验室",
+      "estimatedTime": "2小时",
+      "strategies": ["自行规划", "参考他人研究"],
+      "summary": {
+        "进展": "已完成初步分析",
+        "困难": "报告结构尚需完善",
+        "下一步": "与导师讨论分析结果"
+      },
+      "completed": false
+    }
+  ]
+}

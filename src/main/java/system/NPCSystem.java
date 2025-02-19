@@ -63,6 +63,9 @@ public class NPCSystem {
             else if(npc.getNPCName().equals("叶小钢教授")){
                 npc.addDialogueToHistory(new NPCMessage("user", NPCPromptConfig.MUSPrompt() + userInput));
             }
+            else if(npc.getNPCName().equals("罗智泉教授")){
+                npc.addDialogueToHistory(new NPCMessage("user", NPCPromptConfig.SRIBDPrompt() + userInput));
+            }
             else if(npc.getNPCName().equals("图书馆工作人员")){
                 npc.addDialogueToHistory(new NPCMessage("user", NPCPromptConfig.LibPrompt() + userInput));
             }

@@ -38,6 +38,7 @@ public class CallRefTTS {
             refAudioDict.put("唐本忠教授", "/home/sunzhu/Real-time-hyperpersonification/NPC_Ref_audio/采访声音/理工学院院长（唐本忠）.mp3<text>:研究主要是与光有关系，我们看看这个摄影棚，我们就知道光对现代世界是非常非常重要的。从远古到现在，一直都很重要，但是现在的社会就更重要了，因为你现在的通讯是电子通讯，但是以后一定是光子通讯。那就与光有关系，这是从比较实用的角度来讲，我们现在做这个研究叫做聚集诱导发光，聚集诱导发光是什么呢，就是说聚集之后发光更强");
             refAudioDict.put("熊伟教授", "/home/sunzhu/Real-time-hyperpersonification/NPC_Ref_audio/采访声音/经管学院院长（熊伟).mp3<text>:经管的准毕业生同学们，时光飞逝，还有不到一年，你们即将从SME毕业，奔赴新的前程。为了帮助同学们在本科最后一年做好求职、求学的冲刺，SME CDC组织了本次的准毕业生沟通会。一方面，让大家思想上提个醒。充分利用接下来大半年的时间，做好每周每月的规划，一步一步落实到位，直到做到心仪的offer另一方面。通过分析当前求职求学的");
             refAudioDict.put("叶小钢教授", "/home/sunzhu/Real-time-hyperpersonification/NPC_Ref_audio/采访声音/音乐学院院长（叶小钢).mp3<text>:学生来说，他面临这个世界，我觉得判断和选择是最重要的。为什么，判断包括人生的，生活道路的判断，艺术道路的判断，对学习所用的教材的判断和选择都是非常重要的，这对学生的一生的影响是很大的，觉得大学这个环境培养了什么样的人最合适呢，我觉得每一位学生都应该认识到。我在大学里所要完成的任务是开拓事业，积极进取啊身体");
+            refAudioDict.put("罗智泉教授", "/home/sunzhu/Real-time-hyperpersonification/NPC_Ref_audio/采访声音/Tom Luo.mp3<text>:我知道大家现在都很忙，在积极的准备高考。高考是人生非常重要的一场考试，但也仅仅是一场考试而已。希望大家放下包袱，积极准备，以平常心做最大的努力。啊，这个，没有考好也没有关系，考好了当然要祝贺。我当年高考的时候，也是跟大家一样");
 
 
 

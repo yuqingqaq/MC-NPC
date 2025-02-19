@@ -4,6 +4,7 @@ import api.OpenAIGPT;
 import controller.GameController;
 import interfaces.GameControllerInterface;
 import metadata.NPCMessage;
+import model.AcademicTaskModel;
 import system.ExpertSystem;
 import system.NPCSystem;
 import clinic.huatuoAPI;
@@ -28,6 +29,7 @@ public class GameController implements GameControllerInterface {
     private List<ItemModel> backpackItems;
     private List<ItemModel> worldObjects;
     private List<ItemModel> gameAssets;
+    private List<AcademicTaskModel> academicTasks;
     private NPCSystem npcSystem;
     private ExpertSystem expertSystem;
     private TaskSystem taskSystem;
@@ -56,6 +58,11 @@ public class GameController implements GameControllerInterface {
                 "json/playerBackpack.json",
                 "player_backpack",
                 new TypeReference<List<ItemModel>>() {}
+        );
+        academicTasks = JsonLoader.loadObjectListFromJson(
+                "json/academic_tasks.json",
+                "academic_tasks",
+                new TypeReference<List<AcademicTaskModel>>() {}
         );
         worldObjects = JsonLoader.loadObjectListFromJson(
                 "json/world_objects.json",
@@ -164,6 +171,9 @@ public class GameController implements GameControllerInterface {
         return null;
     }
 
+    public List<AcademicTaskModel> getAcademicTasks() {
+        return academicTasks;
+    }
     public List<NPCModel> getNpcs() {
         return npcs;
     }

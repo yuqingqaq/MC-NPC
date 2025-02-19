@@ -26,7 +26,7 @@ public class LibrarianNPCEntity extends Mob {
         super(type, world);
     }
     private String currentSpeechText = "同学们好，欢迎你们来到香港中文大学（深圳）!";
-    private boolean isTalking = true;
+    private boolean isTalking = false;
 
     public void startTalking(String text) {
         this.currentSpeechText = text;
