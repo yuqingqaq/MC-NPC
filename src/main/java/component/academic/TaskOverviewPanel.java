@@ -1,4 +1,4 @@
-package component;
+package component.academic;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
 
-public class TaskScrollPanel extends ScrollPanel {
+public class TaskOverviewPanel extends ScrollPanel {
     private List<String> taskList; // 保存任务的数据
     private Consumer<String> onTaskClick; // 点击任务时的回调函数
     private final Font font;
@@ -27,7 +27,7 @@ public class TaskScrollPanel extends ScrollPanel {
     private String currentCategory = ""; // 当前分类
     private Map<String, List<String>> categoryTasks = new HashMap<>(); // 分类及其子任务
 
-    public TaskScrollPanel(Minecraft mc, int width, int height, int top, int left, int border, int barWidth, 
+    public TaskOverviewPanel(Minecraft mc, int width, int height, int top, int left, int border, int barWidth, 
             Map<String, List<String>> categoryTasks, Consumer<String> onTaskClick, String initialTaskTitle) {
         super(mc, width, height, top, left, border, barWidth, 0, 0, 0x00000000, 0x00000000, 0x00000000);
         this.categoryTasks = categoryTasks;

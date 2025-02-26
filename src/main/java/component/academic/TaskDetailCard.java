@@ -1,4 +1,4 @@
-package component;
+package component.academic;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -6,6 +6,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.ResourceLocation;
 import java.util.List;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.TextComponent;
 
 public class TaskDetailCard {
     // 为每种卡片类型定义独立的图标资源
@@ -27,12 +29,15 @@ public class TaskDetailCard {
     private static final int ICON_SIZE = 16;
     private final Minecraft minecraft;
     
+    private static final int BUTTON_WIDTH = 60;
+    private static final int BUTTON_HEIGHT = 20;
+    
     public TaskDetailCard(Minecraft minecraft) {
         this.minecraft = minecraft;
     }
     
     public void renderNormalCard(PoseStack poseStack, int x, int y, int width, String title, 
-            String content, ResourceLocation icon) {
+            String content, ResourceLocation icon, boolean showButton, Button.OnPress onPress) {
         // 渲染 10% 透明度的黑色背景
         Screen.fill(poseStack, x, y, x + width, y + 50, 0x1A000000);
         
@@ -42,10 +47,17 @@ public class TaskDetailCard {
         
         minecraft.font.draw(poseStack, title, x + 32, y + 12, 0xFFFFFF);
         minecraft.font.draw(poseStack, content, x + 10, y + 32, 0xAAAAAA);
+        
+        // 根据 showButton 参数决定是否渲染按钮
+        if (showButton) {
+            Button viewButton = new Button(x + width - BUTTON_WIDTH - 10, y + 10, BUTTON_WIDTH, BUTTON_HEIGHT, 
+                                           new TextComponent("查看"), onPress);
+            viewButton.render(poseStack, 0, 0, 0);
+        }
     }
     
     public void renderWideCard(PoseStack poseStack, int x, int y, int width, String title, 
-            List<String> contents, ResourceLocation icon) {
+            List<String> contents, ResourceLocation icon, boolean showButton, Button.OnPress onPress) {
         int height = 35 + contents.size() * 15;
         // 渲染 10% 透明度的黑色背景
         Screen.fill(poseStack, x, y, x + width, y + height, 0x1A000000);
@@ -60,5 +72,18 @@ public class TaskDetailCard {
             minecraft.font.draw(poseStack, "• " + content, x + 10, contentY, 0xAAAAAA);
             contentY += 15;
         }
+        
+        // 根据 showButton 参数决定是否渲染按钮
+        if (showButton) {
+            Button viewButton = new Button(x + width - BUTTON_WIDTH - 10, y + 10, BUTTON_WIDTH, BUTTON_HEIGHT, 
+                                           new TextComponent("查看"), onPress);
+            viewButton.render(poseStack, 0, 0, 0);
+        }
+    }
+
+    public boolean isMouseOverButton(int mouseX, int mouseY, int x, int y, int width) {
+        int buttonX = x + width - BUTTON_WIDTH - 10;
+        int buttonY = y + 10;
+        return mouseX >= buttonX && mouseX <= buttonX + BUTTON_WIDTH && mouseY >= buttonY && mouseY <= buttonY + BUTTON_HEIGHT;
     }
 } 

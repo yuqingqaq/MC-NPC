@@ -1,8 +1,9 @@
-package gui.screen;
+package gui.academic;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import component.TaskScrollPanel;
-import component.TaskDetailPanel;
+
+import component.academic.TaskDetailPanel;
+import component.academic.TaskOverviewPanel;
 import controller.GameController;
 import model.AcademicTaskModel;
 import net.minecraft.client.gui.screens.Screen;
@@ -16,7 +17,7 @@ import java.util.Map;
 public class TaskOverviewScreen extends Screen {
     private List<AcademicTaskModel> academicTasks;
     private AcademicTaskModel currentTask;
-    private TaskScrollPanel taskPanel;
+    private TaskOverviewPanel taskPanel;
     private TaskDetailPanel detailPanel;
     private Map<String, List<String>> categoryTasks = new HashMap<>();
 
@@ -40,7 +41,7 @@ public class TaskOverviewScreen extends Screen {
 
         // 创建左侧任务列表面板
         int leftPanelWidth = 150;
-        taskPanel = new TaskScrollPanel(
+        taskPanel = new TaskOverviewPanel(
             minecraft,
             leftPanelWidth,
             height - 30,

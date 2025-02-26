@@ -1,4 +1,4 @@
-package gui.screen;
+package gui.academic;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.components.Button;
@@ -67,4 +67,4 @@ public class NPCDialogueScreen extends Screen {
     public boolean isPauseScreen() {
         return false;
     }
-} 
+}
