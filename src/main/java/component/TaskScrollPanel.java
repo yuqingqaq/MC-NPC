@@ -9,22 +9,46 @@ import net.minecraftforge.client.gui.ScrollPanel;
 
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.ArrayList;
 
 public class TaskScrollPanel extends ScrollPanel {
     private List<String> taskList; // 保存任务的数据
     private Consumer<String> onTaskClick; // 点击任务时的回调函数
     private final Font font;
     private int selectedTaskIndex = -1; // 当前选中的任务索引
+    private String selectedTaskTitle; // 当前选中的任务标题
 
     private int scrollY = 0; // 当前滚动位置
     private int maxScrollY = 0; // 最大滚动位置
 
-    public TaskScrollPanel(Minecraft mc, int width, int height, int top, int left, int border, int barWidth, List<String> taskList, Consumer<String> onTaskClick) {
-        super(mc, width, height, top, left, border, barWidth, 0, 0, 0x00000000, 0x00000000, 0x00000000); // 添加背景、边框颜色
-        this.taskList = taskList;
+    private boolean isExpanded = false; // 是否展开
+    private String currentCategory = ""; // 当前分类
+    private Map<String, List<String>> categoryTasks = new HashMap<>(); // 分类及其子任务
+
+    public TaskScrollPanel(Minecraft mc, int width, int height, int top, int left, int border, int barWidth, 
+            Map<String, List<String>> categoryTasks, Consumer<String> onTaskClick, String initialTaskTitle) {
+        super(mc, width, height, top, left, border, barWidth, 0, 0, 0x00000000, 0x00000000, 0x00000000);
+        this.categoryTasks = categoryTasks;
         this.onTaskClick = onTaskClick;
-        this.font = mc.font; // 获取字体渲染器实例
+        this.font = mc.font;
+        this.selectedTaskTitle = initialTaskTitle;
+        // 初始化显示所有分类
+        this.taskList = new ArrayList<>(categoryTasks.keySet());
+        expandCategoryForTask(initialTaskTitle);
         this.maxScrollY = Math.max(0, getContentHeight() - height); // 初始化最大滚动值
+    }
+
+    private void expandCategoryForTask(String taskTitle) {
+        for (Map.Entry<String, List<String>> entry : categoryTasks.entrySet()) {
+            if (entry.getValue().contains(taskTitle)) {
+                currentCategory = entry.getKey();
+                isExpanded = true;
+                updateTaskList();
+                break;
+            }
+        }
     }
 
     @Override
@@ -35,23 +59,30 @@ public class TaskScrollPanel extends ScrollPanel {
 
     @Override
     protected void drawPanel(PoseStack poseStack, int mouseX, int mouseY, Tesselator tesselator, int scrollY, int visibleHeight) {
-        scrollY = this.scrollY; // 使用当前滚动位置
-        int yPos = top - scrollY; // 起始绘制任务的 Y 坐标
+        scrollY = this.scrollY;
+        int yPos = top - scrollY;
 
         for (int i = 0; i < taskList.size(); i++) {
-            String task = taskList.get(i);
-
-            // 如果任务在当前可见范围，则渲染
+            String item = taskList.get(i);
+            
             if (yPos + 20 > top && yPos < top + height) {
-                int color = (i == selectedTaskIndex) ? 0xFFFFFF : 0xAAAAAA; // 当前选中任务高亮显示
-                //fill(poseStack, left, yPos, left + width, yPos + 20, 0xFF333333); // 绘制任务项的背景
-                drawString(poseStack, this.font, task, left + 5, yPos + 5, color); // 绘制任务文本
+                int color = (item.equals(selectedTaskTitle)) ? 0xFFFFFF : 0xAAAAAA; // 高亮选中任务为纯白色
+                
+                // 判断是否为分类项
+                if (categoryTasks.containsKey(item)) {
+                    // 绘制分类箭头
+                    String arrow = isExpanded && item.equals(currentCategory) ? "▼" : "▶";
+                    drawString(poseStack, this.font, arrow, left + 5, yPos + 5, color);
+                    drawString(poseStack, this.font, item, left + 20, yPos + 5, color);
+                } else {
+                    // 子任务缩进显示
+                    drawString(poseStack, this.font, item, left + 30, yPos + 5, color);
+                }
             }
-
-            yPos += 20; // 下一个任务的 Y 坐标
+            
+            yPos += 20;
         }
-
-        // 绘制滚动条
+        
         drawScrollbar(poseStack);
     }
 
@@ -80,13 +111,27 @@ public class TaskScrollPanel extends ScrollPanel {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (isMouseOver(mouseX, mouseY)) {
-            // 计算点击的任务索引
             int yOffset = (int) mouseY - top + scrollY;
             int clickedIndex = yOffset / 20;
 
             if (clickedIndex >= 0 && clickedIndex < taskList.size()) {
-                selectedTaskIndex = clickedIndex; // 更新选中任务索引
-                onTaskClick.accept(taskList.get(clickedIndex)); // 触发点击回调
+                String clickedItem = taskList.get(clickedIndex);
+                
+                // 点击分类项时展开/收起
+                if (categoryTasks.containsKey(clickedItem)) {
+                    if (currentCategory.equals(clickedItem)) {
+                        isExpanded = !isExpanded;
+                    } else {
+                        currentCategory = clickedItem;
+                        isExpanded = true;
+                    }
+                    updateTaskList();
+                } else {
+                    // 点击子任务时触发回调
+                    selectedTaskIndex = clickedIndex;
+                    selectedTaskTitle = clickedItem;
+                    onTaskClick.accept(clickedItem);
+                }
                 return true;
             }
         }
@@ -106,5 +151,20 @@ public class TaskScrollPanel extends ScrollPanel {
     @Override
     public void updateNarration(NarrationElementOutput narrationElementOutput) {
         // 实现辅助功能描述
+    }
+
+    private void updateTaskList() {
+        List<String> newList = new ArrayList<>();
+        // 添加所有分类
+        newList.addAll(categoryTasks.keySet());
+        
+        // 如果有展开的分类，添加其子任务
+        if (isExpanded && !currentCategory.isEmpty()) {
+            int insertIndex = newList.indexOf(currentCategory) + 1;
+            newList.addAll(insertIndex, categoryTasks.get(currentCategory));
+        }
+        
+        this.taskList = newList;
+        this.maxScrollY = Math.max(0, getContentHeight() - height);
     }
 }
