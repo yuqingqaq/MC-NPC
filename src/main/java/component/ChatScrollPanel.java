@@ -103,15 +103,4 @@ public class ChatScrollPanel extends ScrollPanel {
         return true; // 表示事件已处理
     }
 
-    @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-        // 渲染聊天历史
-        for (int i = 0; i < chatHistory.size(); i++) {
-            final int index = i; // Declare a final variable
-            NPCMessage message = chatHistory.get(index);
-            // Render each message
-            // Example: drawString(poseStack, this.font, message.getMessage(), x, y + index * lineHeight, 0xFFFFFF);
-        }
-    }
-
 }

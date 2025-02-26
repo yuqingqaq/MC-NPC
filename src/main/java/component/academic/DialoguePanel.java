@@ -69,9 +69,11 @@ public class DialoguePanel extends AbstractWidget implements GuiEventListener, W
             chatHistory.add(new NPCMessage("player", message));
 
             // 模拟 NPC 回复
-            String response = message; // 这里可以替换为实际的逻辑
+            String response = "你好，你需要找图书管理员吗？或许你可以去图书馆！"; // 这里可以替换为实际的逻辑
             chatHistory.add(new NPCMessage("npc", response));
-
+            
+            response = "任务：到达图书馆 预计用时10min"; // 这里可以替换为实际的逻辑
+            chatHistory.add(new NPCMessage("npc", response));
             // 清空输入框
             this.inputField.setValue("");
 
