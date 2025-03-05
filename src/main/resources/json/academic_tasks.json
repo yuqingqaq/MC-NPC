@@ -57,7 +57,23 @@
         "下一步": "与导师讨论分析结果"
       },
       "completed": false,
-      "notes": "需要与团队成员讨论"
+      "notes": "需要与团队成员讨论",
+      "subTasks": [
+        {
+          "subTaskId": "1",
+          "title": "到达实验室",
+          "estimatedTime": "05:00",
+          "completed": false,
+          "status": "COMPLETED"
+        },
+        {
+          "subTaskId": "2",
+          "title": "阅读NLP论文",
+          "estimatedTime": "02:00",
+          "completed": false,
+          "status": "IN_PROGRESS"
+        }
+      ]
     }
   ]
 }
