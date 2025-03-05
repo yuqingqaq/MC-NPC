@@ -5,6 +5,7 @@ import model.AcademicTaskModel;
 import model.SubTaskModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.TextComponent;
+import utils.TimeUtil;
 
 public class HUDTask {
     private final Minecraft minecraft;
@@ -43,9 +44,11 @@ public class HUDTask {
         if (!isExpanded) {
             for (SubTaskModel subTask : task.getSubTasks()) {
                 if (subTask.getStatus() == SubTaskModel.TaskStatus.IN_PROGRESS) {
-                    String taskText = subTask.getTitle(); // 只显示任务标题
+                    String taskText = subTask.getTitle();
+                    String formattedTime = TimeUtil.formatTime(subTask.getRemainingTime());
+                    taskText += " " + formattedTime;
                     minecraft.font.draw(poseStack, new TextComponent(taskText), x + 4, y, 0xFFFFA500);
-                    y += 10; // 调整行间距
+                    y += 10;
                 }
             }
         } else {
@@ -56,21 +59,21 @@ public class HUDTask {
 
                 switch (subTask.getStatus()) {
                     case COMPLETED:
-                        color = 0xFFADFF2F; // 浅绿色
+                        color = 0xFFADFF2F;
                         taskText = subTask.getTitle();
                         break;
                     case IN_PROGRESS:
-                        color = 0xFFFFA500; // 橙色
-                        taskText = subTask.getTitle() + " " + subTask.getEstimatedTime();
+                        color = 0xFFFFA500;
+                        taskText = subTask.getTitle() + " " + TimeUtil.formatTime(subTask.getRemainingTime());
                         break;
                     default:
-                        color = 0xFFAAAAAA; // 灰色
-                        taskText = subTask.getTitle();
+                        color = 0xFFAAAAAA;
+                        taskText = subTask.getTitle() + " " + subTask.getEstimatedTime();
                         break;
                 }
 
                 minecraft.font.draw(poseStack, new TextComponent(taskText), x + 4, y, color);
-                y += 12; // 调整行间距
+                y += 12;
             }
         }
     }
@@ -79,25 +82,7 @@ public class HUDTask {
         isExpanded = !isExpanded;
     }
 
-    public void updateTime() {
-        for (SubTaskModel subTask : task.getSubTasks()) {
-            if (subTask.getStatus() == SubTaskModel.TaskStatus.IN_PROGRESS) {
-                String[] timeParts = subTask.getEstimatedTime().split(":");
-                int minutes = Integer.parseInt(timeParts[0]);
-                int seconds = Integer.parseInt(timeParts[1]);
-
-                if (minutes > 0 || seconds > 0) {
-                    if (seconds == 0) {
-                        minutes--;
-                        seconds = 59;
-                    } else {
-                        seconds--;
-                    }
-                    subTask.setEstimatedTime(String.format("%02d:%02d", minutes, seconds));
-                } else {
-                    subTask.setStatus(SubTaskModel.TaskStatus.COMPLETED);
-                }
-            }
-        }
+    public AcademicTaskModel getTask() {
+        return task;
     }
-} 
+}

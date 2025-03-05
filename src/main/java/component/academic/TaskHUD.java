@@ -2,6 +2,7 @@ package component.academic;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import model.AcademicTaskModel;
+import model.SubTaskModel;
 import net.minecraft.client.Minecraft;
 import system.TaskManager;
 import system.UIScreenManager;
@@ -22,11 +23,15 @@ public class TaskHUD {
 
     private void initializeTasks() {
         List<AcademicTaskModel> tasks = TaskManager.getInstance().getTasks();
-        if (tasks == null) {
-            return; // 如果任务列表为 null，直接返回
+        if (tasks == null || tasks.isEmpty()) {
+            System.out.println("No tasks found");
+            return;
         }
         for (AcademicTaskModel task : tasks) {
-            hudTasks.add(new HUDTask(minecraft, task));
+            System.out.println("Initializing task: " + task.getTitle());
+            for (SubTaskModel subTask : task.getSubTasks()) {
+                System.out.println("SubTask: " + subTask.getTitle() + ", estimatedTime: " + subTask.getEstimatedTime());
+            }
         }
     }
 
@@ -46,8 +51,15 @@ public class TaskHUD {
     public void tick() {
         long currentTime = System.currentTimeMillis();
         if (currentTime - lastUpdateTime >= 1000) { // 每秒更新一次
+            System.out.println("Updating tasks at: " + currentTime);
             for (HUDTask hudTask : hudTasks) {
-                hudTask.updateTime();
+                AcademicTaskModel academicTask = hudTask.getTask();
+                for (SubTaskModel subTask : academicTask.getSubTasks()) {
+                    if (subTask.getStatus() == SubTaskModel.TaskStatus.IN_PROGRESS) {
+                        System.out.println("Updating time for subtask: " + subTask.getTitle());
+                        TaskManager.getInstance().updateSubTaskTime(subTask);
+                    }
+                }
             }
             lastUpdateTime = currentTime;
         }

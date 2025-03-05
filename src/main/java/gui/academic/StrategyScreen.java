@@ -86,9 +86,9 @@ public class StrategyScreen extends Screen {
             );
         } else if ("自行规划".equals(strategy)) {
             // 从当前任务中获取子任务
-            List<TaskPlanningPanel.Task> tasks = new ArrayList<>();
+            List<SubTaskModel> tasks = new ArrayList<>();
             for (SubTaskModel subTask : currentTask.getSubTasks()) {
-                tasks.add(new TaskPlanningPanel.Task(subTask.getTitle(), subTask.getEstimatedTime()));
+                tasks.add(subTask);
             }
             
             this.rightPanel = new TaskPlanningPanel(rightPanelX, 40, rightPanelWidth, this.height - 60, tasks);

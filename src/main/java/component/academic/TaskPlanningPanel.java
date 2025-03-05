@@ -1,52 +1,71 @@
 package component.academic;
 import com.mojang.blaze3d.vertex.PoseStack;
+
+import model.SubTaskModel;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.TextComponent;
+import system.TaskManager;
 import net.minecraft.client.Minecraft;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TaskPlanningPanel extends AbstractWidget implements Widget {
-    private final List<Task> tasks; // 任务列表
-    private final List<Button> taskButtons; // 每个任务对应的按钮
+    private final List<SubTaskModel> subTasks; // 子任务列表
+    private final List<Button> taskButtons; // 每个子任务对应的按钮
     private final int panelWidth;
     private final int panelHeight;
 
-    private int draggingTaskIndex = -1; // 当前正在拖动的任务索引
+    private int draggingTaskIndex = -1; // 当前正在拖动的子任务索引
     private int dragY = 0; // 当前拖动的 Y 坐标
+    private Button startButton; // 开始行动按钮
 
-    public TaskPlanningPanel(int x, int y, int width, int height, List<Task> initialTasks) {
+    public TaskPlanningPanel(int x, int y, int width, int height, List<SubTaskModel> initialSubTasks) {
         super(x, y, width, height, new TextComponent("Task Planning Panel"));
-        this.tasks = new ArrayList<>(initialTasks); // 初始化任务列表
+        this.subTasks = new ArrayList<>(initialSubTasks); // 初始化子任务列表
         this.taskButtons = new ArrayList<>();
         this.panelWidth = width;
         this.panelHeight = height;
         init();
     }
 
-    // 初始化任务按钮
+    // 初始化子任务按钮和开始行动按钮
     private void init() {
-        int buttonHeight = 20; // 每个任务按钮的高度
+        int buttonHeight = 20; // 每个子任务按钮的高度
         int buttonSpacing = 5; // 按钮之间的间距
         int startY = this.y + 20; // 第一个按钮的起始 Y 坐标
 
         taskButtons.clear(); // 清空按钮列表
 
-        for (int i = 0; i < tasks.size(); i++) {
+        for (int i = 0; i < subTasks.size(); i++) {
             final int index = i;  // 创建一个 final 变量
             int buttonY = startY + i * (buttonHeight + buttonSpacing);
-            Task task = tasks.get(i);
+            SubTaskModel subTask = subTasks.get(i);
 
-            // 创建任务按钮
+            // 创建子任务按钮
             Button button = new Button(this.x + 10, buttonY, this.panelWidth - 20, buttonHeight,
-                new TextComponent(task.taskName + " (" + task.taskTime + ")"),
+                new TextComponent(subTask.getTitle() + " (" + subTask.getEstimatedTime() + ")"),
                 btn -> draggingTaskIndex = index  // 使用 final 变量
             );
 
             taskButtons.add(button);
+        }
+
+        // 创建开始行动按钮
+        this.startButton = new Button(this.x + 10, startY + subTasks.size() * (buttonHeight + buttonSpacing), this.panelWidth - 20, buttonHeight,
+                new TextComponent("开始行动"), btn -> startTask());
+    }
+
+    // 开始行动的逻辑
+    private void startTask() {
+        // 获取排序后的第一个子任务
+        if (!subTasks.isEmpty()) {
+            SubTaskModel selectedSubTask = subTasks.get(0); // 获取第一个子任务
+            // 这里可以调用 TaskManager 的方法来开始任务
+            TaskManager.getInstance().startSubTask(selectedSubTask); // 假设 startTask 方法可以处理 SubTaskModel
+            System.out.println("开始子任务: " + selectedSubTask.getTitle());
         }
     }
 
@@ -58,7 +77,7 @@ public class TaskPlanningPanel extends AbstractWidget implements Widget {
         int totalHeight = buttonHeight + buttonSpacing; // 每个按钮占用的总高度
 
         int relativeY = mouseY - startY;
-        return Math.min(tasks.size() - 1, Math.max(0, relativeY / totalHeight));
+        return Math.min(subTasks.size() - 1, Math.max(0, relativeY / totalHeight));
     }
 
     @Override
@@ -75,8 +94,8 @@ public class TaskPlanningPanel extends AbstractWidget implements Widget {
         if (draggingTaskIndex != -1) {
             // 鼠标释放时，计算目标索引，并重新排序任务
             int targetIndex = calculateTargetIndex((int) mouseY);
-            Task draggedTask = tasks.remove(draggingTaskIndex); // 移除拖动的任务
-            tasks.add(targetIndex, draggedTask); // 插入到目标位置
+            SubTaskModel draggedSubTask = subTasks.remove(draggingTaskIndex); // 移除拖动的子任务
+            subTasks.add(targetIndex, draggedSubTask); // 插入到目标位置
 
             // 重置拖动状态
             draggingTaskIndex = -1;
@@ -97,29 +116,32 @@ public class TaskPlanningPanel extends AbstractWidget implements Widget {
         // 渲染标题
         Minecraft.getInstance().font.draw(
             poseStack,
-            "拖动任务以排序",
+            "拖动子任务以排序",
             this.x + 10,
             this.y + 5,
             0xFFFFFF
         );
 
-        // 渲染任务按钮
+        // 渲染子任务按钮
         for (int i = 0; i < taskButtons.size(); i++) {
-            if (i == draggingTaskIndex) continue; // 跳过正在拖动的任务
+            if (i == draggingTaskIndex) continue; // 跳过正在拖动的子任务
             taskButtons.get(i).render(poseStack, mouseX, mouseY, partialTicks);
         }
 
-        // 渲染拖动的任务
+        // 渲染开始行动按钮
+        startButton.render(poseStack, mouseX, mouseY, partialTicks);
+
+        // 渲染拖动的子任务
         if (draggingTaskIndex != -1) {
-            Task draggingTask = tasks.get(draggingTaskIndex);
+            SubTaskModel draggingSubTask = subTasks.get(draggingTaskIndex);
 
             // 获取文字宽度
-            int textWidth = Minecraft.getInstance().font.width(draggingTask.taskName + " (" + draggingTask.taskTime + ")");
+            int textWidth = Minecraft.getInstance().font.width(draggingSubTask.getTitle() + " (" + draggingSubTask.getEstimatedTime() + ")");
 
-            // 调整拖动任务文字的渲染位置，使其显示在鼠标左侧
+            // 调整拖动子任务文字的渲染位置，使其显示在鼠标左侧
             Minecraft.getInstance().font.draw(
                 poseStack,
-                draggingTask.taskName + " (" + draggingTask.taskTime + ")",
+                draggingSubTask.getTitle() + " (" + draggingSubTask.getEstimatedTime() + ")",
                 mouseX - textWidth - 5, // 将文字向左偏移文字宽度和额外的 5 像素
                 mouseY - 5, // 文字相对于鼠标位置的 Y 坐标
                 0xFFFFFF // 白色文字
@@ -135,30 +157,11 @@ public class TaskPlanningPanel extends AbstractWidget implements Widget {
                 return true;
             }
         }
-        return super.mouseClicked(mouseX, mouseY, button);
+        return startButton.mouseClicked(mouseX, mouseY, button) || super.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
     public void updateNarration(NarrationElementOutput output) {
         // 暂时不需要实现旁白支持
-    }
-
-    // 定义任务类
-    public static class Task {
-        private final String taskName; // 任务名称
-        private final String taskTime; // 任务时间
-
-        public Task(String taskName, String taskTime) {
-            this.taskName = taskName;
-            this.taskTime = taskTime;
-        }
-
-        public String getTaskName() {
-            return taskName;
-        }
-
-        public String getTaskTime() {
-            return taskTime;
-        }
     }
 }

@@ -21,6 +21,8 @@ public class AcademicTaskModel {
     private TaskStatus status; // 任务状态
     private String notes; // 笔记字段
     private List<SubTaskModel> subTasks; // 子任务列表
+    private long startTime; // 任务开始时间
+    private long elapsedTime; // 已用时间
 
     public enum TaskStatus {
         NOT_STARTED,
@@ -47,6 +49,7 @@ public class AcademicTaskModel {
         this.summary = summary;
         this.completed = completed;
         this.status = completed ? TaskStatus.COMPLETED : TaskStatus.NOT_STARTED;
+        this.elapsedTime = 0;
     }
 
     // Getters 和 Setters
@@ -165,6 +168,22 @@ public class AcademicTaskModel {
 
     public void setSubTasks(List<SubTaskModel> subTasks) {
         this.subTasks = subTasks;
+    }
+
+    public long getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
+    }
+
+    public long getElapsedTime() {
+        return elapsedTime;
+    }
+
+    public void addElapsedTime(long time) {
+        this.elapsedTime += time;
     }
 
     // toString 方法（调试时使用）
