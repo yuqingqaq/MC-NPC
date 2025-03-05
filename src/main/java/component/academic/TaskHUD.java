@@ -32,7 +32,10 @@ public class TaskHUD {
             for (SubTaskModel subTask : task.getSubTasks()) {
                 System.out.println("SubTask: " + subTask.getTitle() + ", estimatedTime: " + subTask.getEstimatedTime());
             }
+            hudTasks.add(new HUDTask(minecraft, task));
+
         }
+
     }
 
     public void render(PoseStack poseStack) {
