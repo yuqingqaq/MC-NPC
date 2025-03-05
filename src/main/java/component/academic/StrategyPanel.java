@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+
 public class StrategyPanel extends ScrollPanel {
     private final Font font;
     private int scrollY = 0; // 当前滚动位置
@@ -74,4 +75,6 @@ public class StrategyPanel extends ScrollPanel {
     public void updateNarration(NarrationElementOutput narrationElementOutput) {
         // 实现辅助功能描述
     }
+
+
 } 

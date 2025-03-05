@@ -9,7 +9,7 @@ import model.AcademicTaskModel;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TextComponent;
 import system.UIScreenManager;
-import system.TaskManager;
+import system.UITaskManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,8 +41,13 @@ public class TaskOverviewScreen extends Screen {
 
         // 设置初始任务（如果有的话）
         if (!academicTasks.isEmpty()) {
-            currentTask = academicTasks.get(0);
-            TaskManager.getInstance().setCurrentTask(currentTask); // 设置当前任务
+            if(UITaskManager.getInstance().getCurrentTaskInOverview() == null){
+                currentTask = academicTasks.get(0);
+                UITaskManager.getInstance().setCurrentTaskInOverview(currentTask); // 设置当前任务
+            }
+            else{
+                currentTask = UITaskManager.getInstance().getCurrentTaskInOverview();
+            }
         }
 
         // 创建左侧任务列表面板
@@ -93,6 +98,7 @@ public class TaskOverviewScreen extends Screen {
                 .findFirst()
                 .orElse(null);
         detailPanel.setTask(currentTask);
+        UITaskManager.getInstance().setCurrentTaskInOverview(currentTask);
     }
 
     @Override

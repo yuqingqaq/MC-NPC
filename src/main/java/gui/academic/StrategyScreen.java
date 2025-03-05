@@ -3,16 +3,15 @@ package gui.academic;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.components.Widget;
-import net.minecraft.client.gui.components.events.GuiEventListener;
+
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TextComponent;
 import component.academic.DialoguePanel;
 import component.academic.StrategyPanel;
 import component.academic.TaskPlanningPanel;
 import metadata.NPCMessage;
-import system.TaskManager;
 import system.UIScreenManager;
+import system.UITaskManager;
 import model.AcademicTaskModel;
 import model.SubTaskModel;
 
@@ -36,7 +35,7 @@ public class StrategyScreen extends Screen {
         UIScreenManager.getInstance().setCurrentScreenState(UIScreenManager.ScreenState.NO_HUD);
         
         // 获取当前任务
-        AcademicTaskModel currentTask = TaskManager.getInstance().getCurrentTask();
+        AcademicTaskModel currentTask = UITaskManager.getInstance().getCurrentTaskInOverview();
         if (currentTask == null) {
             // 处理没有当前任务的情况
             return;
@@ -69,7 +68,7 @@ public class StrategyScreen extends Screen {
         int rightPanelWidth = this.width - rightPanelX - 20;
 
         // 获取当前任务
-        AcademicTaskModel currentTask = TaskManager.getInstance().getCurrentTask();
+        AcademicTaskModel currentTask = UITaskManager.getInstance().getCurrentTaskInOverview();
 
         // Create the new right panel based on the selected strategy
         if ("问问NPC".equals(strategy)) {

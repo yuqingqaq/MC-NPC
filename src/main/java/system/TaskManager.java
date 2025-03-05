@@ -7,8 +7,8 @@ import controller.GameController;
 
 public class TaskManager {
     private static TaskManager instance;
-    private List<AcademicTaskModel> tasks;
-    private AcademicTaskModel currentTask;
+    private List<AcademicTaskModel> currentTasks;
+    private AcademicTaskModel currentTaskinOverview;
 
     private TaskManager() {
         loadTasks();
@@ -22,22 +22,23 @@ public class TaskManager {
     }
 
     private void loadTasks() {
-        tasks = GameController.getInstance().getAcademicTasks();
+        currentTasks = GameController.getInstance().getAcademicTasks();
     }
 
     public void setTasks(List<AcademicTaskModel> tasks) {
-        this.tasks = tasks;
+        this.currentTasks = tasks;
     }
 
     public List<AcademicTaskModel> getTasks() {
-        return tasks;
+        return currentTasks;
     }
 
+    
     public AcademicTaskModel getCurrentTask() {
-        return currentTask;
+        return currentTaskinOverview;
     }
 
     public void setCurrentTask(AcademicTaskModel task) {
-        this.currentTask = task;
+        this.currentTaskinOverview = task;
     }
 } 
