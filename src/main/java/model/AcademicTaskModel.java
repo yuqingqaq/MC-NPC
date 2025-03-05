@@ -18,6 +18,15 @@ public class AcademicTaskModel {
     private Map<String, String> summary; // 任务总结，键值对格式
     private boolean completed; // 是否完成
     private OnTaskCompleteListener onCompleteListener; // 任务完成监听器
+    private TaskStatus status; // 任务状态
+    private String notes; // 笔记字段
+    private List<SubTaskModel> subTasks; // 子任务列表
+
+    public enum TaskStatus {
+        NOT_STARTED,
+        IN_PROGRESS,
+        COMPLETED
+    }
 
     // 无参构造函数（Jackson 需要这个）
     public AcademicTaskModel() {}
@@ -37,7 +46,18 @@ public class AcademicTaskModel {
         this.strategies = strategies;
         this.summary = summary;
         this.completed = completed;
+        this.status = completed ? TaskStatus.COMPLETED : TaskStatus.NOT_STARTED;
     }
+
+    // Getters 和 Setters
+    public TaskStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(TaskStatus status) {
+        this.status = status;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -45,7 +65,7 @@ public class AcademicTaskModel {
     public String getCategory() {
         return category;
     }
-    // Getters 和 Setters
+
     public String getTaskId() {
         return taskId;
     }
@@ -116,6 +136,7 @@ public class AcademicTaskModel {
 
     public void setCompleted(boolean completed) {
         this.completed = completed;
+        this.status = completed ? TaskStatus.COMPLETED : this.status;
         // 如果任务完成，且监听器不为空，触发完成逻辑
         if (completed && this.onCompleteListener != null) {
             this.onCompleteListener.onTaskComplete(this.taskId, "Academic task completed!");
@@ -128,6 +149,22 @@ public class AcademicTaskModel {
 
     public void setOnCompleteListener(OnTaskCompleteListener onCompleteListener) {
         this.onCompleteListener = onCompleteListener;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    public List<SubTaskModel> getSubTasks() {
+        return subTasks;
+    }
+
+    public void setSubTasks(List<SubTaskModel> subTasks) {
+        this.subTasks = subTasks;
     }
 
     // toString 方法（调试时使用）
@@ -143,6 +180,7 @@ public class AcademicTaskModel {
                 ", strategies=" + strategies +
                 ", summary=" + summary +
                 ", completed=" + completed +
+                ", status=" + status +
                 '}';
     }
 }

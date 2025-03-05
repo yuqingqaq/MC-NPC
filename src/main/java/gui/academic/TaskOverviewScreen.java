@@ -8,6 +8,8 @@ import controller.GameController;
 import model.AcademicTaskModel;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TextComponent;
+import system.UIScreenManager;
+import system.TaskManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,6 +29,7 @@ public class TaskOverviewScreen extends Screen {
 
     @Override
     protected void init() {
+        UIScreenManager.getInstance().setCurrentScreenState(UIScreenManager.ScreenState.NO_HUD);
         academicTasks = GameController.getInstance().getAcademicTasks();
         
         // 构建分类任务数据
@@ -37,7 +40,10 @@ public class TaskOverviewScreen extends Screen {
         }
 
         // 设置初始任务（如果有的话）
-        currentTask = academicTasks.get(0);
+        if (!academicTasks.isEmpty()) {
+            currentTask = academicTasks.get(0);
+            TaskManager.getInstance().setCurrentTask(currentTask); // 设置当前任务
+        }
 
         // 创建左侧任务列表面板
         int leftPanelWidth = 150;
@@ -99,5 +105,14 @@ public class TaskOverviewScreen extends Screen {
         return super.mouseScrolled(mouseX, mouseY, delta);
     }
 
-    
+    @Override
+    public void onClose() {
+        super.onClose();
+        UIScreenManager.getInstance().setCurrentScreenState(UIScreenManager.ScreenState.DEFAULT);
+    }
+
+    @Override
+    public boolean isPauseScreen() {
+        return false; // 返回 false 以隐藏鼠标
+    }
 }

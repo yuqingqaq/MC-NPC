@@ -54,6 +54,7 @@ public class NPCOpenAI {
         MinecraftForge.EVENT_BUS.register(this);
         LOGGER.info(" MinecraftForge.EVENT_BUS Registered");
 
+        MinecraftForge.EVENT_BUS.register(HUDRenderer.class);
     }
 
     public static Logger getLogger() {

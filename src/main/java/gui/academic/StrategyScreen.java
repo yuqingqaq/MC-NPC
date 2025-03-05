@@ -11,6 +11,10 @@ import component.academic.DialoguePanel;
 import component.academic.StrategyPanel;
 import component.academic.TaskPlanningPanel;
 import metadata.NPCMessage;
+import system.TaskManager;
+import system.UIScreenManager;
+import model.AcademicTaskModel;
+import model.SubTaskModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,10 +33,26 @@ public class StrategyScreen extends Screen {
 
     @Override
     protected void init() {
-        // 定义策略和对应的子策略面板数据
+        UIScreenManager.getInstance().setCurrentScreenState(UIScreenManager.ScreenState.NO_HUD);
+        
+        // 获取当前任务
+        AcademicTaskModel currentTask = TaskManager.getInstance().getCurrentTask();
+        if (currentTask == null) {
+            // 处理没有当前任务的情况
+            return;
+        }
+
+        // 从当前任务中获取策略
         Map<String, List<String>> strategies = new HashMap<>();
-        strategies.put("问问NPC", List.of("NPC 对话内容"));
-        strategies.put("自行规划", List.of("任务拆解描述"));
+        List<String> taskStrategies = currentTask.getStrategies();
+        if (taskStrategies != null && !taskStrategies.isEmpty()) {
+            for (String strategy : taskStrategies) {
+                strategies.put(strategy, List.of("相关描述"));
+            }
+        } else {
+            // 处理没有策略的情况
+            return;
+        }
 
         // 创建左侧的策略面板
         this.strategyPanel = new StrategyPanel(minecraft, 150, this.height - 40, 40, 20, strategies, this::onStrategySelected);
@@ -47,6 +67,9 @@ public class StrategyScreen extends Screen {
         }
         int rightPanelX = 190; // Left panel width + spacing
         int rightPanelWidth = this.width - rightPanelX - 20;
+
+        // 获取当前任务
+        AcademicTaskModel currentTask = TaskManager.getInstance().getCurrentTask();
 
         // Create the new right panel based on the selected strategy
         if ("问问NPC".equals(strategy)) {
@@ -63,14 +86,12 @@ public class StrategyScreen extends Screen {
                 chatHistory
             );
         } else if ("自行规划".equals(strategy)) {
-            // Initialize TaskPlanningPanel with Task objects
-            List<TaskPlanningPanel.Task> tasks = List.of(
-                new TaskPlanningPanel.Task("前往图书馆", "10min"),
-                new TaskPlanningPanel.Task("找到图书管理员", "5min"),
-                new TaskPlanningPanel.Task("学习大语言模型", "10min"),
-                new TaskPlanningPanel.Task("回答问题5道", "10min")
-
-            );
+            // 从当前任务中获取子任务
+            List<TaskPlanningPanel.Task> tasks = new ArrayList<>();
+            for (SubTaskModel subTask : currentTask.getSubTasks()) {
+                tasks.add(new TaskPlanningPanel.Task(subTask.getTitle(), subTask.getEstimatedTime()));
+            }
+            
             this.rightPanel = new TaskPlanningPanel(rightPanelX, 40, rightPanelWidth, this.height - 60, tasks);
         }
     
@@ -142,5 +163,11 @@ public class StrategyScreen extends Screen {
     @Override
     public boolean isPauseScreen() {
         return false; // 界面不会暂停游戏
+    }
+
+    @Override
+    public void onClose() {
+        super.onClose();
+        UIScreenManager.getInstance().switchToTaskOverviewScreen();
     }
 }

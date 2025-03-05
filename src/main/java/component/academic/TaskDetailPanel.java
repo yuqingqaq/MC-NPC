@@ -4,10 +4,13 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 
 import gui.academic.StrategyScreen;
+import gui.academic.TaskCompletionScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import model.AcademicTaskModel;
 import net.minecraftforge.client.gui.ScrollPanel;
+import system.UIScreenManager;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -136,7 +139,7 @@ public class TaskDetailPanel extends ScrollPanel {
 
         // 检查 "完成情况" 卡片的按钮
         if (detailCard.isMouseOverButton((int) mouseX, (int) mouseY, x, summaryCardY, contentWidth)) {
-            //mc.setScreen(new TaskPlanningScreen(mc));
+            mc.setScreen(new TaskCompletionScreen(mc, currentTask));
             return true;
         }
 
