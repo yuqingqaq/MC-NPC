@@ -6,10 +6,9 @@ public class TimeUtil {
             String[] timeParts = estimatedTime.split(":");
             int minutes = Integer.parseInt(timeParts[0]);
             int seconds = Integer.parseInt(timeParts[1]);
-            return (minutes * 60L) + seconds; // 转换为总秒数，使用 60L 避免可能的整数溢出
+            return (minutes * 60L) + seconds; // 转换为总秒数
         } catch (Exception e) {
-            // 如果解析失败，返回默认值（比如 10 分钟）
-            return 600L;
+            return 600L; // 默认 10 分钟
         }
     }
 
@@ -20,9 +19,5 @@ public class TimeUtil {
         long minutes = totalSeconds / 60;
         long seconds = totalSeconds % 60;
         return String.format("%02d:%02d", minutes, seconds);
-    }
-
-    public static String formatLongTime(long totalMinutes) {
-        return totalMinutes + " min";
     }
 }

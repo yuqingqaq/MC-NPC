@@ -5,7 +5,7 @@ import model.AcademicTaskModel;
 import model.SubTaskModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.TextComponent;
-import utils.TimeUtil;
+import system.TimeManager;
 
 public class HUDTask {
     private final Minecraft minecraft;
@@ -45,7 +45,7 @@ public class HUDTask {
             for (SubTaskModel subTask : task.getSubTasks()) {
                 if (subTask.getStatus() == SubTaskModel.TaskStatus.IN_PROGRESS) {
                     String taskText = subTask.getTitle();
-                    String formattedTime = TimeUtil.formatTime(subTask.getRemainingTime());
+                    String formattedTime = TimeManager.getInstance().formatTime(subTask.getRemainingTime()); // 使用 TimeManager 格式化时间
                     taskText += " " + formattedTime;
                     minecraft.font.draw(poseStack, new TextComponent(taskText), x + 4, y, 0xFFFFA500);
                     y += 10;
@@ -64,11 +64,11 @@ public class HUDTask {
                         break;
                     case IN_PROGRESS:
                         color = 0xFFFFA500;
-                        taskText = subTask.getTitle() + " " + TimeUtil.formatTime(subTask.getRemainingTime());
+                        taskText = subTask.getTitle() + " " + TimeManager.getInstance().formatTime(subTask.getRemainingTime());
                         break;
                     default:
                         color = 0xFFAAAAAA;
-                        taskText = subTask.getTitle() + " " + subTask.getEstimatedTime();
+                        taskText = subTask.getTitle() ;
                         break;
                 }
 

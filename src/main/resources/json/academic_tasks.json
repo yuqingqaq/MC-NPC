@@ -23,14 +23,14 @@
           "title": "到达图书馆",
           "estimatedTime": "05:00",
           "completed": false,
-          "status": "COMPLETED"
+          "status": "NOT_STARTED"
         },
         {
           "subTaskId": "2",
           "title": "寻找图书馆管理员",
           "estimatedTime": "02:00",
           "completed": false,
-          "status": "IN_PROGRESS"
+          "status": "NOT_STARTED"
         },
         {
           "subTaskId": "3",
@@ -64,14 +64,14 @@
           "title": "到达实验室",
           "estimatedTime": "05:00",
           "completed": false,
-          "status": "COMPLETED"
+          "status": "NOT_STARTED"
         },
         {
           "subTaskId": "2",
           "title": "阅读NLP论文",
           "estimatedTime": "02:00",
           "completed": false,
-          "status": "IN_PROGRESS"
+          "status": "NOT_STARTED"
         }
       ]
     }
