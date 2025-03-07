@@ -21,9 +21,25 @@ public class NavigationBar {
     public void render(PoseStack poseStack, int x, int y) {
         for (int i = 0; i < items.size(); i++) {
             String item = items.get(i);
-            int color = (i == selectedIndex) ? 0xFF0000FF : 0xFFFFFFFF; // 选中项为蓝色
-            minecraft.font.draw(poseStack, item, x + i * 60, y, color);
+            int color = (i == selectedIndex) ? 0xFFFFFF00 : 0xFFFFFFFF; // 选中项为亮黄色，未选中项为白色
+            minecraft.font.draw(poseStack, item, x + i * 80, y, color);
         }
+    }
+
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        int startX = 10;
+        int startY = 40;
+
+        for (int i = 0; i < items.size(); i++) {
+            int itemX = startX + i * 80;
+            int itemWidth = 80;
+
+            if (mouseX >= itemX && mouseX <= itemX + itemWidth && mouseY >= startY && mouseY <= startY + 10) {
+                selectItem(i);
+                return true;
+            }
+        }
+        return false;
     }
 
     public void selectItem(int index) {
@@ -32,4 +48,8 @@ public class NavigationBar {
             onPress.onPress(null);
         }
     }
-} 
+
+    public int getSelectedIndex() {
+        return selectedIndex;
+    }
+}

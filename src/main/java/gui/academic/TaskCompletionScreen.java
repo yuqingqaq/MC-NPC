@@ -28,20 +28,22 @@ public class TaskCompletionScreen extends Screen {
     @Override
     protected void init() {
         UIScreenManager.getInstance().setCurrentScreenState(UIScreenManager.ScreenState.NO_HUD);
-        
+
         // 初始化导航栏
         List<String> strategies = task.getStrategies();
         this.navigationBar = new NavigationBar(minecraft, strategies, button -> {
             // 切换策略时的逻辑
+            System.out.println("切换到策略：" + strategies.get(navigationBar.getSelectedIndex()));
+
         });
 
         // 初始化任务总结文本框
-        this.summaryBox = new ScrollableTextBox(minecraft, 10, 40, this.width / 2 - 20, this.height / 2 - 60);
-        this.summaryBox.setText(task.getSummary().toString());
-
+        this.summaryBox = new ScrollableTextBox(minecraft, this.width / 2 + 10, 40, this.width / 2 - 20, this.height / 2 - 60);
+        // 在初始化中设置任务总结文本框的内容
+        this.summaryBox.setText(task.getSummaryAsString());
         // 初始化笔记模块
-        this.noteModule = new NoteModule(minecraft, 10, this.height / 2, this.width / 2 - 20, this.height / 2 - 60);
-        this.noteModule.setText(task.getNotes());
+        this.noteModule = new NoteModule(minecraft, this.width / 2 + 10, this.height / 2 + 10, this.width / 2 - 20, this.height / 2 - 60);
+        this.noteModule.setText(task.getNotes()); // 显示玩家保存的笔记
     }
 
     @Override
@@ -52,39 +54,65 @@ public class TaskCompletionScreen extends Screen {
         drawCenteredString(poseStack, this.font, "任务完成情况", this.width / 2, 10, 0xFFFFFF);
 
         // 渲染导航栏
-        this.navigationBar.render(poseStack, 10, 20);
+        this.navigationBar.render(poseStack, 10, 40);
 
         // 渲染任务总结文本框
-        this.summaryBox.render(poseStack);
+        this.summaryBox.render(poseStack, mouseX, mouseY, partialTicks);
 
         // 渲染笔记模块
-        this.noteModule.render(poseStack);
+        this.noteModule.render(poseStack, mouseX, mouseY, partialTicks);
 
         super.render(poseStack, mouseX, mouseY, partialTicks);
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        // 处理鼠标点击事件
+        // 处理导航栏的点击
+        if (this.navigationBar.mouseClicked(mouseX, mouseY, button)) {
+            return true;
+        }
+
+        // 处理任务总结文本框的滚动
+        if (this.summaryBox.mouseClicked(mouseX, mouseY, button)) {
+            return true;
+        }
+
+        // 处理笔记模块的交互
+        if (this.noteModule.mouseClicked(mouseX, mouseY, button)) {
+            return true;
+        }
+
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        // 处理键盘事件
+        // 处理任务总结文本框的输入
+        if (this.summaryBox.keyPressed(keyCode, scanCode, modifiers)) {
+            return true;
+        }
+
+        // 处理笔记模块的输入
+        if (this.noteModule.keyPressed(keyCode, scanCode, modifiers)) {
+            return true;
+        }
+
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
     @Override
     public boolean charTyped(char codePoint, int modifiers) {
-        // 处理字符输入事件
-        return super.charTyped(codePoint, modifiers);
-    }
+        // 处理任务总结文本框的字符输入
+        if (this.summaryBox.charTyped(codePoint, modifiers)) {
+            return true;
+        }
 
-    @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-        // 处理鼠标滚轮事件
-        return super.mouseScrolled(mouseX, mouseY, amount);
+        // 处理笔记模块的字符输入
+        if (this.noteModule.charTyped(codePoint, modifiers)) {
+            return true;
+        }
+
+        return super.charTyped(codePoint, modifiers);
     }
 
     @Override
@@ -100,6 +128,10 @@ public class TaskCompletionScreen extends Screen {
     @Override
     public void onClose() {
         super.onClose();
+
+        // 保存玩家的笔记到任务模型中
+        task.setNotes(this.noteModule.getText());
+
         UIScreenManager.getInstance().switchToTaskOverviewScreen();
     }
-} 
+}

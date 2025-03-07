@@ -133,6 +133,17 @@ public class AcademicTaskModel {
         this.summary = summary;
     }
 
+    // 提供一个方法将 summary 转换为 String 格式
+    public String getSummaryAsString() {
+        if (summary == null || summary.isEmpty()) {
+            return "暂无总结";
+        }
+        StringBuilder sb = new StringBuilder();
+        summary.forEach((key, value) -> sb.append(key).append(": ").append(value).append("\n"));
+        return sb.toString().trim(); // 去除最后的换行符
+    }
+
+    // Getter 和 Setter 方法
     public boolean isCompleted() {
         return completed;
     }
