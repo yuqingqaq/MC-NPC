@@ -9,7 +9,7 @@
       "resources": ["参考书籍", "在线文章"],
       "location": "图书馆",
       "estimatedTime": "10:00",
-      "strategies": ["组队", "问问NPC", "自行规划"],
+      "strategies": ["组队", "辅助规划", "自行规划"],
       "summary": {
         "进展": "已完成大部分资料搜集",
         "困难": "部分参考文献无法获取",
@@ -84,7 +84,7 @@
       "resources": ["邮件写作大师"],
       "location": "图书馆",
       "estimatedTime": "10:00",
-      "strategies": ["自行规划", "询问专家"],
+      "strategies": ["自行规划", "问问专家"],
       "summary": {
         "进展": "已完成初步分析",
         "困难": "报告结构尚需完善",
@@ -102,8 +102,22 @@
         },
         {
           "subTaskId": "2",
-          "title": "学习写邮件",
+          "title": "学习写英文邮件",
           "estimatedTime": "05:00",
+          "completed": false,
+          "status": "NOT_STARTED"
+        },
+        {
+          "subTaskId": "3",
+          "title": "找到论文写作辅导员",
+          "estimatedTime": "02:00",
+          "completed": false,
+          "status": "NOT_STARTED"
+        },
+        {
+          "subTaskId": "4",
+          "title": "撰写英文Report",
+          "estimatedTime": "10:00",
           "completed": false,
           "status": "NOT_STARTED"
         }

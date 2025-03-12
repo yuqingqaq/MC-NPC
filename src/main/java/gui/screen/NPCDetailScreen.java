@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import component.ColoredText;
 import component.TextUtils;
 import gui.academic.writting.EmailEditorScreen;
+import gui.academic.writting.PaperEditorScreen;
 import model.NPCModel;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -40,6 +41,9 @@ public class NPCDetailScreen extends Screen {
             if ("邮件写作大师".equals(npc.getNPCName())) {
                 // 打开 EmailEditorScreen
                 this.minecraft.setScreen(new EmailEditorScreen(npc));
+            } else if ("论文写作大师".equals(npc.getNPCName())) {
+                // 打开 EmailEditorScreen
+                this.minecraft.setScreen(new PaperEditorScreen(npc));
             } else {
                 // 打开 NPCInteractionScreen
                 this.minecraft.setScreen(new NPCInteractionScreen(npc));

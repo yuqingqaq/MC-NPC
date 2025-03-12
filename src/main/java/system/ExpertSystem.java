@@ -26,6 +26,13 @@ public class ExpertSystem {
             } else {
                 systemPrompt = ExpertPromptConfig.EMAIL_WRITING_MASTER_PROMPT;
             }
+        } else if ("论文写作大师".equals(npc.getNPCName().trim())) {
+            // 如果是邮箱写作大师，使用对应的 Prompt
+            if ("zh".equals(language)) {
+                systemPrompt = ExpertPromptConfig.PAPER_WRITING_MASTER_PROMPT_IN_CHINESE;
+            } else {
+                systemPrompt = ExpertPromptConfig.PAPER_WRITING_MASTER_PROMPT;
+            }
         } else {
             // 默认使用心理健康 Prompt
             if ("zh".equals(language)) {

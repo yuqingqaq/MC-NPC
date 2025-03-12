@@ -1,9 +1,11 @@
 package gui.academic;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import component.academic.ExpertPanel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
 
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TextComponent;
 import component.academic.DialoguePanel;
@@ -71,7 +73,7 @@ public class StrategyScreen extends Screen {
         AcademicTaskModel currentTask = UITaskManager.getInstance().getCurrentTaskInOverview();
 
         // Create the new right panel based on the selected strategy
-        if ("问问NPC".equals(strategy)) {
+        if ("辅助规划".equals(strategy)) {
             // Initialize DialoguePanel
             List<NPCMessage> chatHistory = new ArrayList<>();
             chatHistory.add(new NPCMessage("npc", "欢迎开始对话！"));
@@ -92,11 +94,21 @@ public class StrategyScreen extends Screen {
             }
             
             this.rightPanel = new TaskPlanningPanel(rightPanelX, 40, rightPanelWidth, this.height - 60, tasks);
+        } else if ("问问专家".equals(strategy)) {
+            // 使用 ExpertPanel
+            this.rightPanel = new ExpertPanel(rightPanelX, 40, rightPanelWidth, this.height - 60);
         }
-    
+
+
         // Add the new right panel if it is not null
         if (rightPanel != null) {
             this.addRenderableWidget(rightPanel); // Add directly without casting
+        }
+    }
+
+    private void teleportToNPC(int index) {
+        if (this.minecraft.player != null) {
+            this.minecraft.player.chat("/findnpc " + index);
         }
     }
 
