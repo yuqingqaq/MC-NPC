@@ -53,7 +53,7 @@ public class HintScrollPanel extends ScrollPanel {
 
         if (needsRefresh) {
             needsRefresh = false;
-            System.out.println("Panel refreshed due to content change or resizing.");
+            //System.out.println("Panel refreshed due to content change or resizing.");
         }
         scrollY = this.scrollY;
         int yPos = top + 5 - scrollY;  // 起始绘制的y位置，随滚动条滚动调整

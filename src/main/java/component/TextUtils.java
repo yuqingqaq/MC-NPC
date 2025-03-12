@@ -17,21 +17,39 @@ public class TextUtils {
     public static List<ColoredText> wrapText(String text, int maxWidth, boolean isWhite) {
         List<ColoredText> wrappedLines = new ArrayList<>();
         StringBuilder currentLine = new StringBuilder();
+        StringBuilder currentWord = new StringBuilder(); // 用于暂存当前单词
         int currentLineWidth = 0;
+        int currentWordWidth = 0;
         int currentColor = isWhite ? PLAYER_COLOR : NPC_COLOR;
 
         boolean inQuotes = false;
+        boolean inHighlight = false;
 
         for (int i = 0; i < text.length(); i++) {
             char ch = text.charAt(i);
 
             // Handle line breaks
             if (ch == '\n') {
+                if (currentWord.length() > 0) {
+                    // 将当前单词添加到行中
+                    currentLine.append(currentWord);
+                    currentLineWidth += currentWordWidth;
+                    currentWord = new StringBuilder();
+                    currentWordWidth = 0;
+                }
                 if (currentLine.length() > 0) {
                     wrappedLines.add(new ColoredText(currentLine.toString(), currentColor));
                     currentLine = new StringBuilder();
                     currentLineWidth = 0;
                 }
+                continue;
+            }
+
+            // Detect highlight markers (**)
+            if (ch == '*' && i + 1 < text.length() && text.charAt(i + 1) == '*') {
+                inHighlight = !inHighlight;
+                currentColor = inHighlight ? QUOTE_COLOR : (isWhite ? PLAYER_COLOR : NPC_COLOR);
+                i++; // Skip the second '*'
                 continue;
             }
 
@@ -42,21 +60,47 @@ public class TextUtils {
                 continue;
             }
 
-            // Calculate width and wrap text if necessary
+            // Calculate character width
             int charWidth = isChinese(ch) ? WIDTH_PER_CHINESE_CHAR : WIDTH_PER_ENGLISH_CHAR;
-            if (currentLineWidth + charWidth > maxWidth) {
-                wrappedLines.add(new ColoredText(currentLine.toString(), currentColor));
-                currentLine = new StringBuilder();
-                currentLineWidth = 0;
+
+            // Check if we need to wrap the line
+            if (currentLineWidth + currentWordWidth + charWidth > maxWidth) {
+                if (currentLine.length() > 0) {
+                    wrappedLines.add(new ColoredText(currentLine.toString(), currentColor));
+                    currentLine = new StringBuilder();
+                    currentLineWidth = 0;
+                }
+
+                // 如果当前单词的宽度超出了行宽，直接换行
+                if (currentWordWidth + charWidth > maxWidth) {
+                    wrappedLines.add(new ColoredText(currentWord.toString(), currentColor));
+                    currentWord = new StringBuilder();
+                    currentWordWidth = 0;
+                }
             }
 
-            currentLine.append(ch);
-            currentLineWidth += charWidth;
+            // Append to current word or directly to the line
+            if (Character.isWhitespace(ch)) {
+                // 如果是空白字符，将当前单词添加到当前行中
+                currentLine.append(currentWord).append(ch);
+                currentLineWidth += currentWordWidth + charWidth;
+                currentWord = new StringBuilder();
+                currentWordWidth = 0;
+            } else {
+                // 非空白字符，追加到当前单词中
+                currentWord.append(ch);
+                currentWordWidth += charWidth;
+            }
         }
 
+        // 添加剩余的单词和行
+        if (currentWord.length() > 0) {
+            currentLine.append(currentWord);
+        }
         if (currentLine.length() > 0) {
             wrappedLines.add(new ColoredText(currentLine.toString(), currentColor));
         }
+
         return wrappedLines;
     }
 

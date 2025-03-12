@@ -19,17 +19,28 @@ public class ExpertSystem {
 
     public String interact(NPCModel npc, String userInput, String language) {
         String systemPrompt;
-        if ("zh".equals(language)) {
-            systemPrompt = ExpertPromptConfig.SYSTEM_PROMPT_IN_CHINESE;
+        if ("邮件写作大师".equals(npc.getNPCName().trim())) {
+            // 如果是邮箱写作大师，使用对应的 Prompt
+            if ("zh".equals(language)) {
+                systemPrompt = ExpertPromptConfig.EMAIL_WRITING_MASTER_PROMPT_IN_CHINESE;
+            } else {
+                systemPrompt = ExpertPromptConfig.EMAIL_WRITING_MASTER_PROMPT;
+            }
         } else {
-            systemPrompt = ExpertPromptConfig.SYSTEM_PROMPT;
+            // 默认使用心理健康 Prompt
+            if ("zh".equals(language)) {
+                systemPrompt = ExpertPromptConfig.SYSTEM_PROMPT_IN_CHINESE;
+            } else {
+                systemPrompt = ExpertPromptConfig.SYSTEM_PROMPT;
+            }
         }
-
         List<NPCMessage> messageHistory = new ArrayList<>();
         messageHistory.add(new NPCMessage("system", systemPrompt));
+        messageHistory.addAll(npc.getDialogueHistory());
 
         String chatHistoryMarkdown = "```\n" + npc.getChatHistoryAsString() + "\n```";
         messageHistory.add(new NPCMessage("user", chatHistoryMarkdown + userInput));
+        npc.addDialogueToHistory(new NPCMessage("user", userInput));
 
         System.out.println("Prompt to ExpertGPT:");
         messageHistory.forEach(m -> System.out.println(m.getSender() + ": " + m.getContent()));
@@ -37,6 +48,9 @@ public class ExpertSystem {
         String npcResponse = gptModel.call(messageHistory);
         String cleanedResponse = cleanResponse(npcResponse);
         System.out.println(cleanedResponse);
+
+        // 更新 NPC 的对话历史
+        npc.addDialogueToHistory(new NPCMessage("assistant", cleanedResponse));
 
         return cleanedResponse;
     }
