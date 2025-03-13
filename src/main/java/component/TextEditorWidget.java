@@ -209,13 +209,29 @@ public class TextEditorWidget extends AbstractWidget {
     private int findBreakIndex(String line) {
         var font = Minecraft.getInstance().font;
         int width = 0;
+        int lastValidBreak = -1; // 记录最后一个有效的断点（单词边界）
+
         for (int i = 0; i < line.length(); i++) {
-            width += font.width(String.valueOf(line.charAt(i)));
+            char ch = line.charAt(i);
+            width += font.width(String.valueOf(ch));
+
+            // 如果是空格或标点，记录为可能的断点
+            if (Character.isWhitespace(ch) || isPunctuation(ch)) {
+                lastValidBreak = i;
+            }
+
+            // 如果宽度超过最大宽度
             if (width > maxWidth) {
-                return i;
+                // 如果找到过有效断点，优先在该位置断开
+                return (lastValidBreak != -1) ? lastValidBreak + 1 : i;
             }
         }
-        return line.length();
+        return line.length(); // 如果不需要换行，返回行的末尾
+    }
+
+    private boolean isPunctuation(char ch) {
+        // 判断是否为标点符号
+        return "!.,;:?".indexOf(ch) != -1;
     }
 
     private int calculateCursorX(String line) {
