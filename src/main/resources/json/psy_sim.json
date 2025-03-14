@@ -42,8 +42,8 @@
           "description": "帮助Chen Liu找到合适的学习资源和策略",
           "completion_criteria": "提供有用的学习资源和策略，并进行一次学习会话",
           "completed": false,
-          "object": "Academic Support",
-          "reward": ["Academic Helper"],
+          "object": "Adaptive Support",
+          "reward": ["Adaptive Helper"],
           "plot_significance": "玩家通过提供学习资源帮助Student Liu改善学习效果，同时也增强了自己的学习能力。"
         }
       ]

@@ -101,4 +101,7 @@ public class HintScrollPanel extends ScrollPanel {
         return true; // 表示事件已处理
     }
 
+    public void setContent(List<String> paperContent) {
+        chatHistory = paperContent;
+    }
 }

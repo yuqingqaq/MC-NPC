@@ -3,7 +3,7 @@ package model;
 import interfaces.TaskStatusListener;
 import utils.TimeUtil;
 
-public class SubTaskModel {
+public class AdaptiveSubTaskModel {
     private String subTaskId;
     private String title;
     private String estimatedTime;
@@ -11,6 +11,7 @@ public class SubTaskModel {
     private TaskStatus status;
     private long remainingTime; // 剩余时间（秒）
     private TaskStatusListener listener;
+    private String outcome; // 新增字段：任务的收获
 
     public enum TaskStatus {
         NOT_STARTED,
@@ -19,16 +20,25 @@ public class SubTaskModel {
     }
 
     // 无参构造函数
-    public SubTaskModel() {}
+    public AdaptiveSubTaskModel() {}
 
     // 带参构造函数
-    public SubTaskModel(String subTaskId, String title, String estimatedTime, boolean completed) {
+    public AdaptiveSubTaskModel(String subTaskId, String title, String estimatedTime, boolean completed) {
         this.subTaskId = subTaskId;
         this.title = title;
         this.estimatedTime = estimatedTime;
         this.completed = completed;
         this.status = completed ? TaskStatus.COMPLETED : TaskStatus.NOT_STARTED;
         this.remainingTime = TimeUtil.parseEstimatedTime(estimatedTime); // 初始化剩余时间
+    }
+
+    // 新增字段：outcome 的 Getter 和 Setter
+    public String getOutcome() {
+        return outcome;
+    }
+
+    public void setOutcome(String outcome) {
+        this.outcome = outcome;
     }
 
     // Getters 和 Setters

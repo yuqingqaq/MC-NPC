@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TextEditorWidget extends AbstractWidget {
-    private static final int FONT_HEIGHT = 9; // 每行的高度
-    private static final int MARGIN = 4;     // 编辑器的边距
+    public static final int FONT_HEIGHT = 9; // 每行的高度
+    public static final int MARGIN = 4;     // 编辑器的边距
 
     private final List<String> lines; // 文本内容按行存储
     private int cursorX;              // 光标的列索引

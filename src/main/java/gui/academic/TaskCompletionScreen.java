@@ -1,25 +1,25 @@
-package gui.academic;
+package gui.adaptive;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TextComponent;
-import component.academic.NavigationBar;
-import component.academic.ScrollableTextBox;
-import component.academic.NoteModule;
-import model.AcademicTaskModel;
+import component.adaptive.NavigationBar;
+import component.adaptive.ScrollableTextBox;
+import component.adaptive.NoteModule;
+import model.AdaptiveTaskModel;
 import system.UIScreenManager;
 
 import java.util.List;
 
 public class TaskCompletionScreen extends Screen {
     private final Minecraft minecraft;
-    private final AcademicTaskModel task;
+    private final AdaptiveTaskModel task;
     private NavigationBar navigationBar;
     private ScrollableTextBox summaryBox;
     private NoteModule noteModule;
 
-    public TaskCompletionScreen(Minecraft minecraft, AcademicTaskModel task) {
+    public TaskCompletionScreen(Minecraft minecraft, AdaptiveTaskModel task) {
         super(new TextComponent("任务完成情况"));
         this.minecraft = minecraft;
         this.task = task;

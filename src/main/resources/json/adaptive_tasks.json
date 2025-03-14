@@ -1,5 +1,5 @@
 {
-  "academic_tasks": [
+  "adaptive_tasks": [
     {
       "taskId": "task1",
       "title": "参考文献",
@@ -43,14 +43,14 @@
     },
     {
       "taskId": "task2",
-      "title": "NLP 模型分析",
+      "title": "Agent研究",
       "category": "Academic",
-      "description": "分析自然语言处理模型的优缺点",
-      "target": "完成一份详细的报告",
-      "resources": ["NLP 教材", "研究论文"],
+      "description": "在开始写作前：在学校图书馆内找到1篇相关的参考文献，并进行总结，需要输出简洁的review结论; 找到一位Agent领域专家进行访谈，确定写作specific的主题",
+      "target": "完成一份有关Agent的学习报告",
+      "resources": ["参考文献", "领域专家"],
       "location": "实验室",
       "estimatedTime": "120:00",
-      "strategies": ["自行规划", "参考他人研究"],
+      "strategies": ["自行规划", "协作规划"],
       "summary": {
         "进展": "已完成初步分析",
         "困难": "报告结构尚需完善",
@@ -61,15 +61,22 @@
       "subTasks": [
         {
           "subTaskId": "1",
-          "title": "到达实验室",
-          "estimatedTime": "05:00",
+          "title": "文献搜集",
+          "estimatedTime": "10:00",
           "completed": false,
           "status": "NOT_STARTED"
         },
         {
           "subTaskId": "2",
-          "title": "阅读NLP论文",
-          "estimatedTime": "02:00",
+          "title": "专家访谈",
+          "estimatedTime": "15:00",
+          "completed": false,
+          "status": "NOT_STARTED"
+        },
+        {
+          "subTaskId": "3",
+          "title": "报告大纲撰写",
+          "estimatedTime": "10:00",
           "completed": false,
           "status": "NOT_STARTED"
         }
@@ -118,6 +125,40 @@
           "subTaskId": "4",
           "title": "撰写英文Report",
           "estimatedTime": "10:00",
+          "completed": false,
+          "status": "NOT_STARTED"
+        }
+      ]
+    },
+    {
+      "taskId": "task4",
+      "title": "熟悉校园",
+      "category": "Environmental",
+      "description": "熟悉虚拟校园场景",
+      "target": "完成一份详细的报告",
+      "resources": ["校园导览地图"],
+      "location": "行政楼",
+      "estimatedTime": "150:00",
+      "strategies": ["问问专家"],
+      "summary": {
+        "进展": "已游览部分校园",
+        "困难": "无法到达xxx",
+        "下一步": "与朋友分享"
+      },
+      "completed": false,
+      "notes": "需要与团队成员讨论",
+      "subTasks": [
+        {
+          "subTaskId": "1",
+          "title": "到达行政楼",
+          "estimatedTime": "05:00",
+          "completed": false,
+          "status": "NOT_STARTED"
+        },
+        {
+          "subTaskId": "2",
+          "title": "收集校徽碎片",
+          "estimatedTime": "02:00",
           "completed": false,
           "status": "NOT_STARTED"
         }

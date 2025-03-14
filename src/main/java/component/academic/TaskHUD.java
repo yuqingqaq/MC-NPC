@@ -1,8 +1,8 @@
-package component.academic;
+package component.adaptive;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import model.AcademicTaskModel;
-import model.SubTaskModel;
+import model.AdaptiveTaskModel;
+import model.AdaptiveSubTaskModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.TextComponent;
 import system.TaskManager;
@@ -22,17 +22,17 @@ public class TaskHUD {
 
     // 初始化任务，只运行一次，避免任务列表为空
     private void initializeTasks() {
-        List<AcademicTaskModel> tasks = TaskManager.getInstance().getTasks();
+        List<AdaptiveTaskModel> tasks = TaskManager.getInstance().getTasks();
         if (tasks == null || tasks.isEmpty()) {
             System.out.println("No tasks found");
             return;
         }
 
         // 仅初始化包含 IN_PROGRESS 或 COMPLETED 子任务的 HUDTask
-        for (AcademicTaskModel task : tasks) {
+        for (AdaptiveTaskModel task : tasks) {
             boolean hasValidSubTasks = task.getSubTasks().stream().anyMatch(
-                    subTask -> subTask.getStatus() == SubTaskModel.TaskStatus.IN_PROGRESS
-                            || subTask.getStatus() == SubTaskModel.TaskStatus.COMPLETED);
+                    subTask -> subTask.getStatus() == AdaptiveSubTaskModel.TaskStatus.IN_PROGRESS
+                            || subTask.getStatus() == AdaptiveSubTaskModel.TaskStatus.COMPLETED);
 
             if (hasValidSubTasks) {
                 hudTasks.add(new HUDTask(minecraft, task));
@@ -42,7 +42,7 @@ public class TaskHUD {
 
     // 更新任务列表，动态添加新任务或移除不符合条件的任务
     private void updateTasks() {
-        List<AcademicTaskModel> tasks = TaskManager.getInstance().getTasks();
+        List<AdaptiveTaskModel> tasks = TaskManager.getInstance().getTasks();
         if (tasks == null || tasks.isEmpty()) {
             hudTasks.clear(); // 如果没有任务清空列表
             return;
@@ -52,10 +52,10 @@ public class TaskHUD {
         List<HUDTask> updatedHudTasks = new ArrayList<>();
 
         // 遍历所有任务，检查是否需要更新到 HUD
-        for (AcademicTaskModel task : tasks) {
+        for (AdaptiveTaskModel task : tasks) {
             boolean hasValidSubTasks = task.getSubTasks().stream().anyMatch(
-                    subTask -> subTask.getStatus() == SubTaskModel.TaskStatus.IN_PROGRESS
-                            || subTask.getStatus() == SubTaskModel.TaskStatus.COMPLETED);
+                    subTask -> subTask.getStatus() == AdaptiveSubTaskModel.TaskStatus.IN_PROGRESS
+                            || subTask.getStatus() == AdaptiveSubTaskModel.TaskStatus.COMPLETED);
 
             if (hasValidSubTasks) {
                 // 检查当前 HUDTask 是否已经存在

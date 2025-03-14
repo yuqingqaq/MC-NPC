@@ -50,6 +50,17 @@ public class NPCModel {
         this.items = new ArrayList<>();
         this.npcTask = npcTask;
     }
+    public NPCModel(String name) {
+        this(); // 调用默认构造函数，初始化其他字段
+        this.name = name; // 设置 name
+        this.dialogueHistory = new ArrayList<>();
+        this.chatHistory = new ArrayList<>();
+        this.items = new ArrayList<>();
+    }
+
+    public NPCModel(){
+
+    }
     public String getNPCName(){
         return name;
     }

@@ -1,6 +1,6 @@
 package item;
 
-import gui.academic.TaskOverviewScreen;
+import gui.adaptive.TaskOverviewScreen;
 import net.minecraft.client.Minecraft;
 import npcopenai.NPCOpenAI;
 

@@ -5,7 +5,7 @@ import interfaces.OnTaskCompleteListener;
 import java.util.List;
 import java.util.Map;
 
-public class AcademicTaskModel {
+public class AdaptiveTaskModel {
     private String taskId; // 任务 ID
     private String title; // 任务标题
     private String category; // 类别归属
@@ -20,7 +20,7 @@ public class AcademicTaskModel {
     private OnTaskCompleteListener onCompleteListener; // 任务完成监听器
     private TaskStatus status; // 任务状态
     private String notes; // 笔记字段
-    private List<SubTaskModel> subTasks; // 子任务列表
+    private List<AdaptiveSubTaskModel> subTasks; // 子任务列表
     private long startTime; // 任务开始时间
     private long elapsedTime; // 已用时间
 
@@ -31,10 +31,10 @@ public class AcademicTaskModel {
     }
 
     // 无参构造函数（Jackson 需要这个）
-    public AcademicTaskModel() {}
+    public AdaptiveTaskModel() {}
 
     // 全参构造函数
-    public AcademicTaskModel(String taskId, String title, String category, String description, String target,
+    public AdaptiveTaskModel(String taskId, String title, String category, String description, String target,
                              List<String> resources, String location, String estimatedTime, List<String> strategies,
                              Map<String, String> summary, boolean completed) {
         this.taskId = taskId;
@@ -153,7 +153,7 @@ public class AcademicTaskModel {
         this.status = completed ? TaskStatus.COMPLETED : this.status;
         // 如果任务完成，且监听器不为空，触发完成逻辑
         if (completed && this.onCompleteListener != null) {
-            this.onCompleteListener.onTaskComplete(this.taskId, "Academic task completed!");
+            this.onCompleteListener.onTaskComplete(this.taskId, "Adaptive task completed!");
         }
     }
 
@@ -173,11 +173,11 @@ public class AcademicTaskModel {
         this.notes = notes;
     }
 
-    public List<SubTaskModel> getSubTasks() {
+    public List<AdaptiveSubTaskModel> getSubTasks() {
         return subTasks;
     }
 
-    public void setSubTasks(List<SubTaskModel> subTasks) {
+    public void setSubTasks(List<AdaptiveSubTaskModel> subTasks) {
         this.subTasks = subTasks;
     }
 
@@ -200,7 +200,7 @@ public class AcademicTaskModel {
     // toString 方法（调试时使用）
     @Override
     public String toString() {
-        return "AcademicTaskModel{" +
+        return "AdaptiveTaskModel{" +
                 "taskId='" + taskId + '\'' +
                 ", description='" + description + '\'' +
                 ", target='" + target + '\'' +

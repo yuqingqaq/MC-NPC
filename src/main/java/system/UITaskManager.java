@@ -1,10 +1,10 @@
 package system;
 
-import model.AcademicTaskModel;
+import model.AdaptiveTaskModel;
 
 public class UITaskManager {
     private static UITaskManager instance;
-    private AcademicTaskModel currentTaskInOverview;
+    private AdaptiveTaskModel currentTaskInOverview;
 
     private UITaskManager() {}
 
@@ -15,11 +15,11 @@ public class UITaskManager {
         return instance;
     }
 
-    public AcademicTaskModel getCurrentTaskInOverview() {
+    public AdaptiveTaskModel getCurrentTaskInOverview() {
         return currentTaskInOverview;
     }
 
-    public void setCurrentTaskInOverview(AcademicTaskModel task) {
+    public void setCurrentTaskInOverview(AdaptiveTaskModel task) {
         this.currentTaskInOverview = task;
     }
 } 

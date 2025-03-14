@@ -1,6 +1,6 @@
 package system;
 
-import model.SubTaskModel;
+import model.AdaptiveSubTaskModel;
 import utils.TimeUtil;
 
 import java.util.Timer;
@@ -22,15 +22,15 @@ public class TimeManager {
     }
 
     // 开启子任务的时间更新逻辑
-    public void startTrackingTime(SubTaskModel subTask) {
-        if (subTask.getStatus() == SubTaskModel.TaskStatus.IN_PROGRESS) {
+    public void startTrackingTime(AdaptiveSubTaskModel subTask) {
+        if (subTask.getStatus() == AdaptiveSubTaskModel.TaskStatus.IN_PROGRESS) {
             timer.scheduleAtFixedRate(new TimerTask() {
                 @Override
                 public void run() {
                     if (subTask.getRemainingTime() > 0) {
                         subTask.reduceRemainingTime(1); // 每秒减少 1 秒
                     } else {
-                        subTask.setStatus(SubTaskModel.TaskStatus.COMPLETED); // 时间耗尽后标记为完成
+                        subTask.setStatus(AdaptiveSubTaskModel.TaskStatus.COMPLETED); // 时间耗尽后标记为完成
                         this.cancel(); // 停止计时
                     }
                 }
@@ -39,8 +39,8 @@ public class TimeManager {
     }
 
     // 停止对子任务的时间追踪
-    public void stopTrackingTime(SubTaskModel subTask) {
-        subTask.setStatus(SubTaskModel.TaskStatus.COMPLETED);
+    public void stopTrackingTime(AdaptiveSubTaskModel subTask) {
+        subTask.setStatus(AdaptiveSubTaskModel.TaskStatus.COMPLETED);
     }
 
     // 格式化时间

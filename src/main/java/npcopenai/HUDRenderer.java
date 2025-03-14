@@ -1,6 +1,6 @@
 package npcopenai;
 
-import component.academic.TaskHUD;
+import component.adaptive.TaskHUD;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.TickEvent;

@@ -1,10 +1,8 @@
 package controller;
 
 import api.OpenAIGPT;
-import controller.GameController;
 import interfaces.GameControllerInterface;
-import metadata.NPCMessage;
-import model.AcademicTaskModel;
+import model.AdaptiveTaskModel;
 import system.ExpertSystem;
 import system.NPCSystem;
 import clinic.huatuoAPI;
@@ -16,10 +14,8 @@ import model.ItemModel;
 import model.TaskModel;
 import util.JsonLoader;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class GameController implements GameControllerInterface {
     private static GameController instance; // Singleton instance
@@ -29,7 +25,7 @@ public class GameController implements GameControllerInterface {
     private List<ItemModel> backpackItems;
     private List<ItemModel> worldObjects;
     private List<ItemModel> gameAssets;
-    private List<AcademicTaskModel> academicTasks;
+    private List<AdaptiveTaskModel> adaptiveTasks;
     private NPCSystem npcSystem;
     private ExpertSystem expertSystem;
     private TaskSystem taskSystem;
@@ -59,10 +55,10 @@ public class GameController implements GameControllerInterface {
                 "player_backpack",
                 new TypeReference<List<ItemModel>>() {}
         );
-        academicTasks = JsonLoader.loadObjectListFromJson(
-                "json/academic_tasks.json",
-                "academic_tasks",
-                new TypeReference<List<AcademicTaskModel>>() {}
+        adaptiveTasks = JsonLoader.loadObjectListFromJson(
+                "json/adaptive_tasks.json",
+                "adaptive_tasks",
+                new TypeReference<List<AdaptiveTaskModel>>() {}
         );
         worldObjects = JsonLoader.loadObjectListFromJson(
                 "json/world_objects.json",
@@ -171,8 +167,8 @@ public class GameController implements GameControllerInterface {
         return null;
     }
 
-    public List<AcademicTaskModel> getAcademicTasks() {
-        return academicTasks;
+    public List<AdaptiveTaskModel> getAdaptiveTasks() {
+        return adaptiveTasks;
     }
     public List<NPCModel> getNpcs() {
         return npcs;

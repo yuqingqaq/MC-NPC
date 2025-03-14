@@ -1,11 +1,11 @@
-package gui.academic;
+package gui.adaptive;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import component.academic.TaskDetailPanel;
-import component.academic.TaskOverviewPanel;
+import component.adaptive.TaskDetailPanel;
+import component.adaptive.TaskOverviewPanel;
 import controller.GameController;
-import model.AcademicTaskModel;
+import model.AdaptiveTaskModel;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TextComponent;
 import system.UIScreenManager;
@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.Map;
 
 public class TaskOverviewScreen extends Screen {
-    private List<AcademicTaskModel> academicTasks;
-    private AcademicTaskModel currentTask;
+    private List<AdaptiveTaskModel> adaptiveTasks;
+    private AdaptiveTaskModel currentTask;
     private TaskOverviewPanel taskPanel;
     private TaskDetailPanel detailPanel;
     private Map<String, List<String>> categoryTasks = new HashMap<>();
@@ -30,19 +30,19 @@ public class TaskOverviewScreen extends Screen {
     @Override
     protected void init() {
         UIScreenManager.getInstance().setCurrentScreenState(UIScreenManager.ScreenState.NO_HUD);
-        academicTasks = GameController.getInstance().getAcademicTasks();
+        adaptiveTasks = GameController.getInstance().getAdaptiveTasks();
         
         // 构建分类任务数据
-        for (AcademicTaskModel task : academicTasks) {
+        for (AdaptiveTaskModel task : adaptiveTasks) {
             String category = task.getCategory();
             categoryTasks.computeIfAbsent(category, k -> new ArrayList<>())
                     .add(task.getTitle());
         }
 
         // 设置初始任务（如果有的话）
-        if (!academicTasks.isEmpty()) {
+        if (!adaptiveTasks.isEmpty()) {
             if(UITaskManager.getInstance().getCurrentTaskInOverview() == null){
-                currentTask = academicTasks.get(0);
+                currentTask = adaptiveTasks.get(0);
                 UITaskManager.getInstance().setCurrentTaskInOverview(currentTask); // 设置当前任务
             }
             else{
@@ -93,7 +93,7 @@ public class TaskOverviewScreen extends Screen {
     }
 
     private void onTaskSelected(String taskTitle) {
-        currentTask = academicTasks.stream()
+        currentTask = adaptiveTasks.stream()
                 .filter(task -> task.getTitle().equals(taskTitle))
                 .findFirst()
                 .orElse(null);

@@ -1,18 +1,18 @@
-package component.academic;
+package component.adaptive;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import model.AcademicTaskModel;
-import model.SubTaskModel;
+import model.AdaptiveTaskModel;
+import model.AdaptiveSubTaskModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.TextComponent;
 import system.TimeManager;
 
 public class HUDTask {
     private final Minecraft minecraft;
-    private final AcademicTaskModel task;
+    private final AdaptiveTaskModel task;
     private boolean isExpanded = false; // 是否展开
 
-    public HUDTask(Minecraft minecraft, AcademicTaskModel task) {
+    public HUDTask(Minecraft minecraft, AdaptiveTaskModel task) {
         this.minecraft = minecraft;
         this.task = task;
     }
@@ -21,13 +21,13 @@ public class HUDTask {
         // 计算高度
         int height = 15; // 标题的高度
         if (isExpanded) {
-            for (SubTaskModel subTask : task.getSubTasks()) {
+            for (AdaptiveSubTaskModel subTask : task.getSubTasks()) {
                 height += 12; // 每个子任务的高度
             }
         } else {
             // 在收起状态下，显示进行中的子任务
-            for (SubTaskModel subTask : task.getSubTasks()) {
-                if (subTask.getStatus() == SubTaskModel.TaskStatus.IN_PROGRESS) {
+            for (AdaptiveSubTaskModel subTask : task.getSubTasks()) {
+                if (subTask.getStatus() == AdaptiveSubTaskModel.TaskStatus.IN_PROGRESS) {
                     height += 10; // 进行中的子任务的高度
                 }
             }
@@ -42,8 +42,8 @@ public class HUDTask {
 
         // 在收起状态下仍然显示进行中的子任务
         if (!isExpanded) {
-            for (SubTaskModel subTask : task.getSubTasks()) {
-                if (subTask.getStatus() == SubTaskModel.TaskStatus.IN_PROGRESS) {
+            for (AdaptiveSubTaskModel subTask : task.getSubTasks()) {
+                if (subTask.getStatus() == AdaptiveSubTaskModel.TaskStatus.IN_PROGRESS) {
                     String taskText = subTask.getTitle();
                     String formattedTime = TimeManager.getInstance().formatTime(subTask.getRemainingTime()); // 使用 TimeManager 格式化时间
                     taskText += " " + formattedTime;
@@ -53,7 +53,7 @@ public class HUDTask {
             }
         } else {
             // 展开状态，显示所有子任务
-            for (SubTaskModel subTask : task.getSubTasks()) {
+            for (AdaptiveSubTaskModel subTask : task.getSubTasks()) {
                 int color;
                 String taskText;
 
@@ -82,7 +82,7 @@ public class HUDTask {
         isExpanded = !isExpanded;
     }
 
-    public AcademicTaskModel getTask() {
+    public AdaptiveTaskModel getTask() {
         return task;
     }
 }

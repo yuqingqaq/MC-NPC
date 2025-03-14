@@ -1,8 +1,8 @@
 package interfaces;
 
-import model.SubTaskModel;
+import model.AdaptiveSubTaskModel;
 
 public interface TaskStatusListener {
-    void onTaskStarted(SubTaskModel subTask);
-    void onTaskCompleted(SubTaskModel subTask);
+    void onTaskStarted(AdaptiveSubTaskModel subTask);
+    void onTaskCompleted(AdaptiveSubTaskModel subTask);
 } 
