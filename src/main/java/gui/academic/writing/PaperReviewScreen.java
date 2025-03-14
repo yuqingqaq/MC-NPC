@@ -55,7 +55,7 @@ public class PaperReviewScreen extends Screen {
         this.paperContentPanel= new ContentPanel(
                 Minecraft.getInstance(),
                 250,   // 面板宽度
-                90,   // 面板高度
+                85,   // 面板高度
                 20,    // 面板顶部位置
                 20,    // 面板左侧位置
                 5,     // 面板边框大小
