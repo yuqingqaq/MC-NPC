@@ -1,7 +1,7 @@
 package system;
 
 import net.minecraft.client.Minecraft;
-import gui.academic.TaskOverviewScreen;
+import gui.adaptive.TaskOverviewScreen;
 
 public class UIScreenManager {
     private static UIScreenManager instance;

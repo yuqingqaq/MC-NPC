@@ -89,7 +89,6 @@ public class NPCSystem {
 
 
 
-
         String cleanedResponse = cleanResponse(npcResponse);
 
         npc.addDialogueToHistory(new NPCMessage("assistant", cleanedResponse));

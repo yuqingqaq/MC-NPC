@@ -1,13 +1,13 @@
-package component.academic;
+package component.adaptive;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 
-import gui.academic.StrategyScreen;
-import gui.academic.TaskCompletionScreen;
+import gui.adaptive.StrategyScreen;
+import gui.adaptive.TaskCompletionScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import model.AcademicTaskModel;
+import model.AdaptiveTaskModel;
 import net.minecraftforge.client.gui.ScrollPanel;
 import system.UIScreenManager;
 
@@ -17,7 +17,7 @@ import java.util.Map;
 
 public class TaskDetailPanel extends ScrollPanel {
     private final TaskDetailCard detailCard;
-    private AcademicTaskModel currentTask;
+    private AdaptiveTaskModel currentTask;
     private int contentWidth;
     private int scrollY = 0; // 当前滚动位置
     private int maxScrollY = 0; // 最大滚动位置
@@ -29,7 +29,7 @@ public class TaskDetailPanel extends ScrollPanel {
     private int strategyCardY; // 完成策略卡片的Y坐标
     private int summaryCardY;   // 完成情况卡片的Y坐标
     
-    public TaskDetailPanel(Minecraft mc, int width, int height, int top, int left, AcademicTaskModel initialTask) {
+    public TaskDetailPanel(Minecraft mc, int width, int height, int top, int left, AdaptiveTaskModel initialTask) {
         super(mc, width, height, top, left, 0, 0, 0, 0, 0x00000000, 0x00000000, 0x00000000);
         this.mc = mc;
         this.detailCard = new TaskDetailCard(mc);
@@ -38,7 +38,7 @@ public class TaskDetailPanel extends ScrollPanel {
         updateMaxScrollY();
     }
     
-    public void setTask(AcademicTaskModel task) {
+    public void setTask(AdaptiveTaskModel task) {
         this.currentTask = task;
         updateMaxScrollY();
     }

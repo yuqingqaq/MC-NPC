@@ -3,6 +3,8 @@ package gui.screen;
 import com.mojang.blaze3d.vertex.PoseStack;
 import component.ColoredText;
 import component.TextUtils;
+import gui.academic.writing.EmailEditorScreen;
+import gui.academic.writing.PaperEditorScreen;
 import model.NPCModel;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -35,8 +37,17 @@ public class NPCDetailScreen extends Screen {
         // "跟 xxx 聊聊" 按钮
         this.addRenderableWidget(new Button(centerX - buttonWidth - buttonSpacing, buttonY, buttonWidth, buttonHeight,
                 new TextComponent("跟 " + npc.getNPCName() + " 聊聊"), button -> {
-            // 打开 NPCInteractionScreen
-            this.minecraft.setScreen(new NPCInteractionScreen(npc));
+            // 判断 npc 的名字
+            if ("邮件写作大师".equals(npc.getNPCName())) {
+                // 打开 EmailEditorScreen
+                this.minecraft.setScreen(new EmailEditorScreen(npc));
+            } else if ("论文写作大师".equals(npc.getNPCName())) {
+                // 打开 EmailEditorScreen
+                this.minecraft.setScreen(new PaperEditorScreen(npc));
+            } else {
+                // 打开 NPCInteractionScreen
+                this.minecraft.setScreen(new NPCInteractionScreen(npc));
+            }
         }
         ));
 

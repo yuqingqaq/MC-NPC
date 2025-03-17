@@ -1,19 +1,20 @@
-package gui.academic;
+package gui.adaptive;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import component.adaptive.ExpertPanel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
 
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TextComponent;
-import component.academic.DialoguePanel;
-import component.academic.StrategyPanel;
-import component.academic.TaskPlanningPanel;
+import component.adaptive.DialoguePanel;
+import component.adaptive.StrategyPanel;
+import component.adaptive.TaskPlanningPanel;
 import metadata.NPCMessage;
 import system.UIScreenManager;
 import system.UITaskManager;
-import model.AcademicTaskModel;
-import model.SubTaskModel;
+import model.AdaptiveTaskModel;
+import model.AdaptiveSubTaskModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,7 +36,7 @@ public class StrategyScreen extends Screen {
         UIScreenManager.getInstance().setCurrentScreenState(UIScreenManager.ScreenState.NO_HUD);
         
         // 获取当前任务
-        AcademicTaskModel currentTask = UITaskManager.getInstance().getCurrentTaskInOverview();
+        AdaptiveTaskModel currentTask = UITaskManager.getInstance().getCurrentTaskInOverview();
         if (currentTask == null) {
             // 处理没有当前任务的情况
             return;
@@ -68,10 +69,10 @@ public class StrategyScreen extends Screen {
         int rightPanelWidth = this.width - rightPanelX - 20;
 
         // 获取当前任务
-        AcademicTaskModel currentTask = UITaskManager.getInstance().getCurrentTaskInOverview();
+        AdaptiveTaskModel currentTask = UITaskManager.getInstance().getCurrentTaskInOverview();
 
         // Create the new right panel based on the selected strategy
-        if ("问问NPC".equals(strategy)) {
+        if ("辅助规划".equals(strategy)) {
             // Initialize DialoguePanel
             List<NPCMessage> chatHistory = new ArrayList<>();
             chatHistory.add(new NPCMessage("npc", "欢迎开始对话！"));
@@ -86,17 +87,27 @@ public class StrategyScreen extends Screen {
             );
         } else if ("自行规划".equals(strategy)) {
             // 从当前任务中获取子任务
-            List<SubTaskModel> tasks = new ArrayList<>();
-            for (SubTaskModel subTask : currentTask.getSubTasks()) {
+            List<AdaptiveSubTaskModel> tasks = new ArrayList<>();
+            for (AdaptiveSubTaskModel subTask : currentTask.getSubTasks()) {
                 tasks.add(subTask);
             }
             
             this.rightPanel = new TaskPlanningPanel(rightPanelX, 40, rightPanelWidth, this.height - 60, tasks);
+        } else if ("问问专家".equals(strategy)) {
+            // 使用 ExpertPanel
+            this.rightPanel = new ExpertPanel(rightPanelX, 40, rightPanelWidth, this.height - 60);
         }
-    
+
+
         // Add the new right panel if it is not null
         if (rightPanel != null) {
             this.addRenderableWidget(rightPanel); // Add directly without casting
+        }
+    }
+
+    private void teleportToNPC(int index) {
+        if (this.minecraft.player != null) {
+            this.minecraft.player.chat("/findnpc " + index);
         }
     }
 

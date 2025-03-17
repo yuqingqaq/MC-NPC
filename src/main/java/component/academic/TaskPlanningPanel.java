@@ -1,7 +1,7 @@
-package component.academic;
+package component.adaptive;
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import model.SubTaskModel;
+import model.AdaptiveSubTaskModel;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Widget;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TaskPlanningPanel extends AbstractWidget implements Widget {
-    private final List<SubTaskModel> subTasks; // 子任务列表
+    private final List<AdaptiveSubTaskModel> subTasks; // 子任务列表
     private final List<Button> taskButtons; // 每个子任务对应的按钮
     private final int panelWidth;
     private final int panelHeight;
@@ -22,7 +22,7 @@ public class TaskPlanningPanel extends AbstractWidget implements Widget {
     private int dragY = 0; // 当前拖动的 Y 坐标
     private Button startButton; // 开始行动按钮
 
-    public TaskPlanningPanel(int x, int y, int width, int height, List<SubTaskModel> initialSubTasks) {
+    public TaskPlanningPanel(int x, int y, int width, int height, List<AdaptiveSubTaskModel> initialSubTasks) {
         super(x, y, width, height, new TextComponent("Task Planning Panel"));
         this.subTasks = new ArrayList<>(initialSubTasks); // 初始化子任务列表
         this.taskButtons = new ArrayList<>();
@@ -42,7 +42,7 @@ public class TaskPlanningPanel extends AbstractWidget implements Widget {
         for (int i = 0; i < subTasks.size(); i++) {
             final int index = i;  // 创建一个 final 变量
             int buttonY = startY + i * (buttonHeight + buttonSpacing);
-            SubTaskModel subTask = subTasks.get(i);
+            AdaptiveSubTaskModel subTask = subTasks.get(i);
 
             // 创建子任务按钮
             Button button = new Button(this.x + 10, buttonY, this.panelWidth - 20, buttonHeight,
@@ -54,7 +54,7 @@ public class TaskPlanningPanel extends AbstractWidget implements Widget {
         }
 
         // 创建开始行动按钮
-        this.startButton = new Button(this.x + 10, startY + subTasks.size() * (buttonHeight + buttonSpacing), this.panelWidth - 20, buttonHeight,
+        this.startButton = new Button(this.x + 10, startY + subTasks.size() * (buttonHeight + buttonSpacing) + 20, this.panelWidth - 20, buttonHeight,
                 new TextComponent("开始行动"), btn -> startTask());
     }
 
@@ -62,7 +62,7 @@ public class TaskPlanningPanel extends AbstractWidget implements Widget {
     private void startTask() {
         // 获取排序后的第一个子任务
         if (!subTasks.isEmpty()) {
-            SubTaskModel selectedSubTask = subTasks.get(0); // 获取第一个子任务
+            AdaptiveSubTaskModel selectedSubTask = subTasks.get(0); // 获取第一个子任务
             // 这里可以调用 TaskManager 的方法来开始任务
             TaskManager.getInstance().startSubTask(selectedSubTask); // 假设 startTask 方法可以处理 SubTaskModel
             System.out.println("开始子任务: " + selectedSubTask.getTitle());
@@ -94,7 +94,7 @@ public class TaskPlanningPanel extends AbstractWidget implements Widget {
         if (draggingTaskIndex != -1) {
             // 鼠标释放时，计算目标索引，并重新排序任务
             int targetIndex = calculateTargetIndex((int) mouseY);
-            SubTaskModel draggedSubTask = subTasks.remove(draggingTaskIndex); // 移除拖动的子任务
+            AdaptiveSubTaskModel draggedSubTask = subTasks.remove(draggingTaskIndex); // 移除拖动的子任务
             subTasks.add(targetIndex, draggedSubTask); // 插入到目标位置
 
             // 重置拖动状态
@@ -133,7 +133,7 @@ public class TaskPlanningPanel extends AbstractWidget implements Widget {
 
         // 渲染拖动的子任务
         if (draggingTaskIndex != -1) {
-            SubTaskModel draggingSubTask = subTasks.get(draggingTaskIndex);
+            AdaptiveSubTaskModel draggingSubTask = subTasks.get(draggingTaskIndex);
 
             // 获取文字宽度
             int textWidth = Minecraft.getInstance().font.width(draggingSubTask.getTitle() + " (" + draggingSubTask.getEstimatedTime() + ")");
