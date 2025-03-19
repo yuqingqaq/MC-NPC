@@ -1,4 +1,4 @@
-package component.adaptive;
+package component.academic;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import model.AdaptiveTaskModel;

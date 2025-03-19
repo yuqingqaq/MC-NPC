@@ -1,12 +1,12 @@
-package gui.adaptive;
+package gui.academic;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TextComponent;
-import component.adaptive.NavigationBar;
-import component.adaptive.ScrollableTextBox;
-import component.adaptive.NoteModule;
+import component.academic.NavigationBar;
+import component.academic.ScrollableTextBox;
+import component.academic.NoteModule;
 import model.AdaptiveTaskModel;
 import system.UIScreenManager;
 

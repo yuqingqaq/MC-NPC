@@ -2,21 +2,19 @@
   "adaptive_tasks": [
     {
       "taskId": "task1",
-      "title": "参考文献",
+      "title": "虚拟图书馆",
       "category": "Academic",
       "description": "研究虚拟校园图书馆的使用方法",
-      "target": "搜集有关大语言模型的5条参考文献",
-      "resources": ["参考书籍", "在线文章"],
+      "target": "跟图书馆管理员交谈，了解图书馆文献搜集方法",
+      "resources": ["图书馆管理员", "在线文章"],
       "location": "图书馆",
-      "estimatedTime": "10:00",
-      "strategies": ["组队", "辅助规划", "自行规划"],
+      "estimatedTime": "20:00",
+      "strategies": ["辅助规划", "自行规划"],
       "summary": {
-        "进展": "已完成大部分资料搜集",
-        "困难": "部分参考文献无法获取",
-        "下一步": "前往图书管理员咨询"
+        "待办": "前往图书管理员咨询"
       },
       "completed": false,
-      "notes": "需要更多的在线资源",
+      "notes": "需要访问更多的在线资源",
       "subTasks": [
         {
           "subTaskId": "1",
@@ -43,59 +41,18 @@
     },
     {
       "taskId": "task2",
-      "title": "Agent研究",
-      "category": "Academic",
-      "description": "在开始写作前：在学校图书馆内找到1篇相关的参考文献，并进行总结，需要输出简洁的review结论; 找到一位Agent领域专家进行访谈，确定写作specific的主题",
-      "target": "完成一份有关Agent的学习报告",
-      "resources": ["参考文献", "领域专家"],
-      "location": "实验室",
-      "estimatedTime": "120:00",
-      "strategies": ["自行规划", "协作规划"],
-      "summary": {
-        "进展": "已完成初步分析",
-        "困难": "报告结构尚需完善",
-        "下一步": "与导师讨论分析结果"
-      },
-      "completed": false,
-      "notes": "需要与团队成员讨论",
-      "subTasks": [
-        {
-          "subTaskId": "1",
-          "title": "文献搜集",
-          "estimatedTime": "10:00",
-          "completed": false,
-          "status": "NOT_STARTED"
-        },
-        {
-          "subTaskId": "2",
-          "title": "专家访谈",
-          "estimatedTime": "15:00",
-          "completed": false,
-          "status": "NOT_STARTED"
-        },
-        {
-          "subTaskId": "3",
-          "title": "报告大纲撰写",
-          "estimatedTime": "10:00",
-          "completed": false,
-          "status": "NOT_STARTED"
-        }
-      ]
-    },
-    {
-      "taskId": "task3",
       "title": "英文写作",
       "category": "Academic",
-      "description": "学习英文写作",
+      "description": "学习英文文本写作",
       "target": "完成一份详细的邮件",
       "resources": ["邮件写作大师"],
       "location": "图书馆",
-      "estimatedTime": "10:00",
+      "estimatedTime": "20:00",
       "strategies": ["自行规划", "问问专家"],
       "summary": {
-        "进展": "已完成初步分析",
-        "困难": "报告结构尚需完善",
-        "下一步": "与导师讨论分析结果"
+        "进展": "可完成初步写作",
+        "困难": "需要调整规范写作结构",
+        "下一步": "与专家讨论分析"
       },
       "completed": false,
       "notes": "",
@@ -113,6 +70,40 @@
           "estimatedTime": "05:00",
           "completed": false,
           "status": "NOT_STARTED"
+        }
+      ]
+    },
+    {
+      "taskId": "task3",
+      "title": "Agent研究",
+      "category": "Academic",
+      "description": "在开始写作前：在学校图书馆内找到1篇相关的参考文献，并进行总结，需要输出简洁的review结论; 找到一位Agent领域专家进行访谈，确定写作specific的主题",
+      "target": "完成一份有关Agent的学习报告",
+      "resources": ["参考文献", "领域专家"],
+      "location": "实验室",
+      "estimatedTime": "35:00",
+      "strategies": ["自行规划", "协作规划"],
+      "summary": {
+        "进展": "已完成初步分析",
+        "困难": "报告结构尚需完善",
+        "下一步": "与导师讨论分析结果"
+      },
+      "completed": false,
+      "notes": "需要与团队成员讨论",
+      "subTasks": [
+        {
+          "subTaskId": "1",
+          "title": "文献搜集-ExpeL",
+          "estimatedTime": "10:00",
+          "completed": false,
+          "status": "NOT_STARTED"
+        },
+        {
+          "subTaskId": "2",
+          "title": "专家访谈",
+          "estimatedTime": "15:00",
+          "completed": false,
+          "status": "NOT_STARTED"
         },
         {
           "subTaskId": "3",
@@ -123,7 +114,7 @@
         },
         {
           "subTaskId": "4",
-          "title": "撰写英文Report",
+          "title": "报告大纲撰写",
           "estimatedTime": "10:00",
           "completed": false,
           "status": "NOT_STARTED"

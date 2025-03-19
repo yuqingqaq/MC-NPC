@@ -1,15 +1,15 @@
-package gui.adaptive;
+package gui.academic;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import component.adaptive.ExpertPanel;
+import component.academic.ExpertPanel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
 
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TextComponent;
-import component.adaptive.DialoguePanel;
-import component.adaptive.StrategyPanel;
-import component.adaptive.TaskPlanningPanel;
+import component.academic.DialoguePanel;
+import component.academic.StrategyPanel;
+import component.academic.TaskPlanningPanel;
 import metadata.NPCMessage;
 import system.UIScreenManager;
 import system.UITaskManager;
@@ -102,12 +102,6 @@ public class StrategyScreen extends Screen {
         // Add the new right panel if it is not null
         if (rightPanel != null) {
             this.addRenderableWidget(rightPanel); // Add directly without casting
-        }
-    }
-
-    private void teleportToNPC(int index) {
-        if (this.minecraft.player != null) {
-            this.minecraft.player.chat("/findnpc " + index);
         }
     }
 

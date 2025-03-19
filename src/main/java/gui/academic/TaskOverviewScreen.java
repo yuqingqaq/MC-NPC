@@ -1,9 +1,9 @@
-package gui.adaptive;
+package gui.academic;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import component.adaptive.TaskDetailPanel;
-import component.adaptive.TaskOverviewPanel;
+import component.academic.TaskDetailPanel;
+import component.academic.TaskOverviewPanel;
 import controller.GameController;
 import model.AdaptiveTaskModel;
 import net.minecraft.client.gui.screens.Screen;

@@ -75,6 +75,9 @@ public class NPCSystem {
             else if(npc.getNPCName().equals("朋辈心理辅导员")){
                 npc.addDialogueToHistory(new NPCMessage("user", NPCPromptConfig. uBuddiesPromptZh() + userInput));
             }
+            else if(npc.getNPCName().equals("王教授")){
+                npc.addDialogueToHistory(new NPCMessage("user", NPCPromptConfig.ProfWangPromptZh() + userInput));
+            }
 
             List<NPCMessage> messageHistory = new ArrayList<>();
             messageHistory.add(new NPCMessage("system", systemPrompt));

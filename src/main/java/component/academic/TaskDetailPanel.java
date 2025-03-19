@@ -1,16 +1,16 @@
-package component.adaptive;
+package component.academic;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 
-import gui.adaptive.StrategyScreen;
-import gui.adaptive.TaskCompletionScreen;
+import gui.academic.StrategyScreen;
+import gui.academic.TaskCompletionScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import model.AdaptiveTaskModel;
 import net.minecraftforge.client.gui.ScrollPanel;
 import system.UIScreenManager;
-
+import component.academic.TaskDetailCard;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
