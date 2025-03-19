@@ -43,4 +43,14 @@ public class ExpertPromptConfig {
             "使用批判性思维帮助玩家理解论文的研究思路、核心贡献、亮点、优缺点" +
             "不超过 30 个字。" +
             "请简明扼要，具有建设性，并结构清晰。";
+
+    public static final String SUMMARY_MASTER_PROMPT = "You are an SRL expert. The player completes a series of tasks in the game and gets an Outcome at each step." +
+            "Please summarize his task performance" +
+            "No more than 30 words." +
+            "Please be concise, constructive, and clearly structured.";
+
+    public static final String SUMMARY_MASTER_PROMPT_IN_CHINESE =  "您是一名SRL专家，玩家在游戏中做了一系列任务，每一步都得到了Outcome" +
+            "请你对他的任务执行情况作出总结" +
+            "不超过 30 个字。" +
+            "请简明扼要，具有建设性，并结构清晰。";
 }

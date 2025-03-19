@@ -83,11 +83,7 @@
       "location": "实验室",
       "estimatedTime": "35:00",
       "strategies": ["自行规划", "协作规划"],
-      "summary": {
-        "进展": "已完成初步分析",
-        "困难": "报告结构尚需完善",
-        "下一步": "与导师讨论分析结果"
-      },
+      "summary": {},
       "completed": false,
       "notes": "需要与团队成员讨论",
       "subTasks": [

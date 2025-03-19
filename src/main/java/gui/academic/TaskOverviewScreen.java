@@ -8,6 +8,7 @@ import controller.GameController;
 import model.AdaptiveTaskModel;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TextComponent;
+import system.TaskManager;
 import system.UIScreenManager;
 import system.UITaskManager;
 
@@ -99,6 +100,7 @@ public class TaskOverviewScreen extends Screen {
                 .orElse(null);
         detailPanel.setTask(currentTask);
         UITaskManager.getInstance().setCurrentTaskInOverview(currentTask);
+        TaskManager.getInstance().setCurrentTaskInOverview(currentTask);
     }
 
     @Override

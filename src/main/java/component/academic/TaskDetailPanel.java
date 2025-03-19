@@ -139,7 +139,7 @@ public class TaskDetailPanel extends ScrollPanel {
 
         // 检查 "完成情况" 卡片的按钮
         if (detailCard.isMouseOverButton((int) mouseX, (int) mouseY, x, summaryCardY, contentWidth)) {
-            mc.setScreen(new TaskCompletionScreen(mc, currentTask));
+            mc.setScreen(new TaskCompletionScreen(mc));
             return true;
         }
 
