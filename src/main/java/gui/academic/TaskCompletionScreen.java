@@ -85,18 +85,7 @@ public class TaskCompletionScreen extends Screen {
         return npcModel;
     }
 
-    /**
-     * 生成任务总结并显示在右上角区域
-     */
     private void generateTaskSummary() {
-        // 检查任务是否已有总结
-//        String existingSummary = task.getSummaryAsString();
-//        if (existingSummary != null && !existingSummary.isEmpty()) {
-//            // 如果已有总结，直接显示
-//            this.summaryBox.setText(existingSummary);
-//            return;
-//        }
-
         // 收集所有子任务的outcomes
         StringBuilder allOutcomes = new StringBuilder();
         allOutcomes.append("任务名称: ").append(task.getTitle()).append("\n\n");
@@ -104,18 +93,26 @@ public class TaskCompletionScreen extends Screen {
         allOutcomes.append("子任务完成内容:\n");
 
         List<AdaptiveSubTaskModel> subTasks = TaskManager.getInstance().getSortedSubTasks(task);
+        boolean hasCompletedContent = false;
+
         if (subTasks != null && !subTasks.isEmpty()) {
             for (AdaptiveSubTaskModel subTask : subTasks) {
                 String outcome = subTask.getOutcome();
                 if (outcome != null && !outcome.isEmpty()) {
                     allOutcomes.append("- ").append(subTask.getTitle()).append(":\n");
                     allOutcomes.append(outcome).append("\n\n");
+                    hasCompletedContent = true;
                 }
             }
         }
 
+        // 如果没有任务完成内容，添加提示信息
+        if (!hasCompletedContent) {
+            allOutcomes.append("暂无任务完成内容。\n\n");
+        }
+
         // 使用任务总结Agent生成总结
-        String prompt = "请基于以下任务完成内容，生成一个简洁明了的任务总结。总结应该包括任务的主要成果、关键发现和结论。\n\n" +
+        String prompt = "请基于以下任务完成情况，生成一个简洁明了的任务总结。总结应该包括任务的主要成果、关键发现和结论。如果任务暂无完成内容，请提供适当的初始阶段评估。\n\n" +
                 allOutcomes.toString();
 
         String summary = GameController.getInstance().interactWithExpert(summaryAgent, prompt);
@@ -128,6 +125,7 @@ public class TaskCompletionScreen extends Screen {
         summaryMap.put("总结", summary);
         task.setSummary(summaryMap);
     }
+
     /**
      * 从TaskManager获取当前任务的所有子任务outcomes并显示在左侧面板
      */

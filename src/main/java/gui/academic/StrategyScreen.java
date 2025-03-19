@@ -1,15 +1,12 @@
 package gui.academic;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import component.academic.ExpertPanel;
+import component.academic.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
 
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TextComponent;
-import component.academic.DialoguePanel;
-import component.academic.StrategyPanel;
-import component.academic.TaskPlanningPanel;
 import metadata.NPCMessage;
 import system.UIScreenManager;
 import system.UITaskManager;
@@ -55,7 +52,7 @@ public class StrategyScreen extends Screen {
         }
 
         // 创建左侧的策略面板
-        this.strategyPanel = new StrategyPanel(minecraft, 150, this.height - 40, 40, 20, strategies, this::onStrategySelected);
+        this.strategyPanel = new StrategyPanel(minecraft, 80, this.height - 40, 40, 20, strategies, this::onStrategySelected);
         this.addRenderableWidget(strategyPanel);
     }
 
@@ -65,7 +62,7 @@ public class StrategyScreen extends Screen {
             this.removeWidget(rightPanel); // Remove the current panel
             rightPanel = null;  // Clear the reference
         }
-        int rightPanelX = 190; // Left panel width + spacing
+        int rightPanelX = 110; // Left panel width + spacing
         int rightPanelWidth = this.width - rightPanelX - 20;
 
         // 获取当前任务
@@ -92,8 +89,17 @@ public class StrategyScreen extends Screen {
                 tasks.add(subTask);
             }
             
-            this.rightPanel = new TaskPlanningPanel(rightPanelX, 40, rightPanelWidth, this.height - 60, tasks);
-        } else if ("问问专家".equals(strategy)) {
+            this.rightPanel = new TaskPlanningPanel(rightPanelX + 40, 40, (int)(rightPanelWidth/1.5), this.height - 60, tasks);
+        } else if ("协作规划".equals(strategy)) {
+            // 从当前任务中获取子任务
+            List<AdaptiveSubTaskModel> tasks = new ArrayList<>();
+            for (AdaptiveSubTaskModel subTask : currentTask.getSubTasks()) {
+                tasks.add(subTask);
+            }
+
+            this.rightPanel = new TaskPlanningSupportPanel(rightPanelX, 40, rightPanelWidth, this.height - 60, tasks);
+        }
+        else if ("问问专家".equals(strategy)) {
             // 使用 ExpertPanel
             this.rightPanel = new ExpertPanel(rightPanelX, 40, rightPanelWidth, this.height - 60);
         }

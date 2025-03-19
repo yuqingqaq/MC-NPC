@@ -6,6 +6,7 @@ import utils.TimeUtil;
 public class AdaptiveSubTaskModel {
     private String subTaskId;
     private String title;
+    private String description;
     private String estimatedTime;
     private boolean completed;
     private TaskStatus status;
@@ -31,7 +32,7 @@ public class AdaptiveSubTaskModel {
         this.status = completed ? TaskStatus.COMPLETED : TaskStatus.NOT_STARTED;
         this.remainingTime = TimeUtil.parseEstimatedTime(estimatedTime); // 初始化剩余时间
     }
-
+    public String getDescription(){ return description;}
     // 新增字段：outcome 的 Getter 和 Setter
     public String getOutcome() {
         return outcome;

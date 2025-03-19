@@ -20,32 +20,35 @@ public class ExpertSystem {
     public String interact(NPCModel npc, String userInput, String language) {
         String systemPrompt;
         if ("邮件写作大师".equals(npc.getNPCName().trim())) {
-            // 如果是邮箱写作大师，使用对应的 Prompt
             if ("zh".equals(language)) {
                 systemPrompt = ExpertPromptConfig.EMAIL_WRITING_MASTER_PROMPT_IN_CHINESE;
             } else {
                 systemPrompt = ExpertPromptConfig.EMAIL_WRITING_MASTER_PROMPT;
             }
         } else if ("论文写作大师".equals(npc.getNPCName().trim())) {
-            // 如果是邮箱写作大师，使用对应的 Prompt
             if ("zh".equals(language)) {
                 systemPrompt = ExpertPromptConfig.PAPER_WRITING_MASTER_PROMPT_IN_CHINESE;
             } else {
                 systemPrompt = ExpertPromptConfig.PAPER_WRITING_MASTER_PROMPT;
             }
         } else if ("文献阅读Agent".equals(npc.getNPCName().trim())) {
-            // 如果是邮箱写作大师，使用对应的 Prompt
             if ("zh".equals(language)) {
                 systemPrompt = ExpertPromptConfig.PAPER_REVIEW_MASTER_PROMPT_IN_CHINESE;
             } else {
                 systemPrompt = ExpertPromptConfig.PAPER_REVIEW_MASTER_PROMPT;
             }
         }else if ("任务总结Agent".equals(npc.getNPCName().trim())) {
-            // 如果是邮箱写作大师，使用对应的 Prompt
             if ("zh".equals(language)) {
                 systemPrompt = ExpertPromptConfig.SUMMARY_MASTER_PROMPT_IN_CHINESE;
             } else {
                 systemPrompt = ExpertPromptConfig.SUMMARY_MASTER_PROMPT;
+            }
+        }
+        else if ("任务排序Agent".equals(npc.getNPCName().trim())) {
+            if ("zh".equals(language)) {
+                systemPrompt = ExpertPromptConfig.PLANNING_MASTER_PROMPT_IN_CHINESE;
+            } else {
+                systemPrompt = ExpertPromptConfig.PLANNING_MASTER_PROMPT;
             }
         }else {
             // 默认使用心理健康 Prompt
