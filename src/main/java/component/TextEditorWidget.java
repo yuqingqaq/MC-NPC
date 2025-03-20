@@ -8,6 +8,7 @@ import net.minecraft.network.chat.TextComponent;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class TextEditorWidget extends AbstractWidget {
@@ -32,6 +33,36 @@ public class TextEditorWidget extends AbstractWidget {
 
     public String getText() {
         return String.join("\n", lines);
+    }
+    /**
+     * 设置编辑器的文本内容
+     * @param text 文本内容，可以包含换行符
+     */
+    public void setText(String text) {
+        if (text == null) {
+            text = ""; // 防止空指针异常
+        }
+
+        // 将文本拆分为行
+        String[] textLines = text.split("\n");
+
+        // 清空当前行
+        lines.clear();
+
+        // 添加每一行文本
+        lines.addAll(Arrays.asList(textLines));
+
+        // 如果没有行，添加一个空行
+        if (lines.isEmpty()) {
+            lines.add("");
+        }
+
+        // 重置光标位置到开头
+        cursorX = 0;
+        cursorY = 0;
+
+        // 执行自动换行处理
+        wrapLines();
     }
 
     @Override

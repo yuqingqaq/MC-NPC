@@ -1,4 +1,4 @@
-package component.adaptive;
+package component.academic;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -52,9 +52,20 @@ public class ExpertPanel extends AbstractWidget implements Widget {
                 btn -> teleportToNPC(13) // 点击事件
         );
 
+        // 创建“专家访谈”按钮
+        Button expertInterviewButton = new Button(
+                this.x + 10, // 第三个按钮的 x 坐标
+                startY + 2 * (buttonHeight + buttonSpacing), // 第三个按钮的 y 坐标
+                this.panelWidth - 20, // 按钮宽度
+                buttonHeight,         // 按钮高度
+                new TextComponent("LLM专家"), // 按钮文本
+                btn -> teleportToNPC(14) // 点击事件
+        );
+
         // 将按钮添加到列表
         actionButtons.add(emailWritingButton);
         actionButtons.add(essayWritingButton);
+        actionButtons.add(expertInterviewButton);
     }
 
     // 执行跳转到 NPC 的逻辑
@@ -100,5 +111,4 @@ public class ExpertPanel extends AbstractWidget implements Widget {
     public void updateNarration(NarrationElementOutput output) {
         // 暂时不需要实现旁白支持
     }
-
 }

@@ -32,6 +32,7 @@ public class PaperReviewScreen extends Screen {
     private final String subTaskTitle;          // 当前任务标题
     private final List<String> paperContent;    // 论文内容
     private final NPCModel npcModel;            // 当前的 NPC 模型
+    private AdaptiveSubTaskModel currentSubTask; // 当前子任务的引用
 
     public PaperReviewScreen(String subTaskTitle, List<String> paperContent, NPCModel npcModel) {
         super(new TextComponent(TITLE));
@@ -39,6 +40,23 @@ public class PaperReviewScreen extends Screen {
         this.paperContent = paperContent != null ? paperContent : new ArrayList<>();
         this.npcModel = npcModel;
         this.hintHistory = new ArrayList<>();
+
+        // 在构造函数中查找当前子任务
+        findCurrentSubTask();
+    }
+
+    // 查找当前子任务
+    private void findCurrentSubTask() {
+        TaskManager taskManager = TaskManager.getInstance();
+
+        for (AdaptiveTaskModel task : taskManager.getTasks()) {
+            for (AdaptiveSubTaskModel subTask : task.getSubTasks()) {
+                if (subTask.getTitle().equals(subTaskTitle)) {
+                    this.currentSubTask = subTask;
+                    return;
+                }
+            }
+        }
     }
 
     @Override
@@ -72,6 +90,9 @@ public class PaperReviewScreen extends Screen {
                 70
         );
         this.addRenderableWidget(this.textEditor);
+
+        // 加载已有的outcome
+        loadExistingOutcome();
 
         // 左侧下方：问题输入框
         this.questionInput = new EditBox(
@@ -128,6 +149,22 @@ public class PaperReviewScreen extends Screen {
         ));
     }
 
+    // 加载已有的outcome到编辑器
+    private void loadExistingOutcome() {
+        if (currentSubTask != null) {
+            String outcome = currentSubTask.getOutcome();
+            if (outcome != null && !outcome.isEmpty()) {
+                textEditor.setText(outcome);
+
+                // 添加一条信息到提示历史，指示已加载之前的工作
+                hintHistory.add("Previous work loaded for task: " + currentSubTask.getTitle());
+                hintHistory.add("Status: " + currentSubTask.getStatus().toString());
+                hintHistory.add("----------------------");
+                hintHistory.add("");
+            }
+        }
+    }
+
     @Override
     public void onClose() {
         this.minecraft.setScreen(null);
@@ -137,22 +174,34 @@ public class PaperReviewScreen extends Screen {
         String editorContent = textEditor.getText().trim();
         if (!editorContent.isEmpty()) {
             TaskManager taskManager = TaskManager.getInstance();
+            if (currentSubTask != null) {
+                currentSubTask.setOutcome(editorContent);
+                taskManager.completeSubTask(currentSubTask);
 
-            for (AdaptiveTaskModel task : taskManager.getTasks()) {
-                for (AdaptiveSubTaskModel subTask : task.getSubTasks()) {
-                    if (subTask.getTitle().equals(subTaskTitle)) {
-                        subTask.setOutcome(editorContent);
-                        Minecraft.getInstance().player.displayClientMessage(
-                                new TextComponent("Outcome saved for sub-task: " + subTask.getTitle()), true
-                        );
-                        return;
+                Minecraft.getInstance().player.displayClientMessage(
+                        new TextComponent("Outcome saved for sub-task: " + currentSubTask.getTitle()), true
+                );
+            } else {
+                // 如果在构造函数中没有找到当前子任务，再次尝试查找
+
+                for (AdaptiveTaskModel task : taskManager.getTasks()) {
+                    for (AdaptiveSubTaskModel subTask : task.getSubTasks()) {
+                        if (subTask.getTitle().equals(subTaskTitle)) {
+                            subTask.setOutcome(editorContent);
+                            this.currentSubTask = subTask; // 保存引用以备将来使用
+                            taskManager.completeSubTask(subTask);
+                            Minecraft.getInstance().player.displayClientMessage(
+                                    new TextComponent("Outcome saved for sub-task: " + subTask.getTitle()), true
+                            );
+                            return;
+                        }
                     }
                 }
-            }
 
-            Minecraft.getInstance().player.displayClientMessage(
-                    new TextComponent("No sub-task found with the matching title."), true
-            );
+                Minecraft.getInstance().player.displayClientMessage(
+                        new TextComponent("No sub-task found with the matching title."), true
+                );
+            }
         } else {
             Minecraft.getInstance().player.displayClientMessage(
                     new TextComponent("Editor content is empty!"), true

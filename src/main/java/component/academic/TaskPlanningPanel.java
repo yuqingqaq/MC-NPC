@@ -1,4 +1,4 @@
-package component.adaptive;
+package component.academic;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import model.AdaptiveSubTaskModel;
@@ -59,13 +59,15 @@ public class TaskPlanningPanel extends AbstractWidget implements Widget {
     }
 
     // 开始行动的逻辑
+// 开始行动的逻辑
     private void startTask() {
-        // 获取排序后的第一个子任务
+        // 获取排序后的子任务列表
         if (!subTasks.isEmpty()) {
-            AdaptiveSubTaskModel selectedSubTask = subTasks.get(0); // 获取第一个子任务
-            // 这里可以调用 TaskManager 的方法来开始任务
-            TaskManager.getInstance().startSubTask(selectedSubTask); // 假设 startTask 方法可以处理 SubTaskModel
-            System.out.println("开始子任务: " + selectedSubTask.getTitle());
+            AdaptiveSubTaskModel firstSubTask = subTasks.get(0); // 获取第一个子任务
+
+            // 调用 TaskManager 的方法来开始任务，并传入排序后的子任务列表
+            TaskManager.getInstance().startSubTask(firstSubTask, subTasks);
+            System.out.println("开始子任务: " + firstSubTask.getTitle());
         }
     }
 
