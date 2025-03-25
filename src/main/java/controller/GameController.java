@@ -34,6 +34,8 @@ public class GameController implements GameControllerInterface {
     private huatuoAPI clinicModel;
 
     private Map<String, String> taskCoinLocations; // 任务 ID 和位置的映射
+    private KnowledgeGraphManager knowledgeManager;
+    private KnowledgeTaskMonitor knowledgeMonitor;
 
     public static GameController getInstance() {
         if (instance == null) {
@@ -81,6 +83,9 @@ public class GameController implements GameControllerInterface {
         this.taskSystem = new TaskSystem();
         taskCoinLocations = JsonLoader.loadTaskCoinLocations("json/task_coin_location.json");
         initializeTasksAndNPCs(this.npcs);
+        knowledgeManager = KnowledgeGraphManager.getInstance();
+        knowledgeMonitor = KnowledgeTaskMonitor.getInstance();
+        knowledgeMonitor.startMonitoring(); // 启动监控
     }
 
     public void initializeTasksAndNPCs(List<NPCModel> npcs) {
@@ -189,5 +194,53 @@ public class GameController implements GameControllerInterface {
 
     public TaskSystem getTaskSystem() {
         return this.taskSystem;
+    }
+
+    // 可以添加一个重置方法
+    public void resetKnowledgeMonitoring() {
+        knowledgeMonitor.stopMonitoring();
+        knowledgeMonitor.startMonitoring();
+    }
+    /**
+     * 添加概念到知识图谱
+     */
+    public void addConceptToKnowledgeGraph(String conceptName) {
+        knowledgeManager.addConcept(conceptName);
+        // 可以在这里添加游戏效果，如声音、粒子等
+    }
+
+    /**
+     * 添加概念关系到知识图谱
+     */
+    public void addRelationshipsToKnowledgeGraph(String relationshipCategory) {
+        knowledgeManager.addRelationship(relationshipCategory);
+    }
+
+    /**
+     * 验证智能体原则
+     */
+    public void validateAgentPrinciple(String principle) {
+        knowledgeManager.addPrinciple(principle);
+    }
+
+    /**
+     * 添加时间线到知识图谱
+     */
+    public void addTimelineToKnowledgeGraph(String timeline) {
+        knowledgeManager.addTimeline(timeline);
+    }
+
+    /**
+     * 获取知识图谱完成百分比
+     */
+    public int getKnowledgeGraphCompletion() {
+        return knowledgeManager.getOverallCompletionPercentage();
+    }
+
+    /**
+     * 获取指定知识领域的完成百分比
+     */
+    public int getKnowledgeAreaCompletion(String area) {
+        return knowledgeManager.getCompletionPercentage(area);
     }
 }

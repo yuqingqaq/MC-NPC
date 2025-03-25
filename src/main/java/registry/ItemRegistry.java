@@ -14,6 +14,8 @@ import item.CustomItem;
 import item.TimedCustomItem;
 import item.goldcoin.GoldCoinItem;
 import item.PaperItem;
+import item.knowledge.*;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -25,7 +27,23 @@ public class ItemRegistry {
     public static final RegistryObject<Item> CUSTOM_Overview_ITEM = ITEMS.register("task_overview_book", CustomTaskOverviewItem::new);
     public static final RegistryObject<Item> CUSTOM_ITEM_TIMED = ITEMS.register("timed_book", TimedCustomItem::new);
     public static final RegistryObject<Item> GOLD_COIN = ITEMS.register("phoenix", GoldCoinItem::new);
-    private static final Logger LOGGER = LogManager.getLogger();
+    // 知识学习主物品
+    public static final RegistryObject<Item> KNOWLEDGE_JOURNAL = ITEMS.register("knowledge_journal", KnowledgeJournalItem::new);
+
+    // 知识问题物品 - 使用QuestionItem并指定对应的问题ID
+    public static final RegistryObject<Item> AGENT_CONCEPT = ITEMS.register("agent_concept",
+            () -> new QuestionItem("mc_agent_concept"));
+
+    public static final RegistryObject<Item> AGENT_RELATIONSHIP = ITEMS.register("agent_relationship",
+            () -> new QuestionItem("match_learning_methods"));
+
+    public static final RegistryObject<Item> AGENT_PRINCIPLE = ITEMS.register("agent_principle",
+            () -> new QuestionItem("tf_learning_principle"));
+
+    public static final RegistryObject<Item> AGENT_TIMELINE = ITEMS.register("agent_timeline",
+            () -> new QuestionItem("order_tech_evolution"));
+
+     private static final Logger LOGGER = LogManager.getLogger();
 
     public static void init() {
         ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
@@ -55,6 +73,16 @@ public class ItemRegistry {
                     PAPER_ITEM.get()
             );
             LOGGER.info("Paper items registered.");
+
+            // 注册知识学习物品
+            itemRegistryEvent.getRegistry().registerAll(
+                    KNOWLEDGE_JOURNAL.get(),
+                    AGENT_CONCEPT.get(),
+                    AGENT_RELATIONSHIP.get(),
+                    AGENT_PRINCIPLE.get(),
+                    AGENT_TIMELINE.get()
+            );
+            LOGGER.info("Knowledge learning items registered.");
         }
     }
 

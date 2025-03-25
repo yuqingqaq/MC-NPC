@@ -50,7 +50,14 @@ public class ExpertSystem {
             } else {
                 systemPrompt = ExpertPromptConfig.PLANNING_MASTER_PROMPT;
             }
-        }else {
+        } else if ("Question Expert".equals(npc.getNPCName().trim())) {
+            if ("zh".equals(language)) {
+                systemPrompt = ExpertPromptConfig.QUESTION_PROMPT_IN_CHINESE;
+            } else {
+                systemPrompt = ExpertPromptConfig.QUESTION_MASTER_PROMPT;
+            }
+        }
+        else {
             // 默认使用心理健康 Prompt
             if ("zh".equals(language)) {
                 systemPrompt = ExpertPromptConfig.SYSTEM_PROMPT_IN_CHINESE;
