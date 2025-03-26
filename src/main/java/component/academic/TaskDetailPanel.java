@@ -62,9 +62,6 @@ public class TaskDetailPanel extends ScrollPanel {
         // 确保当前滚动位置不超过最大值
         this.scrollY = Math.min(scrollY, maxScrollY);
 
-        System.out.println("Total content height: " + totalContentHeight);
-        System.out.println("Panel height: " + height);
-        System.out.println("Max scroll Y: " + maxScrollY);
     }
 
     private int calculateContentHeight() {

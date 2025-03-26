@@ -42,7 +42,7 @@ public class ScrollableTextBox extends ScrollPanel {
         lines.clear();
         if (content != null && !content.isEmpty()) {
             // 使用 TextUtils.wrapText 进行换行处理，默认白色
-            lines = TextUtils.wrapText(content, this.width - 10, true); // 传入内容、最大宽度、是否白色
+            lines = TextUtils.wrapText(content, this.width - 5, true); // 传入内容、最大宽度、是否白色
         }
         maxScrollY = Math.max(0, getContentHeight() - height); // 更新最大滚动范围
         scrollY = Math.min(scrollY, maxScrollY); // 确保滚动位置不超出范围
