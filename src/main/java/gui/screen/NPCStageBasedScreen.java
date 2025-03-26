@@ -10,7 +10,8 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
-import prompt.TaskPrompts;
+// import prompt.TaskPrompts;
+import prompt.SRLTaskPrompt;
 import system.TaskSystem;
 
 import java.util.List;
@@ -20,20 +21,35 @@ public class NPCStageBasedScreen extends Screen {
     private static final ResourceLocation PENDING = new ResourceLocation("npcopenai", "textures/item/to_do.png");
 
     private final TaskSystem taskSystem; // 使用 TaskSystem 管理任务和 NPC
-    private TaskPrompts.TaskStage currentStage = TaskPrompts.TaskStage.INTRO;
-    private static final List<TaskPrompts.TaskStage> STAGE_ORDER = List.of(
-            TaskPrompts.TaskStage.INTRO,
-            TaskPrompts.TaskStage.ADMIN,
-            TaskPrompts.TaskStage.TA,
-            TaskPrompts.TaskStage.TB,
-            TaskPrompts.TaskStage.TC,
-            TaskPrompts.TaskStage.TD,
-            TaskPrompts.TaskStage.DAOYUAN,
-            TaskPrompts.TaskStage.CONFERENCE,
-            TaskPrompts.TaskStage.LIBRARY,
-            TaskPrompts.TaskStage.GYM,
-            TaskPrompts.TaskStage.END
-    );
+    // private TaskPrompts.TaskStage currentStage = TaskPrompts.TaskStage.INTRO;
+    private SRLTaskPrompt.TaskStage currentStage = SRLTaskPrompt.TaskStage.INTRO;
+
+    // private static final List<TaskPrompts.TaskStage> STAGE_ORDER = List.of(
+    //         TaskPrompts.TaskStage.INTRO,
+    //         TaskPrompts.TaskStage.ADMIN,
+    //         TaskPrompts.TaskStage.TA,
+    //         TaskPrompts.TaskStage.TB,
+    //         TaskPrompts.TaskStage.TC,
+    //         TaskPrompts.TaskStage.TD,
+    //         TaskPrompts.TaskStage.DAOYUAN,
+    //         TaskPrompts.TaskStage.CONFERENCE,
+    //         TaskPrompts.TaskStage.LIBRARY,
+    //         TaskPrompts.TaskStage.GYM,
+    //         TaskPrompts.TaskStage.END
+    // );
+    private static final List<SRLTaskPrompt.TaskStage> STAGE_ORDER = List.of(
+        SRLTaskPrompt.TaskStage.INTRO,
+        SRLTaskPrompt.TaskStage.Day1,
+        SRLTaskPrompt.TaskStage.TA,
+        SRLTaskPrompt.TaskStage.TB,
+        SRLTaskPrompt.TaskStage.TC,
+        SRLTaskPrompt.TaskStage.TD,
+        SRLTaskPrompt.TaskStage.DAOYUAN,
+        SRLTaskPrompt.TaskStage.CONFERENCE,
+        SRLTaskPrompt.TaskStage.LIBRARY,
+        SRLTaskPrompt.TaskStage.GYM,
+        SRLTaskPrompt.TaskStage.END
+);
 
     private int yOffset = 0; // 全局 y 偏移量
 
@@ -48,10 +64,12 @@ public class NPCStageBasedScreen extends Screen {
         super.init();
 
         // 跳过已完成的阶段
-        if (TaskPrompts.isIntroCompleted() && currentStage == TaskPrompts.TaskStage.INTRO) {
+        // if (TaskPrompts.isIntroCompleted() && currentStage == TaskPrompts.TaskStage.INTRO) {
+        //     currentStage = determineLastCompletedStage();
+        // }
+        if (SRLTaskPrompt.isIntroCompleted() && currentStage == SRLTaskPrompt.TaskStage.INTRO) {
             currentStage = determineLastCompletedStage();
         }
-
         int buttonWidth = 100;
         int buttonHeight = 20;
         int leftButtonX = 20;
@@ -79,7 +97,7 @@ public class NPCStageBasedScreen extends Screen {
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
         renderBackground(poseStack);
 
-        yOffset = 20; // 初始化 y 偏移量
+        yOffset = 30; // 初始化 y 偏移量
         renderTitle(poseStack);
         renderStageContent(poseStack);
         renderNPCList(poseStack);
@@ -88,14 +106,16 @@ public class NPCStageBasedScreen extends Screen {
     }
 
     private void renderTitle(PoseStack poseStack) {
-        String title = TaskPrompts.getTitle(currentStage);
+        // String title = TaskPrompts.getTitle(currentStage);
+        String title = SRLTaskPrompt.getTitle(currentStage);
         drawCenteredString(poseStack, this.font, title, this.width / 2, yOffset, 0xFFFFAA00);
-        yOffset += 20;
+        yOffset += 40;
     }
 
     private void renderStageContent(PoseStack poseStack) {
-        String content = TaskPrompts.getContent(currentStage);
-        List<ColoredText> contentLines = TextUtils.wrapText(content, (int) (this.width / 1.3f), true);
+        // String content = TaskPrompts.getContent(currentStage);
+        String content = SRLTaskPrompt.getContent(currentStage);
+        List<ColoredText> contentLines = TextUtils.wrapText(content, (int) (this.width / 1.5f), true);
 
         for (ColoredText line : contentLines) {
             drawString(poseStack, this.font, line.text, this.width / 2 - 120, yOffset, line.color);
@@ -106,7 +126,10 @@ public class NPCStageBasedScreen extends Screen {
     }
 
     private void renderNPCList(PoseStack poseStack) {
-        if (currentStage == TaskPrompts.TaskStage.INTRO || currentStage == TaskPrompts.TaskStage.END) {
+        // if (currentStage == TaskPrompts.TaskStage.INTRO || currentStage == TaskPrompts.TaskStage.END) {
+        //     return;
+        // }
+        if (currentStage == SRLTaskPrompt.TaskStage.INTRO || currentStage == SRLTaskPrompt.TaskStage.END) {
             return;
         }
 
@@ -130,6 +153,8 @@ public class NPCStageBasedScreen extends Screen {
 
             this.addRenderableWidget(new Button(this.width / 2 + 90, yOffset - 5, 60, 20, new TextComponent("Go"), button -> {
                 teleportToNPC(npcIndex);
+                String content = "你在教室找到了学术写作导师，上前跟他进行对话，他会告诉你该怎么做。";
+                this.minecraft.setScreen(new NarratorScreen(content));
             }));
 
             yOffset += 25;
@@ -147,7 +172,8 @@ public class NPCStageBasedScreen extends Screen {
 
         yOffset += 10;
 
-        String outCome = TaskPrompts.getOutCome(currentStage);
+        // String outCome = TaskPrompts.getOutCome(currentStage);
+        String outCome = SRLTaskPrompt.getOutCome(currentStage);
         List<ColoredText> outComeLines = TextUtils.wrapText(outCome, (int) (this.width / 1.3f), true);
         for (ColoredText line : outComeLines) {
             drawString(poseStack, this.font, line.text, this.width / 2 - 120, yOffset, line.color);
@@ -175,7 +201,8 @@ public class NPCStageBasedScreen extends Screen {
     @Override
     public void onClose() {
         super.onClose();
-        TaskPrompts.setIntroCompleted(true);
+        // TaskPrompts.setIntroCompleted(true);
+        SRLTaskPrompt.setIntroCompleted(true);
     }
 
     @Override
@@ -183,12 +210,20 @@ public class NPCStageBasedScreen extends Screen {
         return false;
     }
 
-    private TaskPrompts.TaskStage determineLastCompletedStage() {
-        for (TaskPrompts.TaskStage stage : STAGE_ORDER) {
+    // private TaskPrompts.TaskStage determineLastCompletedStage() {
+    //     for (TaskPrompts.TaskStage stage : STAGE_ORDER) {
+    //         if (!taskSystem.areAllTasksCompletedInStage(stage.name())) {
+    //             return stage;
+    //         }
+    //     }
+    //     return TaskPrompts.TaskStage.END;
+    // }
+    private SRLTaskPrompt.TaskStage determineLastCompletedStage() {
+        for (SRLTaskPrompt.TaskStage stage : STAGE_ORDER) {
             if (!taskSystem.areAllTasksCompletedInStage(stage.name())) {
                 return stage;
             }
         }
-        return TaskPrompts.TaskStage.END;
+        return SRLTaskPrompt.TaskStage.END;
     }
 }

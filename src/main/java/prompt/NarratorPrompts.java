@@ -3,39 +3,36 @@ package prompt;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SRLTaskPrompt {
+public class NarratorPrompts {
 
     private static boolean introCompleted = false;
 
     public enum TaskStage {
-        INTRO, Day1, TA, TB, TC, TD, DAOYUAN, CONFERENCE, LIBRARY, GYM, END
+        AANarrator, N2, N3, N4, N5, N6, DAOYUAN, CONFERENCE, LIBRARY, GYM, END
     }
 
     private static final Map<TaskStage, String[]> prompts = new HashMap<>();
 
     static {
-        prompts.put(TaskStage.INTRO, new String[] {
-                "欢迎来到SRLQuest",
-                "在这里，你可以体验一个融合游戏化学习、任务管理与AI助手的全新学习环境。" +
-                        "我们的目标是帮助你掌握自我调节学习（SRL）技能，包括规划目标、选择策略、监控进度以及反思改进等步骤。" +
-                        "整个学习流程包含四天，每天有不同的任务，你需要完成这些任务来获得校徽碎片。\n" +
-                        "现在，整理好你的思绪，准备开始冒险吧！\n",
+        prompts.put(TaskStage.AANarrator, new String[] {
+                "你好，欢迎来到学术写作训练营！我是你的学术写作导师，随时准备为你提供帮助。" +
+                "在这里，你将要撰写一篇关于‘大模型 Agent’的文献综述。请告诉我，你有什么具体想法或目标吗？",
 
         });
 
-        prompts.put(TaskStage.Day1, new String[] {
+        prompts.put(TaskStage.N2, new String[] {
                 "第一天：迈入学术的殿堂",
                 "欢迎开启第一天的学术写作任务！今天，你将围绕“学术论文写作入门”展开初步规划，为日后的学术写作做好充分准备。你的专属学术写作导师正在TA教学楼等候你的到来。"
         });
 
-        prompts.put(TaskStage.TA, new String[] {
+        prompts.put(TaskStage.N3, new String[] {
                 "前往：智慧的足迹",
                 "经管学院位于TA教学楼，那里是一座充满智慧与活力的学术殿堂。" +
                         "院长熊伟正在教学楼门口等着与你会面。他希望你能感受这里的学术氛围，快去TA教学楼吧！",
                 "第二块校徽碎片已找到！你正在逐步拼凑出港中深的精神象征。继续前进吧，还有更多故事等待你去发现。"
         });
 
-        prompts.put(TaskStage.TB, new String[] {
+        prompts.put(TaskStage.N4, new String[] {
                 "前往：人文的魅力",
                 "人文社科学院位于TB教学楼，这里充满了浓厚的人文气息。" +
                         "院长唐文方期待与你见面，与你分享学院独特的人文故事。" +
@@ -43,7 +40,7 @@ public class SRLTaskPrompt {
                 "第三块校徽碎片已找到！讲台是知识传递的起点，文学从这里启航。继续前进吧，更多的故事等待你去发现。"
         });
 
-        prompts.put(TaskStage.TC, new String[] {
+        prompts.put(TaskStage.N5, new String[] {
                 "前往：生命的守护",
                 "医学院位于TC教学楼，那里是一片关乎生命与智慧的学术领地。" +
                         "院长郑仲煊正等待你的到来，他将为你展示医学的责任与科学的力量。" +
@@ -51,7 +48,7 @@ public class SRLTaskPrompt {
                 "你找到了一块校徽碎片！医学的核心是连接理论与实践、关怀与责任。继续探索吧，下一块碎片正在等待你的发现！"
         });
 
-        prompts.put(TaskStage.TD, new String[] {
+        prompts.put(TaskStage.N6, new String[] {
                 "前往：科技的未来",
                 "TD教学楼是理工学院的所在地，这里是创新与实践的集中地。" +
                         "院长唐本忠在教学楼前等着你，他希望带你了解学院在科技领域的成就。" +
@@ -106,7 +103,7 @@ public class SRLTaskPrompt {
     }
 
     public static String getContent(TaskStage stage) {
-        return prompts.get(stage)[1];
+        return prompts.get(stage)[0];
     }
 
     public static String getOutCome(TaskStage stage) {

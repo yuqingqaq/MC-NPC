@@ -51,7 +51,8 @@ public class GameController implements GameControllerInterface {
     private void loadGameData() {
 
 //        npcs = JsonLoader.loadNPCsFromJson("json/psy_sim.json");
-        npcs = JsonLoader.loadNPCsFromJson("json/campus_tour.json");
+        // npcs = JsonLoader.loadNPCsFromJson("json/campus_tour.json");
+        npcs = JsonLoader.loadNPCsFromJson("json/SRL_NPC_Config.json");
         backpackItems = JsonLoader.loadObjectListFromJson(
                 "json/playerBackpack.json",
                 "player_backpack",
@@ -74,7 +75,8 @@ public class GameController implements GameControllerInterface {
         );
         gptModel = new OpenAIGPT("gpt-4o","config/gpt3keys.txt");
 //        gptModel = new OpenAIGPT("bot-20241220150201-tvbhd","config/doubao.txt");  // Doubao API
-        expertModel = new OpenAIGPT("gpt-3.5-turbo","config/gpt3keys.txt");
+        expertModel = new OpenAIGPT("chatgpt-4o-latest","config/gpt3keys.txt");
+        // expertModel = new OpenAIGPT("gpt-4o-search-preview-2025-03-11","config/gpt3keys.txt");
         clinicModel = new huatuoAPI("huatuogpt-lg-main");
 
         this.npcSystem = new NPCSystem(gptModel,clinicModel);
@@ -161,7 +163,7 @@ public class GameController implements GameControllerInterface {
             return "";
         }
         String language = isMostlyChinese(userInput) ? "zh" : "en";
-        String advice = expertSystem.interact(npc, userInput, language);
+        String advice = expertSystem.interact(npc, userInput, language) + "\n----------------------\n";
         return advice;
     }
     
