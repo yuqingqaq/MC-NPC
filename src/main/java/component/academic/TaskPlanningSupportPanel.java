@@ -52,7 +52,7 @@ public class TaskPlanningSupportPanel extends AbstractWidget implements Widget {
     private void init() {
         int buttonHeight = 20; // 每个子任务按钮的高度
         int buttonSpacing = 5; // 按钮之间的间距
-        int startY = this.y + 30; // 第一个按钮的起始 Y 坐标
+        int startY = this.y + 20; // 第一个按钮的起始 Y 坐标
 
         // 设置面板布局 - 左侧任务列表宽度占3/5，右侧建议面板占2/5
         int leftPanelWidth = (this.panelWidth * 3) / 5; // 左侧面板宽度（子任务列表）
@@ -91,8 +91,8 @@ public class TaskPlanningSupportPanel extends AbstractWidget implements Widget {
 
         // 创建开始行动按钮，放在左侧面板底部
         this.startButton = new Button(
-                this.x + 20,
-                this.y + this.panelHeight - 30,
+                this.x + 70,
+                this.y + this.panelHeight - 5,
                 leftPanelWidth - 40,
                 buttonHeight,
                 new TextComponent("开始行动"),

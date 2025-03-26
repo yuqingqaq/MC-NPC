@@ -89,7 +89,7 @@ public class StrategyScreen extends Screen {
                 tasks.add(subTask);
             }
             
-            this.rightPanel = new TaskPlanningPanel(rightPanelX + 40, 40, (int)(rightPanelWidth/1.5), this.height - 60, tasks);
+            this.rightPanel = new TaskPlanningPanel(rightPanelX + 40, 30, (int)(rightPanelWidth/1.5), this.height - 60, tasks);
         } else if ("协作规划".equals(strategy)) {
             // 从当前任务中获取子任务
             List<AdaptiveSubTaskModel> tasks = new ArrayList<>();
@@ -97,7 +97,7 @@ public class StrategyScreen extends Screen {
                 tasks.add(subTask);
             }
 
-            this.rightPanel = new TaskPlanningSupportPanel(rightPanelX, 40, rightPanelWidth, this.height - 60, tasks);
+            this.rightPanel = new TaskPlanningSupportPanel(rightPanelX, 30, rightPanelWidth, this.height - 60, tasks);
         }
 //        else if ("问问专家".equals(strategy)) {
 //            // 使用 ExpertPanel

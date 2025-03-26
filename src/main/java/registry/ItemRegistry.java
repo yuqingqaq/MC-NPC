@@ -13,23 +13,25 @@ import item.CustomTaskOverviewItem;
 import item.CustomItem;
 import item.TimedCustomItem;
 import item.goldcoin.GoldCoinItem;
-import item.PaperItem;
 import item.knowledge.*;
 import item.poster.AgentBasicPosterItem;
 import item.poster.AgentEvolutionPosterItem;
 import item.poster.AgentLearningPosterItem;
 import item.poster.AgentPrinciplesPosterItem;
-
+import item.paper.ExcelPaperItem;
+import item.paper.AgentPromptPaperItem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class ItemRegistry {
     private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, NPCOpenAI.MODID);
 
-    public static final RegistryObject<Item> PAPER_ITEM = ITEMS.register("paper", PaperItem::new);
+    // 论文物品
+    public static final RegistryObject<Item> EXCEL_PAPER = ITEMS.register("paper",
+            ExcelPaperItem::new);
+
+    public static final RegistryObject<Item> AGENT_PROMPT_PAPER = ITEMS.register("paper2",
+            AgentPromptPaperItem::new);
     public static final RegistryObject<Item> CUSTOM_ITEM = ITEMS.register("task_book", CustomItem::new);
     public static final RegistryObject<Item> CUSTOM_Overview_ITEM = ITEMS.register("task_overview_book", CustomTaskOverviewItem::new);
     public static final RegistryObject<Item> CUSTOM_ITEM_TIMED = ITEMS.register("timed_book", TimedCustomItem::new);
@@ -89,9 +91,13 @@ public class ItemRegistry {
             itemRegistryEvent.getRegistry().registerAll(
                     CUSTOM_Overview_ITEM.get()
             );
-            LOGGER.info("Paper items registered.");
             itemRegistryEvent.getRegistry().registerAll(
-                    PAPER_ITEM.get()
+                    EXCEL_PAPER .get()
+            );
+            LOGGER.info("Paper items registered.");
+
+            itemRegistryEvent.getRegistry().registerAll(
+                    AGENT_PROMPT_PAPER.get()
             );
             LOGGER.info("Paper items registered.");
 

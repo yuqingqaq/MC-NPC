@@ -96,7 +96,7 @@
           "status": "NOT_STARTED"
         },
         {
-          "subTaskId": "1",
+          "subTaskId": "2",
           "title": "文献搜集-ExpeL",
           "description": "收集PaperItem，阅读文献摘要内容，写简短总结",
           "estimatedTime": "10:00",
@@ -104,7 +104,7 @@
           "status": "NOT_STARTED"
         },
         {
-          "subTaskId": "2",
+          "subTaskId": "3",
           "title": "专家访谈",
           "description": "找到王教授，讨论Agent领域技术",
           "estimatedTime": "15:00",
@@ -112,7 +112,7 @@
           "status": "NOT_STARTED"
         },
         {
-          "subTaskId": "3",
+          "subTaskId": "4",
           "title": "找到论文写作辅导员",
           "description": "可以通过NPC列表快速传送",
           "estimatedTime": "02:00",
@@ -120,9 +120,9 @@
           "status": "NOT_STARTED"
         },
         {
-          "subTaskId": "4",
+          "subTaskId": "5",
           "title": "报告大纲撰写",
-          "description": "根据文献搜集和专家访谈的结果写一份报告大纲",
+          "description": "根据概念学习、文献搜集和专家访谈的结果写一份报告大纲",
           "estimatedTime": "10:00",
           "completed": false,
           "status": "NOT_STARTED"

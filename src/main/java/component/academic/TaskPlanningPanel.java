@@ -54,7 +54,7 @@ public class TaskPlanningPanel extends AbstractWidget implements Widget {
         }
 
         // 创建开始行动按钮
-        this.startButton = new Button(this.x + 10, startY + subTasks.size() * (buttonHeight + buttonSpacing) + 20, this.panelWidth - 20, buttonHeight,
+        this.startButton = new Button(this.x + 10, startY + subTasks.size() * (buttonHeight + buttonSpacing) + 10, this.panelWidth - 20, buttonHeight,
                 new TextComponent("开始行动"), btn -> startTask());
     }
 

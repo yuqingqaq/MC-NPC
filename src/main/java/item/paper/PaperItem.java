@@ -1,7 +1,5 @@
-package item;
+package item.paper;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.context.UseOnContext;
@@ -28,7 +26,7 @@ public class PaperItem extends Item {
     @Override
     public InteractionResult useOn(UseOnContext context) {
         Level world = context.getLevel();
-        NPCOpenAI.getLogger().info("item.PaperItem used on: " + context.getClickedPos());
+        NPCOpenAI.getLogger().info("item.paper.PaperItem used on: " + context.getClickedPos());
 
         if (world.isClientSide) { // 客户端逻辑
             NPCOpenAI.getLogger().info("Executing on client side");
