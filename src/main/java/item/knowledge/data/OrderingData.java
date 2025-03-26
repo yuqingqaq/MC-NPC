@@ -1,22 +1,24 @@
 package item.knowledge.data;
 
+import java.util.ArrayList;
 import java.util.List;
 
-// 排序题数据
 public class OrderingData extends QuestionData {
     private final String orderingTopic;
     private final List<String> correctOrder;
 
-    public OrderingData(String id, String category, String expertType,
-                        String orderingTopic, List<String> correctOrder) {
+    public OrderingData(String id, String category, String expertType, String orderingTopic,
+                        List<String> correctOrder) {
         super(id, category, expertType);
         this.orderingTopic = orderingTopic;
-        this.correctOrder = correctOrder;
+        this.correctOrder = new ArrayList<>(correctOrder);
     }
 
-    @Override
-    public String getQuestionType() {
-        return "ordering";
+    public OrderingData(String id, String category, String expertType, String orderingTopic,
+                        List<String> correctOrder, String nextQuestionId) {
+        super(id, category, expertType, nextQuestionId);
+        this.orderingTopic = orderingTopic;
+        this.correctOrder = new ArrayList<>(correctOrder);
     }
 
     public String getOrderingTopic() {
@@ -24,6 +26,11 @@ public class OrderingData extends QuestionData {
     }
 
     public List<String> getCorrectOrder() {
-        return correctOrder;
+        return new ArrayList<>(correctOrder);
+    }
+
+    @Override
+    public String getQuestionType() {
+        return "ORDERING";
     }
 }

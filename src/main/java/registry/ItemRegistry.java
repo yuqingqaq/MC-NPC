@@ -41,13 +41,13 @@ public class ItemRegistry {
 
     // 知识问题物品 - 使用QuestionItem并指定对应的问题ID
     public static final RegistryObject<Item> AGENT_CONCEPT = ITEMS.register("agent_concept",
-            () -> new QuestionItem("mc_agent_concept"));
+            () -> new QuestionItem("mc_agent_concept_1"));
 
     public static final RegistryObject<Item> AGENT_RELATIONSHIP = ITEMS.register("agent_relationship",
-            () -> new QuestionItem("match_learning_methods"));
+            () -> new QuestionItem("match_learning_methods_1"));
 
     public static final RegistryObject<Item> AGENT_PRINCIPLE = ITEMS.register("agent_principle",
-            () -> new QuestionItem("tf_learning_principle"));
+            () -> new QuestionItem("tf_learning_principle_1"));
 
     public static final RegistryObject<Item> AGENT_TIMELINE = ITEMS.register("agent_timeline",
             () -> new QuestionItem("order_tech_evolution"));
