@@ -5,9 +5,11 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import component.ColoredText;
 import component.TextUtils;
 import controller.GameController;
+import item.goldcoin.GoldCoinTracker;
 import model.NPCModel;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import prompt.TaskPrompts;
@@ -71,8 +73,37 @@ public class NPCStageBasedScreen extends Screen {
             }));
         }
 
+        // 添加寻找金币按钮，但仅在非INTRO阶段且有金币可找时显示
+        if (currentStage != TaskPrompts.TaskStage.INTRO && currentStage != TaskPrompts.TaskStage.END) {
+            // 检查是否有金币可找
+            List<BlockPos> coins = GoldCoinTracker.getCoinPositions();
+            if (!coins.isEmpty()) {
+                this.addRenderableWidget(new Button(this.width / 2 - 50, this.height - 30, 100, buttonHeight, new TextComponent("Find Gold Coin"), button -> {
+                    teleportToNearestCoin();
+                }));
+            }
+        }
+
         // 关闭按钮
         this.addRenderableWidget(new Button(this.width - 30, 15, 20, 20, new TextComponent("X"), button -> onClose()));
+    }
+
+    private void teleportToNearestCoin() {
+        if (this.minecraft.player != null) {
+            BlockPos playerPos = this.minecraft.player.blockPosition();
+            BlockPos nearestCoin = GoldCoinTracker.findNearestCoin(playerPos);
+
+            if (nearestCoin != null) {
+                // 使用命令传送玩家到金币位置附近
+                this.minecraft.player.chat("/tp @s " + nearestCoin.getX() + " " + nearestCoin.getY() + " " + nearestCoin.getZ());
+                onClose(); // 关闭界面
+            } else {
+                // 没有找到金币时提示玩家
+                if (this.minecraft.player != null) {
+                    this.minecraft.player.displayClientMessage(new TextComponent("No gold coins available!"), false);
+                }
+            }
+        }
     }
 
     @Override

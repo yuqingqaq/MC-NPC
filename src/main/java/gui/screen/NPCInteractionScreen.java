@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import speech.TextToSpeechService;
+import system.TaskManager;
 
 public class NPCInteractionScreen extends Screen {
     private EditBox inputField;
@@ -47,7 +48,10 @@ public class NPCInteractionScreen extends Screen {
 
     @Override
     protected void init() {
-
+        // 在聊天界面打开时，自动完成"与一位教授聊天"子任务
+        if (currentNPC != null) {
+            TaskManager.getInstance().completeSubTaskByTitle("与一位教授聊天", true);
+        }
         super.init();
 
         int centerY = this.height / 2;

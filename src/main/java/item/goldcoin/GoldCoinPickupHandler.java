@@ -10,7 +10,10 @@ import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import registry.ItemRegistry;
+import system.TaskManager;
 import system.TaskSystem;
+
+import java.util.List;
 
 @Mod.EventBusSubscriber(modid = "npcopenai", bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class GoldCoinPickupHandler {
@@ -52,6 +55,7 @@ public class GoldCoinPickupHandler {
                         }
                     } else {
                         player.displayClientMessage(new TextComponent("All tasks completed!"), false);
+                        TaskManager.getInstance().completeSubTaskByTitle("收集校徽碎片", true);
                     }
                 }
             }

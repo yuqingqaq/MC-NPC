@@ -1,10 +1,20 @@
 package item.paper;
 
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.Level;
+import net.minecraft.network.chat.Component;
+
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import util.TooltipUtil;
+import java.util.List;
+
+import javax.annotation.Nullable;
+
 import npcopenai.NPCOpenAI;
 import model.NPCModel;
 
@@ -78,5 +88,15 @@ public abstract class BasePaperItem extends Item {
 
     public String getNpcExpertType() {
         return npcExpertType;
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
+        super.appendHoverText(stack, level, tooltip, flag);
+
+        // 添加 Tooltip 信息
+        tooltip.add(new TextComponent("§6论文标题: " + paperTitle));
+        tooltip.add(new TextComponent("§7作者: " + paperAuthors));
+        tooltip.add(new TextComponent("§8右键使用以查看详细内容"));
     }
 }

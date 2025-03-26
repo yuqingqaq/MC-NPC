@@ -1,79 +1,6 @@
 {
   "adaptive_tasks": [
     {
-      "taskId": "task1",
-      "title": "虚拟图书馆",
-      "category": "Academic",
-      "description": "研究虚拟校园图书馆的使用方法",
-      "target": "跟图书馆管理员交谈，了解图书馆文献搜集方法",
-      "resources": ["图书馆管理员", "在线文章"],
-      "location": "图书馆",
-      "estimatedTime": "20:00",
-      "strategies": ["自行规划"],
-      "summary": {
-        "待办": "前往图书管理员咨询"
-      },
-      "completed": false,
-      "notes": "需要访问更多的在线资源",
-      "subTasks": [
-        {
-          "subTaskId": "1",
-          "title": "到达图书馆",
-          "estimatedTime": "05:00",
-          "completed": false,
-          "status": "NOT_STARTED"
-        },
-        {
-          "subTaskId": "2",
-          "title": "寻找图书馆管理员",
-          "estimatedTime": "02:00",
-          "completed": false,
-          "status": "NOT_STARTED"
-        },
-        {
-          "subTaskId": "3",
-          "title": "回答问题",
-          "estimatedTime": "10:00",
-          "completed": false,
-          "status": "NOT_STARTED"
-        }
-      ]
-    },
-    {
-      "taskId": "task2",
-      "title": "英文写作",
-      "category": "Academic",
-      "description": "学习英文文本写作",
-      "target": "完成一份详细的邮件",
-      "resources": ["邮件写作大师"],
-      "location": "图书馆",
-      "estimatedTime": "20:00",
-      "strategies": ["自行规划"],
-      "summary": {
-        "进展": "可完成初步写作",
-        "困难": "需要调整规范写作结构",
-        "下一步": "与专家讨论分析"
-      },
-      "completed": false,
-      "notes": "",
-      "subTasks": [
-        {
-          "subTaskId": "1",
-          "title": "找到邮件写作大师",
-          "estimatedTime": "02:00",
-          "completed": false,
-          "status": "NOT_STARTED"
-        },
-        {
-          "subTaskId": "2",
-          "title": "学习写英文邮件",
-          "estimatedTime": "05:00",
-          "completed": false,
-          "status": "NOT_STARTED"
-        }
-      ]
-    },
-    {
       "taskId": "task3",
       "title": "Agent研究",
       "category": "Academic",
@@ -91,7 +18,7 @@
           "subTaskId": "1",
           "title": "完成知识图谱学习",
           "description": "系统学习Agent的基础概念、关系理解、原则验证和发展时间线，构建完整的知识体系",
-          "estimatedTime": "20:00",
+          "estimatedTime": "10:00",
           "completed": false,
           "status": "NOT_STARTED"
         },
@@ -99,7 +26,15 @@
           "subTaskId": "2",
           "title": "文献搜集-ExpeL",
           "description": "收集PaperItem，阅读文献摘要内容，写简短总结",
-          "estimatedTime": "10:00",
+          "estimatedTime": "5:00",
+          "completed": false,
+          "status": "NOT_STARTED"
+        },
+        {
+          "subTaskId": "3",
+          "title": "文献搜集-Agent Prompt",
+          "description": "收集PaperItem，阅读文献摘要内容，写简短总结",
+          "estimatedTime": "5:00",
           "completed": false,
           "status": "NOT_STARTED"
         },
@@ -107,14 +42,14 @@
           "subTaskId": "3",
           "title": "专家访谈",
           "description": "找到王教授，讨论Agent领域技术",
-          "estimatedTime": "15:00",
+          "estimatedTime": "10:00",
           "completed": false,
           "status": "NOT_STARTED"
         },
         {
           "subTaskId": "4",
           "title": "找到论文写作辅导员",
-          "description": "可以通过NPC列表快速传送",
+          "description": "可以通过任务总览界面快速传送",
           "estimatedTime": "02:00",
           "completed": false,
           "status": "NOT_STARTED"
@@ -123,7 +58,7 @@
           "subTaskId": "5",
           "title": "报告大纲撰写",
           "description": "根据概念学习、文献搜集和专家访谈的结果写一份报告大纲",
-          "estimatedTime": "10:00",
+          "estimatedTime": "15:00",
           "completed": false,
           "status": "NOT_STARTED"
         }
@@ -137,27 +72,25 @@
       "target": "完成一份详细的报告",
       "resources": ["校园导览地图"],
       "location": "行政楼",
-      "estimatedTime": "150:00",
-      "strategies": ["问问专家"],
+      "estimatedTime": "12:00",
+      "strategies": ["自行规划"],
       "summary": {
-        "进展": "已游览部分校园",
-        "困难": "无法到达xxx",
-        "下一步": "与朋友分享"
+        "进展": "已游览部分校园"
       },
       "completed": false,
-      "notes": "需要与团队成员讨论",
+      "notes": "与学校教授聊天",
       "subTasks": [
         {
           "subTaskId": "1",
-          "title": "到达行政楼",
-          "estimatedTime": "05:00",
+          "title": "收集校徽碎片",
+          "estimatedTime": "10:00",
           "completed": false,
           "status": "NOT_STARTED"
         },
         {
           "subTaskId": "2",
-          "title": "收集校徽碎片",
-          "estimatedTime": "02:00",
+          "title": "与一位教授聊天",
+          "estimatedTime": "5:00",
           "completed": false,
           "status": "NOT_STARTED"
         }

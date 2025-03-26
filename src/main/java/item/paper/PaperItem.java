@@ -6,9 +6,17 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.Level;
 import npcopenai.NPCOpenAI;
+
+import net.minecraft.network.chat.Component;
+
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import util.TooltipUtil;
+import java.util.List;
+
+import javax.annotation.Nullable;
 import model.NPCModel;
 
-import java.util.List;
 
 public class PaperItem extends Item {
     private final String subTaskTitle;             // subTask
@@ -50,5 +58,11 @@ public class PaperItem extends Item {
     private NPCModel createNPCModel() {
         NPCModel npcModel = new NPCModel("文献阅读Agent");
         return npcModel;
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
+        super.appendHoverText(stack, level, tooltip, flag);
+        TooltipUtil.addPaperTooltip(stack, level, tooltip, subTaskTitle);
     }
 }
