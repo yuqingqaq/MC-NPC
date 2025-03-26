@@ -1,6 +1,5 @@
 package item.poster;
 
-import block.poster.BasePosterBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
@@ -23,7 +22,7 @@ public abstract class BasePosterItem extends BlockItem {
         super(block, new Properties().tab(CreativeModeTab.TAB_DECORATIONS));
     }
 
-    // 应用海报数据的抽象方法，由子类实现
+    // 应用海报数据的抽象方法，现在可以为空实现
     protected abstract void applyPosterData(BlockEntity entity);
 
     // 获取海报类型名称（用于日志）
@@ -42,24 +41,15 @@ public abstract class BasePosterItem extends BlockItem {
             InteractionResult result = super.useOn(context);
 
             if (result.consumesAction()) {
-                // 放置成功，设置海报数据
+                // 放置成功
                 Level level = context.getLevel();
                 BlockPos pos = blockPlaceContext.getClickedPos();
-                BlockEntity blockEntity = level.getBlockEntity(pos);
 
-                // 应用海报数据 - 调用子类实现的方法
-                if (blockEntity != null) {
-                    LOGGER.info("正在应用" + getPosterTypeName() + "海报数据到位置: " + pos);
-                    applyPosterData(blockEntity);
-
-                    // 如果是玩家放置的，减少物品数量
-                    Player player = context.getPlayer();
-                    if (player != null && !player.getAbilities().instabuild) {
-                        ItemStack itemStack = context.getItemInHand();
-                        itemStack.shrink(1);
-                    }
-                } else {
-                    LOGGER.severe("放置海报失败: 在位置 " + pos + " 没有找到海报方块实体");
+                // 如果是玩家放置的，减少物品数量
+                Player player = context.getPlayer();
+                if (player != null && !player.getAbilities().instabuild) {
+                    ItemStack itemStack = context.getItemInHand();
+                    itemStack.shrink(1);
                 }
             }
             return result;

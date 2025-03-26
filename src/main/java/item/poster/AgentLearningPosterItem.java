@@ -1,7 +1,6 @@
 package item.poster;
 
 import block.poster.AgentLearningPosterBlockEntity;
-import controller.PosterManager;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import registry.BlockRegistry;
 
@@ -13,9 +12,7 @@ public class AgentLearningPosterItem extends BasePosterItem {
 
     @Override
     protected void applyPosterData(BlockEntity blockEntity) {
-        if (blockEntity instanceof AgentLearningPosterBlockEntity entity) {
-            PosterManager.getInstance().setupAgentLearningPosterBlockEntity(entity);
-        }
+        // 不需要额外处理，使用时会从PosterManager获取数据
     }
 
     @Override

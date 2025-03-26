@@ -2,11 +2,13 @@ package block.poster;
 
 import block.poster.client.PosterViewClientHandler;
 import controller.KnowledgeGraphManager;
+import controller.PosterManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -15,6 +17,8 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -25,6 +29,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import registry.ItemRegistry;
 
+import javax.annotation.Nullable;
 import java.util.logging.Logger;
 
 public abstract class BasePosterBlock extends Block implements EntityBlock {
@@ -67,50 +72,56 @@ public abstract class BasePosterBlock extends Block implements EntityBlock {
         builder.add(FACING);
     }
 
+    // 获取海报类型，用于查找海报数据
     protected abstract String getPosterType();
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player,
                                  InteractionHand hand, BlockHitResult hit) {
         if (level.isClientSide) {
-            BlockEntity blockEntity = level.getBlockEntity(pos);
-            if (blockEntity instanceof BasePosterBlockEntity posterEntity) {
-                // 调试输出
-                LOGGER.info("客户端：点击海报 '" + posterEntity.getTitle() +
-                        "' 位于 " + pos);
-
-                // 打开海报内容查看界面
-                openPosterViewScreen(player, posterEntity);
-                return InteractionResult.SUCCESS;
-            }
+            // 客户端：直接根据海报类型获取数据并打开UI
+            openPosterViewScreen(player, getPosterType());
+            return InteractionResult.SUCCESS;
         } else {
-            // 服务器端逻辑
+            // 服务器端：记录玩家已读并生成题目
             BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity instanceof BasePosterBlockEntity posterEntity) {
-                // 调试输出
-                LOGGER.info("服务器端：点击海报 '" + posterEntity.getTitle() +
-                        "' 位于 " + pos +
-                        ", 概念: " + posterEntity.getConceptKey() +
-                        ", 问题ID: " + posterEntity.getAssociatedQuestionId());
-
                 // 检查玩家是否已经学习过这个海报
                 if (!posterEntity.hasBeenReadBy(player.getUUID())) {
                     // 标记为已读
                     posterEntity.markAsRead(player.getUUID());
 
-                    // 添加相应的知识概念
-                    String conceptKey = posterEntity.getConceptKey();
-                    if (!conceptKey.isEmpty()) {
-                        KnowledgeGraphManager.getInstance().addConcept(conceptKey);
-                        player.sendMessage(new TextComponent("你学习了新概念: " + posterEntity.getTitle()), player.getUUID());
+                    // 获取对应的海报数据
+                    PosterManager.PosterData data = getPosterDataFromPosterType(getPosterType());
+                    if (data != null) {
+                        // 添加相应的知识概念
+                        String conceptKey = data.getConceptKey();
+                        if (!conceptKey.isEmpty()) {
+                            KnowledgeGraphManager.getInstance().addConcept(conceptKey);
+                            player.sendMessage(new TextComponent("你学习了新概念: " + data.getTitle()), player.getUUID());
 
-                        // 生成对应的测试题目物品
-                        spawnTestQuestion(level, pos, posterEntity.getAssociatedQuestionId());
+                            // 生成对应的测试题目物品
+                            spawnTestQuestion(level, pos, data.getQuestionId());
+                        }
                     }
                 }
             }
+            return InteractionResult.SUCCESS;
         }
-        return InteractionResult.SUCCESS;
+    }
+
+    // 根据海报类型获取海报数据
+    private PosterManager.PosterData getPosterDataFromPosterType(String posterType) {
+        if (posterType.equals("智能体基础概念")) {
+            return PosterManager.getInstance().getAgentBasicPosterData();
+        } else if (posterType.equals("智能体技术演化")) {
+            return PosterManager.getInstance().getAgentEvolutionPosterData();
+        } else if (posterType.equals("智能体学习方法")) {
+            return PosterManager.getInstance().getAgentLearningPosterData();
+        } else if (posterType.equals("智能体设计原则")) {
+            return PosterManager.getInstance().getAgentPrinciplesPosterData();
+        }
+        return null;
     }
 
     // 生成测试题目物品
@@ -158,11 +169,23 @@ public abstract class BasePosterBlock extends Block implements EntityBlock {
         level.addFreshEntity(itemEntity);
     }
 
-    // 打开海报查看界面
-    private void openPosterViewScreen(Player player, BasePosterBlockEntity entity) {
-        // 客户端代码，通过NetworkHandler或直接打开屏幕
-        PosterViewClientHandler.openPosterScreen(entity.getTitle(), entity.getContent(),
-                entity.getImagePath(), entity.getExpertType());
+    // 打开海报查看界面 - 直接从PosterManager获取最新数据
+    private void openPosterViewScreen(Player player, String posterType) {
+        PosterManager.PosterData data = getPosterDataFromPosterType(posterType);
+
+        if (data != null) {
+            // 直接从PosterManager获取的最新数据打开屏幕
+            PosterViewClientHandler.openPosterScreen(
+                    data.getTitle(),
+                    data.getContent(),
+                    data.getImagePath(),
+                    data.getExpertType()
+            );
+        } else {
+            // 找不到数据，显示错误信息
+            LOGGER.warning("无法找到海报数据：" + posterType);
+            PosterViewClientHandler.openErrorScreen(posterType);
+        }
     }
 
     // 旋转方块相关方法

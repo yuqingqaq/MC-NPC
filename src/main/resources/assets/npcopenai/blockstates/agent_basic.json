@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "npcopenai:block/agent_basic" },
+    "facing=east": { "model": "npcopenai:block/agent_basic", "y": 90 },
+    "facing=south": { "model": "npcopenai:block/agent_basic", "y": 180 },
+    "facing=west": { "model": "npcopenai:block/agent_basic", "y": 270 }
+  }
+}

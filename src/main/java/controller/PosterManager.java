@@ -128,62 +128,7 @@ public class PosterManager {
         );
     }
 
-    // 为新海报块设置数据的方法
-    public void setupAgentBasicPosterBlockEntity(AgentBasicPosterBlockEntity entity) {
-        if (entity != null) {
-            PosterData data = getAgentBasicPosterData();
-            entity.setPosterData(
-                    data.getTitle(),
-                    data.getContent(),
-                    data.getImagePath(),
-                    data.getExpertType(),
-                    data.getConceptKey(),
-                    data.getQuestionId()
-            );
-        }
-    }
 
-    public void setupAgentEvolutionPosterBlockEntity(AgentEvolutionPosterBlockEntity entity) {
-        if (entity != null) {
-            PosterData data = getAgentEvolutionPosterData();
-            entity.setPosterData(
-                    data.getTitle(),
-                    data.getContent(),
-                    data.getImagePath(),
-                    data.getExpertType(),
-                    data.getConceptKey(),
-                    data.getQuestionId()
-            );
-        }
-    }
-
-    public void setupAgentLearningPosterBlockEntity(AgentLearningPosterBlockEntity entity) {
-        if (entity != null) {
-            PosterData data = getAgentLearningPosterData();
-            entity.setPosterData(
-                    data.getTitle(),
-                    data.getContent(),
-                    data.getImagePath(),
-                    data.getExpertType(),
-                    data.getConceptKey(),
-                    data.getQuestionId()
-            );
-        }
-    }
-
-    public void setupAgentPrinciplesPosterBlockEntity(AgentPrinciplesPosterBlockEntity entity) {
-        if (entity != null) {
-            PosterData data = getAgentPrinciplesPosterData();
-            entity.setPosterData(
-                    data.getTitle(),
-                    data.getContent(),
-                    data.getImagePath(),
-                    data.getExpertType(),
-                    data.getConceptKey(),
-                    data.getQuestionId()
-            );
-        }
-    }
     // 获取智能体基础概念海报数据
     public PosterData getAgentBasicPosterData() {
         return agentBasicData;
@@ -202,45 +147,6 @@ public class PosterManager {
     // 获取智能体原则海报数据
     public PosterData getAgentPrinciplesPosterData() {
         return agentPrinciplesData;
-    }
-
-    // 将基础概念海报数据应用到方块实体
-    public void applyAgentBasicPosterToEntity(AcademicPosterBlockEntity entity) {
-        applyPosterDataToEntity(agentBasicData, entity, "基础概念");
-    }
-
-    // 将发展演化海报数据应用到方块实体
-    public void applyAgentEvolutionPosterToEntity(AcademicPosterBlockEntity entity) {
-        applyPosterDataToEntity(agentEvolutionData, entity, "技术演化");
-    }
-
-    // 将学习方法海报数据应用到方块实体
-    public void applyAgentLearningPosterToEntity(AcademicPosterBlockEntity entity) {
-        applyPosterDataToEntity(agentLearningData, entity, "学习方法");
-    }
-
-    // 将设计原则海报数据应用到方块实体
-    public void applyAgentPrinciplesPosterToEntity(AcademicPosterBlockEntity entity) {
-        applyPosterDataToEntity(agentPrinciplesData, entity, "设计原则");
-    }
-
-    // 辅助方法：应用海报数据到方块实体
-    private void applyPosterDataToEntity(PosterData data, AcademicPosterBlockEntity entity, String posterType) {
-        if (entity != null) {
-            entity.setPosterData(
-                    data.getTitle(),
-                    data.getContent(),
-                    data.getImagePath(),
-                    data.getExpertType(),
-                    data.getConceptKey(),
-                    data.getQuestionId()
-            );
-            // 添加调试输出
-            LOGGER.info("已将" + posterType + "海报 '" + data.getTitle() +
-                    "' 应用到位于 " + entity.getBlockPos() + " 的方块实体");
-        } else {
-            LOGGER.severe("应用" + posterType + "海报数据失败: 方块实体为null");
-        }
     }
 
     // 海报数据类

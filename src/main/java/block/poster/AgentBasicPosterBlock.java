@@ -14,7 +14,7 @@ public class AgentBasicPosterBlock extends BasePosterBlock {
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new AgentBasicPosterBlockEntity(pos, state);
     }
-    
+
     @Override
     protected String getPosterType() {
         return "智能体基础概念";

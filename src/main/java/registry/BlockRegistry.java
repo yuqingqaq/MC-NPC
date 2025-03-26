@@ -26,20 +26,6 @@ public class BlockRegistry {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
             DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, NPCOpenAI.MODID);
 
-    // 弃用的原始海报方块(保留兼容性)
-    @Deprecated
-    public static final RegistryObject<Block> ACADEMIC_POSTER =
-            BLOCKS.register("academic_poster", AcademicPosterBlock::new);
-
-    // 弃用的原始海报方块实体(保留兼容性)
-    @Deprecated
-    public static final RegistryObject<BlockEntityType<AcademicPosterBlockEntity>> ACADEMIC_POSTER_ENTITY =
-            BLOCK_ENTITIES.register("academic_poster",
-                    () -> BlockEntityType.Builder.of(
-                            AcademicPosterBlockEntity::new,
-                            ACADEMIC_POSTER.get()
-                    ).build(null));
-
     // 基础概念海报方块
     public static final RegistryObject<Block> AGENT_BASIC_POSTER =
             BLOCKS.register("agent_basic_poster", AgentBasicPosterBlock::new);
