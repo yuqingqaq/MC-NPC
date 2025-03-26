@@ -51,16 +51,16 @@ public class ItemRegistry {
             () -> new QuestionItem("order_tech_evolution"));
 
     // 海报物品
-    public static final RegistryObject<Item> AGENT_BASIC_POSTER = ITEMS.register("poster_agent_basic",
+    public static final RegistryObject<Item> AGENT_BASIC_POSTER = ITEMS.register("agent_basic",
             AgentBasicPosterItem::new);
 
-    public static final RegistryObject<Item> AGENT_EVOLUTION_POSTER = ITEMS.register("poster_agent_evolution",
+    public static final RegistryObject<Item> AGENT_EVOLUTION_POSTER = ITEMS.register("agent_evolution",
             AgentEvolutionPosterItem::new);
 
-    public static final RegistryObject<Item> AGENT_LEARNING_POSTER = ITEMS.register("poster_agent_learning",
+    public static final RegistryObject<Item> AGENT_LEARNING_POSTER = ITEMS.register("agent_learning",
             AgentLearningPosterItem::new);
 
-    public static final RegistryObject<Item> AGENT_PRINCIPLES_POSTER = ITEMS.register("poster_agent_principles",
+    public static final RegistryObject<Item> AGENT_PRINCIPLES_POSTER = ITEMS.register("agent_principles",
             AgentPrinciplesPosterItem::new);
 
 

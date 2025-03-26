@@ -1,6 +1,6 @@
 package controller;
 
-import block.poster.AcademicPosterBlockEntity;
+import block.poster.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -128,6 +128,62 @@ public class PosterManager {
         );
     }
 
+    // 为新海报块设置数据的方法
+    public void setupAgentBasicPosterBlockEntity(AgentBasicPosterBlockEntity entity) {
+        if (entity != null) {
+            PosterData data = getAgentBasicPosterData();
+            entity.setPosterData(
+                    data.getTitle(),
+                    data.getContent(),
+                    data.getImagePath(),
+                    data.getExpertType(),
+                    data.getConceptKey(),
+                    data.getQuestionId()
+            );
+        }
+    }
+
+    public void setupAgentEvolutionPosterBlockEntity(AgentEvolutionPosterBlockEntity entity) {
+        if (entity != null) {
+            PosterData data = getAgentEvolutionPosterData();
+            entity.setPosterData(
+                    data.getTitle(),
+                    data.getContent(),
+                    data.getImagePath(),
+                    data.getExpertType(),
+                    data.getConceptKey(),
+                    data.getQuestionId()
+            );
+        }
+    }
+
+    public void setupAgentLearningPosterBlockEntity(AgentLearningPosterBlockEntity entity) {
+        if (entity != null) {
+            PosterData data = getAgentLearningPosterData();
+            entity.setPosterData(
+                    data.getTitle(),
+                    data.getContent(),
+                    data.getImagePath(),
+                    data.getExpertType(),
+                    data.getConceptKey(),
+                    data.getQuestionId()
+            );
+        }
+    }
+
+    public void setupAgentPrinciplesPosterBlockEntity(AgentPrinciplesPosterBlockEntity entity) {
+        if (entity != null) {
+            PosterData data = getAgentPrinciplesPosterData();
+            entity.setPosterData(
+                    data.getTitle(),
+                    data.getContent(),
+                    data.getImagePath(),
+                    data.getExpertType(),
+                    data.getConceptKey(),
+                    data.getQuestionId()
+            );
+        }
+    }
     // 获取智能体基础概念海报数据
     public PosterData getAgentBasicPosterData() {
         return agentBasicData;

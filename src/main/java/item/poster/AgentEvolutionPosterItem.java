@@ -1,12 +1,21 @@
 package item.poster;
 
-import block.poster.AcademicPosterBlockEntity;
+import block.poster.AgentEvolutionPosterBlockEntity;
 import controller.PosterManager;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import registry.BlockRegistry;
 
 public class AgentEvolutionPosterItem extends BasePosterItem {
+
+    public AgentEvolutionPosterItem() {
+        super(BlockRegistry.AGENT_EVOLUTION_POSTER.get());
+    }
+
     @Override
-    protected void applyPosterData(AcademicPosterBlockEntity entity) {
-        PosterManager.getInstance().applyAgentEvolutionPosterToEntity(entity);
+    protected void applyPosterData(BlockEntity blockEntity) {
+        if (blockEntity instanceof AgentEvolutionPosterBlockEntity entity) {
+            PosterManager.getInstance().setupAgentEvolutionPosterBlockEntity(entity);
+        }
     }
 
     @Override

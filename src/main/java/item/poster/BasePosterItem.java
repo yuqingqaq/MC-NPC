@@ -1,7 +1,6 @@
 package item.poster;
 
-import block.poster.AcademicPosterBlockEntity;
-import controller.PosterManager;
+import block.poster.BasePosterBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
@@ -12,20 +11,20 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import registry.BlockRegistry;
 
 import java.util.logging.Logger;
 
 public abstract class BasePosterItem extends BlockItem {
     protected static final Logger LOGGER = Logger.getLogger("PosterItem");
 
-    public BasePosterItem() {
-        super(BlockRegistry.ACADEMIC_POSTER.get(), new Properties().tab(CreativeModeTab.TAB_DECORATIONS));
+    public BasePosterItem(Block block) {
+        super(block, new Properties().tab(CreativeModeTab.TAB_DECORATIONS));
     }
 
     // 应用海报数据的抽象方法，由子类实现
-    protected abstract void applyPosterData(AcademicPosterBlockEntity entity);
+    protected abstract void applyPosterData(BlockEntity entity);
 
     // 获取海报类型名称（用于日志）
     protected abstract String getPosterTypeName();
@@ -48,10 +47,10 @@ public abstract class BasePosterItem extends BlockItem {
                 BlockPos pos = blockPlaceContext.getClickedPos();
                 BlockEntity blockEntity = level.getBlockEntity(pos);
 
-                if (blockEntity instanceof AcademicPosterBlockEntity posterEntity) {
-                    // 应用海报数据 - 调用子类实现的方法
+                // 应用海报数据 - 调用子类实现的方法
+                if (blockEntity != null) {
                     LOGGER.info("正在应用" + getPosterTypeName() + "海报数据到位置: " + pos);
-                    applyPosterData(posterEntity);
+                    applyPosterData(blockEntity);
 
                     // 如果是玩家放置的，减少物品数量
                     Player player = context.getPlayer();
