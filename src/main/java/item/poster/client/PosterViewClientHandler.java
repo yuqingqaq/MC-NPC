@@ -1,4 +1,4 @@
-package block.poster.client;
+package item.poster.client;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.TextComponent;
@@ -9,11 +9,6 @@ import java.util.List;
 public class PosterViewClientHandler {
     public static void openPosterScreen(String title, List<String> content,
                                         String imagePath, String expertType) {
-        System.out.println("Opening poster screen:");
-        System.out.println("  Title: " + title);
-        System.out.println("  Content: " + (content != null ? content.size() + " lines" : "null"));
-        System.out.println("  Image path: " + imagePath);
-        System.out.println("  Expert type: " + expertType);
 
         // 防止 null 值
         if (title == null) title = "未知标题";

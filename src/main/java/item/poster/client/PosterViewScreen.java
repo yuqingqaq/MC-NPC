@@ -1,4 +1,4 @@
-package block.poster.client;
+package item.poster.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -50,15 +50,6 @@ public class PosterViewScreen extends Screen {
         this.imagePath = imagePath != null ? imagePath : "";
         this.expertType = expertType != null ? expertType : "未知专家";
 
-        // 添加调试输出
-        System.out.println("PosterViewScreen constructed with:");
-        System.out.println("  Title: " + this.title);
-        System.out.println("  Content size: " + this.content.size());
-        if (!this.content.isEmpty()) {
-            System.out.println("  First content line: " + this.content.get(0));
-        }
-        System.out.println("  Image path: " + this.imagePath);
-        System.out.println("  Expert type: " + this.expertType);
     }
 
     @Override
