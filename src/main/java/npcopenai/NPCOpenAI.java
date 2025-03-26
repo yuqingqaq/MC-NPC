@@ -21,6 +21,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import registry.BlockRegistry;
 import registry.EntityRegistry;
 import registry.ItemRegistry;
 import item.goldcoin.GoldCoinWorldGenerator;
@@ -50,6 +51,8 @@ public class NPCOpenAI {
 
         EntityRegistry.init();
         LOGGER.info(" EntityRegistry Initialized");
+
+        BlockRegistry.init();
 
         MinecraftForge.EVENT_BUS.register(this);
         LOGGER.info(" MinecraftForge.EVENT_BUS Registered");

@@ -15,9 +15,16 @@ import item.TimedCustomItem;
 import item.goldcoin.GoldCoinItem;
 import item.PaperItem;
 import item.knowledge.*;
+import item.poster.AgentBasicPosterItem;
+import item.poster.AgentEvolutionPosterItem;
+import item.poster.AgentLearningPosterItem;
+import item.poster.AgentPrinciplesPosterItem;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ItemRegistry {
     private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, NPCOpenAI.MODID);
@@ -43,7 +50,21 @@ public class ItemRegistry {
     public static final RegistryObject<Item> AGENT_TIMELINE = ITEMS.register("agent_timeline",
             () -> new QuestionItem("order_tech_evolution"));
 
-     private static final Logger LOGGER = LogManager.getLogger();
+    // 海报物品
+    public static final RegistryObject<Item> AGENT_BASIC_POSTER = ITEMS.register("poster_agent_basic",
+            AgentBasicPosterItem::new);
+
+    public static final RegistryObject<Item> AGENT_EVOLUTION_POSTER = ITEMS.register("poster_agent_evolution",
+            AgentEvolutionPosterItem::new);
+
+    public static final RegistryObject<Item> AGENT_LEARNING_POSTER = ITEMS.register("poster_agent_learning",
+            AgentLearningPosterItem::new);
+
+    public static final RegistryObject<Item> AGENT_PRINCIPLES_POSTER = ITEMS.register("poster_agent_principles",
+            AgentPrinciplesPosterItem::new);
+
+
+    private static final Logger LOGGER = LogManager.getLogger();
 
     public static void init() {
         ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
@@ -83,9 +104,15 @@ public class ItemRegistry {
                     AGENT_TIMELINE.get()
             );
             LOGGER.info("Knowledge learning items registered.");
+
+            // 注册海报物品
+            itemRegistryEvent.getRegistry().registerAll(
+                    AGENT_BASIC_POSTER.get(),
+                    AGENT_EVOLUTION_POSTER.get(),
+                    AGENT_LEARNING_POSTER.get(),
+                    AGENT_PRINCIPLES_POSTER.get()
+            );
+            LOGGER.info("Academic poster items registered.");
         }
     }
-
-
-
 }
