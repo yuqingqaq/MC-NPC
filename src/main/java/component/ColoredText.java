@@ -5,7 +5,7 @@ public class ColoredText {
     public String text;
     public int color;
 
-    ColoredText(String text, int color) {
+    public ColoredText(String text, int color) {
         this.text = text;
         this.color = color;
     }

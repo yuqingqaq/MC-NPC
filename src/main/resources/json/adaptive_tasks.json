@@ -9,7 +9,7 @@
       "resources": ["图书馆管理员", "在线文章"],
       "location": "图书馆",
       "estimatedTime": "20:00",
-      "strategies": ["辅助规划", "自行规划"],
+      "strategies": ["自行规划"],
       "summary": {
         "待办": "前往图书管理员咨询"
       },
@@ -48,7 +48,7 @@
       "resources": ["邮件写作大师"],
       "location": "图书馆",
       "estimatedTime": "20:00",
-      "strategies": ["自行规划", "问问专家"],
+      "strategies": ["自行规划"],
       "summary": {
         "进展": "可完成初步写作",
         "困难": "需要调整规范写作结构",
@@ -79,14 +79,22 @@
       "category": "Academic",
       "description": "在开始写作前：在学校图书馆内找到1篇相关的参考文献，并进行总结，需要输出简洁的review结论; 找到一位Agent领域专家进行访谈，确定写作specific的主题",
       "target": "完成一份有关Agent的学习报告",
-      "resources": ["参考文献", "领域专家"],
+      "resources": ["知识图谱", "参考文献", "领域专家", "论文写作专家"],
       "location": "实验室",
-      "estimatedTime": "35:00",
+      "estimatedTime": "40:00",
       "strategies": ["自行规划", "协作规划"],
       "summary": {},
       "completed": false,
       "notes": "需要与团队成员讨论",
       "subTasks": [
+        {
+          "subTaskId": "1",
+          "title": "完成知识图谱学习",
+          "description": "系统学习Agent的基础概念、关系理解、原则验证和发展时间线，构建完整的知识体系",
+          "estimatedTime": "20:00",
+          "completed": false,
+          "status": "NOT_STARTED"
+        },
         {
           "subTaskId": "1",
           "title": "文献搜集-ExpeL",

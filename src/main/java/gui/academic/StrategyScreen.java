@@ -99,10 +99,10 @@ public class StrategyScreen extends Screen {
 
             this.rightPanel = new TaskPlanningSupportPanel(rightPanelX, 40, rightPanelWidth, this.height - 60, tasks);
         }
-        else if ("问问专家".equals(strategy)) {
-            // 使用 ExpertPanel
-            this.rightPanel = new ExpertPanel(rightPanelX, 40, rightPanelWidth, this.height - 60);
-        }
+//        else if ("问问专家".equals(strategy)) {
+//            // 使用 ExpertPanel
+//            this.rightPanel = new ExpertPanel(rightPanelX, 40, rightPanelWidth, this.height - 60);
+//        }
 
 
         // Add the new right panel if it is not null

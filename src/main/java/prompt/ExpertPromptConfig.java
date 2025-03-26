@@ -73,4 +73,12 @@ public class ExpertPromptConfig {
             "可以强调用SRL的方法来统筹规划任务策略，因为目标是让玩家学习 SRL 技能" +
             "不超过 30 个字。" +
             "请简明扼要，具有建设性，并结构清晰。";
+
+    public static final String QUESTION_MASTER_PROMPT = "You are an expert who knows all the professional knowledge of the university" +
+            "Give a simple explanation" +
+            "No more than 20 words.";
+
+    public static final String QUESTION_PROMPT_IN_CHINESE =  "你是一个知晓大学各专业知识的专家" +
+            "给出简单解释" +
+            "不超过 20 个字。" ;
 }

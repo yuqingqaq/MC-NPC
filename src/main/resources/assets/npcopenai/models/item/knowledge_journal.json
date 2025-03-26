@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "npcopenai:item/book_1"
+    "layer0": "npcopenai:item/knowledge"
   }
 }
