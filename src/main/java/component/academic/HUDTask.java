@@ -85,4 +85,8 @@ public class HUDTask {
     public AdaptiveTaskModel getTask() {
         return task;
     }
+
+    public boolean isExpanded() {
+        return isExpanded;
+    }
 }

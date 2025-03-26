@@ -197,9 +197,9 @@ public class TaskDetailPanel extends ScrollPanel {
         if (mouseY >= top + (resourceCardY - this.scrollY) &&
                 mouseY <= top + (resourceCardY - this.scrollY) + resourceCardHeight) {
 
-            // 转换鼠标坐标到NPC链接坐标系
+            // 转换鼠标坐标到panel内部坐标系，考虑滚动位置
             int npcMouseX = (int)mouseX;
-            int npcMouseY = (int)mouseY + this.scrollY - top;
+            int npcMouseY = (int)mouseY + this.scrollY;
 
             int npcId = detailCard.checkNpcLinkHover(npcMouseX, npcMouseY);
             if (npcId != -1) {

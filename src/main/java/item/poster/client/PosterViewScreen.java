@@ -2,6 +2,7 @@ package item.poster.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import component.academic.ScrollableTextBox;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
@@ -22,8 +23,11 @@ public class PosterViewScreen extends Screen {
     // 界面元素布局
     private int leftPos;
     private int topPos;
-    private static final int WIDTH = 256;
-    private static final int HEIGHT = 166;
+    private static final int WIDTH = 320; // 增加总宽度
+    private static final int HEIGHT = 200; // 增加总高度
+
+    // 滚动文本框
+    private ScrollableTextBox scrollableTextBox;
 
     // 背景纹理
     private static final ResourceLocation BACKGROUND_TEXTURE =
@@ -49,13 +53,35 @@ public class PosterViewScreen extends Screen {
 
         this.imagePath = imagePath != null ? imagePath : "";
         this.expertType = expertType != null ? expertType : "未知专家";
-
     }
 
     @Override
     protected void init() {
         this.leftPos = (this.width - WIDTH) / 2;
         this.topPos = (this.height - HEIGHT) / 2;
+
+        // 计算左侧和右侧区域
+        int leftSectionWidth = WIDTH / 3; // 左侧1/3宽度
+        int rightSectionWidth = WIDTH - leftSectionWidth; // 右侧宽度
+
+        // 创建滚动文本框
+        this.scrollableTextBox = new ScrollableTextBox(
+                minecraft,
+                leftPos + leftSectionWidth, // x坐标从左侧区域右边开始
+                topPos + 30, // 留出顶部空间给标题
+                rightSectionWidth - 10, // 右侧区域宽度减去边距
+                HEIGHT - 60 // 高度减去顶部和底部空间
+        );
+
+        // 设置文本内容
+        StringBuilder contentBuilder = new StringBuilder();
+        for (String line : this.content) {
+            contentBuilder.append(line).append("\n");
+        }
+        scrollableTextBox.setText(contentBuilder.toString());
+
+        // 将滚动文本框添加到渲染列表
+        this.addRenderableWidget(scrollableTextBox);
 
         // 添加关闭按钮
         this.addRenderableWidget(new Button(
@@ -71,6 +97,9 @@ public class PosterViewScreen extends Screen {
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         this.renderBackground(poseStack);
 
+        // 计算左侧和右侧区域
+        int leftSectionWidth = WIDTH / 3;
+
         // 绘制背景（白色矩形）
         fillGradient(poseStack, leftPos, topPos, leftPos + WIDTH, topPos + HEIGHT,
                 0xFFFFFFFF, 0xFFEEEEEE);
@@ -81,10 +110,13 @@ public class PosterViewScreen extends Screen {
         fill(poseStack, leftPos, topPos, leftPos + 1, topPos + HEIGHT, 0xFF000000);
         fill(poseStack, leftPos + WIDTH - 1, topPos, leftPos + WIDTH, topPos + HEIGHT, 0xFF000000);
 
+        // 分隔线
+        fill(poseStack, leftPos + leftSectionWidth, topPos, leftPos + leftSectionWidth + 1, topPos + HEIGHT, 0xFFCCCCCC);
+
         // 绘制标题
         drawCenteredString(poseStack, font, title, leftPos + WIDTH / 2, topPos + 10, 0xFF000000);
 
-        // 尝试绘制图像（如果加载失败则跳过）
+        // 绘制图像（在左侧区域）
         try {
             if (!imagePath.isEmpty()) {
                 // 确保路径格式正确
@@ -97,59 +129,36 @@ public class PosterViewScreen extends Screen {
                     imageResource = new ResourceLocation(NPCOpenAI.MODID, imagePath);
                 }
 
-                //System.out.println("Loading image resource: " + imageResource);
-
                 RenderSystem.setShader(GameRenderer::getPositionTexShader);
                 RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
                 RenderSystem.setShaderTexture(0, imageResource);
 
-                int imageWidth = 120;
-                int imageHeight = 60;
-                int imageX = leftPos + (WIDTH - imageWidth) / 2;
-                int imageY = topPos + 25;
+                // 图像尺寸适应左侧区域
+                int imageWidth = leftSectionWidth - 20; // 左右边距
+                int imageHeight = imageWidth * 3 / 4; // 保持一定的宽高比
+                int imageX = leftPos + 10; // 左边距
+                int imageY = topPos + 40; // 顶部边距
 
                 // 使用blit渲染图像
                 blit(poseStack, imageX, imageY, 0, 0, imageWidth, imageHeight,
                         imageWidth, imageHeight);
-
-                //System.out.println("Rendered image: " + imagePath);
             } else {
-                //System.out.println("No image path provided or empty path");
                 drawCenteredString(poseStack, font, "无图像",
-                        leftPos + WIDTH / 2, topPos + 50, 0xFF666666);
+                        leftPos + leftSectionWidth / 2, topPos + 80, 0xFF666666);
             }
         } catch (Exception e) {
-            // 图像加载失败，记录日志但继续渲染其他内容
-            //System.out.println("Failed to render poster image: " + imagePath);
             e.printStackTrace();
-
-            // 显示错误信息
             drawCenteredString(poseStack, font, "图像加载失败",
-                    leftPos + WIDTH / 2, topPos + 50, 0xFFFF0000);
+                    leftPos + leftSectionWidth / 2, topPos + 80, 0xFFFF0000);
         }
 
-        // 绘制内容
-        int textStartY = topPos + 90;
-        int textColor = 0xFF000000;
-
-        for (int i = 0; i < content.size() && i < 4; i++) {
-            String line = content.get(i);
-            // 如果文本过长，截断并添加...
-            String renderText = font.plainSubstrByWidth(line, WIDTH - 20);
-            if (!renderText.equals(line)) {
-                renderText = renderText + "...";
-            }
-
-            drawString(poseStack, font, renderText, leftPos + 10, textStartY + i * 12, textColor);
-            //System.out.println("Rendered line " + i + ": " + renderText);
-        }
-
-        // 绘制专家信息
+        // 绘制专家信息（在左侧底部）
         String expertText = "专家: " + expertType;
-        drawString(poseStack, font, expertText,
-                leftPos + WIDTH - 10 - font.width(expertText),
+        drawCenteredString(poseStack, font, expertText,
+                leftPos + leftSectionWidth / 2,
                 topPos + HEIGHT - 35, 0xFF666666);
 
+        // 渲染所有组件（包括滚动文本框）
         super.render(poseStack, mouseX, mouseY, partialTick);
     }
 

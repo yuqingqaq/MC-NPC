@@ -4,14 +4,21 @@ import controller.KnowledgeGraphManager;
 import controller.PosterLearningData;
 import controller.PosterManager;
 import item.poster.client.PosterViewClientHandler;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
@@ -58,26 +65,6 @@ public class PosterEventHandler {
             }
         }
     }
-
-//    // 防止物品展示框被攻击破坏
-//    @SubscribeEvent
-//    public static void onEntityAttack(AttackEntityEvent event) {
-//        Entity target = event.getTarget();
-//
-//        // 检查目标实体是否是物品展示框
-//        if (target instanceof ItemFrame frame) {
-//            ItemStack frameItem = frame.getItem();
-//
-//            // 如果是我们的海报，阻止破坏
-//            if (!frameItem.isEmpty() && frameItem.hasTag()) {
-//                CompoundTag tag = frameItem.getTag();
-//                if (tag != null && tag.contains("PosterData")) {
-//                    // 取消攻击事件
-//                    event.setCanceled(true);
-//                }
-//            }
-//        }
-//    }
 
     // 可选：添加方块破坏事件处理，虽然不直接影响ItemFrame
     @SubscribeEvent
@@ -134,30 +121,114 @@ public class PosterEventHandler {
 
     // 生成测试题目物品
     private static void spawnTestQuestion(Player player, String questionId) {
-        if (questionId == null || questionId.isEmpty()) return;
+        LOGGER.info("Attempting to spawn test question entity, questionId: " + questionId);
 
-        // 根据海报关联的概念，选择正确的测试题目物品
-        ItemStack itemStack = null;
-
-        // 如果是预定义的问题ID，使用对应的预注册物品
-        if (questionId.equals("mc_agent_concept")) {
-            itemStack = new ItemStack(ItemRegistry.AGENT_CONCEPT.get());
-        } else if (questionId.equals("match_learning_methods")) {
-            itemStack = new ItemStack(ItemRegistry.AGENT_RELATIONSHIP.get());
-        } else if (questionId.equals("tf_learning_principle")) {
-            itemStack = new ItemStack(ItemRegistry.AGENT_PRINCIPLE.get());
-        } else if (questionId.equals("order_tech_evolution")) {
-            itemStack = new ItemStack(ItemRegistry.AGENT_TIMELINE.get());
-        }
-
-        // 如果没有匹配的预定义物品，返回
-        if (itemStack == null) {
+        if (questionId == null || questionId.isEmpty()) {
+            LOGGER.warning("QuestionId is null or empty, cannot spawn test question");
             return;
         }
 
-        // 将物品掉落在地上
-            player.drop(itemStack, false);
+        // 创建物品
+        Item questionItem = null;
 
+        if (questionId.equals("mc_agent_concept")) {
+            questionItem = ItemRegistry.AGENT_CONCEPT.get();
+        } else if (questionId.equals("match_learning_methods")) {
+            questionItem = ItemRegistry.AGENT_RELATIONSHIP.get();
+        } else if (questionId.equals("tf_learning_principle")) {
+            questionItem = ItemRegistry.AGENT_PRINCIPLE.get();
+        } else if (questionId.equals("order_tech_evolution")) {
+            questionItem = ItemRegistry.AGENT_TIMELINE.get();
+        }
+
+        if (questionItem == null) {
+            LOGGER.warning("Failed to get item for questionId: " + questionId);
+            return;
+        }
+
+        // 创建物品堆栈
+        ItemStack itemStack = new ItemStack(questionItem);
+
+        // 客户端代码不处理实体的创建，只在服务端处理
+        Level level = player.level;
+        if (!level.isClientSide) {
+            try {
+                // 计算玩家前方的位置（距离玩家约1.5个方块）
+                double offsetDistance = 1.5;
+                Vec3 lookVec = player.getLookAngle().normalize();
+
+                double spawnX = player.getX() + (lookVec.x * offsetDistance);
+                double spawnY = player.getY() + player.getEyeHeight() - 0.3; // 稍微低于眼睛高度
+                double spawnZ = player.getZ() + (lookVec.z * offsetDistance);
+
+                // 创建物品实体
+                net.minecraft.world.entity.item.ItemEntity itemEntity = new net.minecraft.world.entity.item.ItemEntity(
+                        level,
+                        spawnX,
+                        spawnY,
+                        spawnZ,
+                        itemStack
+                );
+
+                // 设置物品属性
+                itemEntity.setPickUpDelay(10); // 短暂的拾取延迟，防止立即被捡起
+                itemEntity.lifespan = 6000; // 设置较长的生存时间（5分钟）
+
+                // 使物品保持相对静止状态（减少随机移动）
+                itemEntity.setDeltaMovement(Vec3.ZERO);
+
+                // 添加到世界
+                boolean success = level.addFreshEntity(itemEntity);
+
+                if (success) {
+                    LOGGER.info("Successfully spawned item entity in front of player at: " +
+                            spawnX + ", " + spawnY + ", " + spawnZ);
+
+                    // 通知玩家
+                    player.sendMessage(new TextComponent("你获得了一个测试题目！请拾取它。"), player.getUUID());
+
+                    // 播放物品生成音效
+                    level.playSound(null, spawnX, spawnY, spawnZ,
+                            SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.PLAYERS, 0.75F, 1.0F);
+
+                    // 在物品位置添加粒子效果
+                    if (level instanceof ServerLevel serverLevel) {
+                        // 创建强烈的粒子效果
+                        serverLevel.sendParticles(
+                                ParticleTypes.TOTEM_OF_UNDYING,  // 图腾粒子非常明显
+                                spawnX,
+                                spawnY + 0.3, // 稍微在物品上方
+                                spawnZ,
+                                20,  // 较多的粒子数量
+                                0.2, 0.3, 0.2,  // 垂直方向扩散多一点
+                                0.1  // 较慢速度让粒子持续更久
+                        );
+
+                        // 再添加一层环形粒子
+                        for (int i = 0; i < 8; i++) {
+                            double angle = i * Math.PI / 4; // 均匀分布在圆周上
+                            double offsetX = Math.cos(angle) * 0.3;
+                            double offsetZ = Math.sin(angle) * 0.3;
+
+                            serverLevel.sendParticles(
+                                    ParticleTypes.END_ROD,  // 末地烛粒子有光柱效果
+                                    spawnX + offsetX,
+                                    spawnY,
+                                    spawnZ + offsetZ,
+                                    1,  // 每个位置只需要一个粒子
+                                    0.0, 0.05, 0.0,  // 只在垂直方向有少量扩散
+                                    0.02  // 非常慢的速度
+                            );
+                        }
+                    }
+                } else {
+                    LOGGER.warning("Failed to spawn item entity in the world");
+                }
+            } catch (Exception e) {
+                LOGGER.severe("Error spawning item entity: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
     }
 
     // 辅助方法：根据类型获取海报数据

@@ -102,8 +102,22 @@ public class TaskHUD {
     }
 
     public void toggleAllTasks() {
+        // First determine if we should expand or collapse all
+        // If any task is collapsed, we'll expand all tasks
+        boolean shouldExpandAll = false;
         for (HUDTask hudTask : hudTasks) {
-            hudTask.toggleExpand();
+            if (!hudTask.isExpanded()) { // You'll need to add a getter for isExpanded
+                shouldExpandAll = true;
+                break;
+            }
+        }
+
+        // Now set all tasks to the same state
+        for (HUDTask hudTask : hudTasks) {
+            // Set all tasks to the target state rather than toggling them individually
+            if (hudTask.isExpanded() != shouldExpandAll) {
+                hudTask.toggleExpand();
+            }
         }
     }
 }
