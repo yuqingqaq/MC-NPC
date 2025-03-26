@@ -81,15 +81,15 @@ public class KnowledgeGraphManager {
         switch(knowledgeArea) {
             case "基础概念":
                 currentTotal = acquiredConcepts.size();
-                targetTotal = 1; // 目标是掌握5个概念
+                targetTotal = 4; // 目标是掌握5个概念
                 break;
             case "关系理解":
                 currentTotal = masteredRelationships.size();
-                targetTotal = 1; // 目标是掌握3个关系类别
+                targetTotal = 3; // 目标是掌握3个关系类别
                 break;
             case "原则验证":
                 currentTotal = validatedPrinciples.size();
-                targetTotal = 1; // 目标是验证2个原则
+                targetTotal = 2; // 目标是验证2个原则
                 break;
             case "发展时间线":
                 currentTotal = masteredTimelines.size();
