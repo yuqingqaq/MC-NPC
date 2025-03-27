@@ -1,0 +1,32 @@
+{
+    "chapter_title": "CUHK(SZ) Freshman Orientation - A Day in CUHK(SZ): Meeting with new friends and professors.",
+    "chapter_description": "新生们来到香港中文大学（深圳）的一天，浏览校园，在校园的不同地点认识学校的教师，结识新朋友。",
+    "npcs": [
+      {
+        "name": "学术写作导师",
+        "description": "他精通学术写作，请通过与他交谈开启你的学术写作学习之旅吧。",
+        "event": "序幕：风启新程",
+        "npcTask": "找到第一块校徽碎片",
+        "role": "香港中文大学（深圳）校长、教授，中国工程院院士",
+        "time": "Morning",
+        "location": "Day1",
+        "relationship": "大学校长, 欢迎新生、介绍学校传统与特色，并布置九块校徽碎片的探索任务。",
+        "dialogues": [
+          "",
+          ""
+        ],
+        "tasks": [
+          {
+            "task_id": "1",
+            "description": "找到第一块校徽碎片。",
+            "completion_criteria": "在行政楼一楼大厅找到校徽碎片。",
+            "completed": false,
+            "object": "校徽碎片",
+            "reward": ["校徽碎片（1/9）"],
+            "plot_significance": "开启象征探索旅程的起点，传递校徽精神与学校故事。"
+          }
+        ]
+      }
+    ],
+    "chapter_end_description": "在收集完所有校徽碎片后，你带着兴奋与期待返回了行政楼。徐扬生校长正站在大堂中央等待你的归来。他将完整的校徽赠予你，象征着你的智慧、勇气和坚持。掌心的校徽温暖而有分量，像是一颗星辰，点亮了你的前路。从这一刻开始，新的篇章，已悄然展开。"
+  }

@@ -14,15 +14,15 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.TextComponent;
 import speech.AudioPlayer;
 import speech.SpeechHandler;
+import prompt.GuideNPCPromptRouting;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import speech.TextToSpeechService;
-import system.TaskManager;
 
-public class NPCInteractionScreen extends Screen {
+public class NPCNarrationScreen extends Screen {
     private EditBox inputField;
     private Button sendButton;
     private Button hintButton;
@@ -39,8 +39,8 @@ public class NPCInteractionScreen extends Screen {
     private AudioPlayer audioPlayer = new AudioPlayer();
     private SpeechHandler speechHandler = new SpeechHandler();
 
-    public NPCInteractionScreen(NPCModel npc) {
-        super(new TextComponent("NPC Interaction: " + npc.getNPCName()));
+    public NPCNarrationScreen(NPCModel npc) {
+        super(new TextComponent("NPC Narration: " + npc.getNPCName()));
         this.currentNPC = npc;
         this.chatHistory = npc.getChatHistory();
         this.hintHistory = new ArrayList<>(Arrays.asList());
@@ -49,65 +49,67 @@ public class NPCInteractionScreen extends Screen {
         if (npc.getNPCName().equals("学术写作导师")) {
             // 如果聊天历史为空，添加一条NPC的欢迎消息
                 if (this.chatHistory.isEmpty()) {
-                    String welcomeMessage = "欢迎来到学术写作课，我是你的学术写作导师。在这里，你将要撰写一篇关于‘大模型 Agent’的文献综述。请告诉我，你有什么具体想法或目标吗？";
+                    String welcomeMessage = "欢迎来到大模型学习课，我是你的大模型学习导师。在这里，你将要学习有关大模型 Agent 相关的知识。\n良好的学习过程往往从确定一个明确的目标开始，请告诉我，你有什么具体想法或目标吗？";
                     this.chatHistory.add(new NPCMessage(npc.getNPCName(), welcomeMessage));
                     
-                    // 使用语音合成将欢迎词转换为语音
-                    try {
-                        String ttsPath = TextToSpeechService.RefTTS(welcomeMessage,npc.getNPCName());
-                        System.out.println(ttsPath);
-                        audioPlayer.playAudio(ttsPath);
-                    } catch (Exception e) {
-                        System.out.println("欢迎语音生成错误: " + e.getMessage());
-                    }
+                    // // 使用语音合成将欢迎词转换为语音
+                    // try {
+                    //     String ttsPath = TextToSpeechService.RefTTS(welcomeMessage,npc.getNPCName());
+                    //     System.out.println(ttsPath);
+                    //     audioPlayer.playAudio(ttsPath);
+                    // } catch (Exception e) {
+                    //     System.out.println("欢迎语音生成错误: " + e.getMessage());
+                    // }
                 }
             }
     }
 
     @Override
     protected void init() {
-        // 在聊天界面打开时，自动完成"与一位教授聊天"子任务
-        if (currentNPC != null) {
-            TaskManager.getInstance().completeSubTaskByTitle("与一位教授聊天", true);
-        }
+
         super.init();
 
         int centerY = this.height / 2;
         int centerX = this.width  / 2;
 
-        this.inputField = new EditBox(this.font, centerX - 190, centerY + 65, 220, 20, new TextComponent("Enter Message"));
+        this.inputField = new EditBox(this.font, centerX - 190, centerY + 65, 200, 20, new TextComponent("Enter Message"));
         this.addWidget(this.inputField);
         // 添加录音按钮
-        recordButton = this.addRenderableWidget(new Button(centerX + 40, centerY + 65, 100, 20, new TextComponent("Start Recording"), button -> {
+        recordButton = this.addRenderableWidget(new Button(centerX - 190, centerY + 90, 110, 20, new TextComponent("Start Recording"), button -> {
             toggleRecording();
         }));
-//        this.hintButton = this.addRenderableWidget(new Button(centerX + 75, centerY + 65, 80, 20, new TextComponent("Hint"), button -> {
-//            getAdvice();
-//        }));
+        this.hintButton = this.addRenderableWidget(new Button(centerX + 75, centerY + 65, 80, 20, new TextComponent("Hint"), button -> {
+            getAdvice();
+        }));
+
+        this.sendButton = this.addRenderableWidget(new Button(centerX - 70, centerY + 90, 80, 20, new TextComponent("Send"), button -> {
+            sendChatMessage();
+        }));
+
         clearButton = this.addRenderableWidget(new Button(centerX + 145, centerY + 95, 50, 20, new TextComponent("Clear"), button -> {
             clearChatHistory();
         }));
-        this.sendButton = this.addRenderableWidget(new Button(centerX + 145, centerY + 65, 50, 20, new TextComponent("Send"), button -> {
-             sendChatMessage();
-        }));
+        // this.sendButton = this.addRenderableWidget(new Button(centerX + 145, centerY + 65, 50, 20, new TextComponent("Send"), button -> {
+        //      sendChatMessage();
+        // }));
 
         Minecraft mc = Minecraft.getInstance();
 
         // 计算 ScrollPanel 的顶部位置
         int panelTop = centerY - 87; // ScrollPanel 的顶部位置
 
-//        // ScrollPanel 的其他参数
-//        int hintPanelWidth = 150;  // 面板宽度
-//        int hintPanelHeight = 140; // 面板高度
-//        int hintPanelLeft = 250;    // 面板左侧位置
-//        int hintPanelBorder = 5;   // 面板边框大小
+        // ScrollPanel 的其他参数
+        int hintPanelWidth = 150;  // 面板宽度
+        int hintPanelHeight = 140; // 面板高度
+        int hintPanelLeft = 250;    // 面板左侧位置
+        int hintPanelBorder = 5;   // 面板边框大小
         int scrollBarWidth = 5; // 滚动条宽度
 //
-//        // 在 NPCInteractionScreen 的 init 方法中
-//        this.hintPanel = new HintScrollPanel(mc, hintPanelWidth, hintPanelHeight, panelTop, hintPanelLeft, hintPanelBorder, scrollBarWidth, hintHistory);
+        // 在 NPCInteractionScreen 的 init 方法中
+        this.hintPanel = new HintScrollPanel(mc, hintPanelWidth, hintPanelHeight, panelTop, hintPanelLeft, hintPanelBorder, scrollBarWidth, hintHistory);
 
         // ScrollPanel 的其他参数
-        int chatPanelWidth = 440;  // 面板宽度
+        int chatPanelWidth = 250;  // 面板宽度
         int chatPanelHeight = 140; // 面板高度
         int chatPanelLeft = 15;    // 面板左侧位置
         int chatPanelBorder = 5;   // 面板边框大小
@@ -121,7 +123,7 @@ public class NPCInteractionScreen extends Screen {
         }));
 
         this.chatPanel.refreshPanel();
-        //this.hintPanel.refreshPanel();
+        this.hintPanel.refreshPanel();
 
         //this.toast = new PersistentToast(TutorialToast.Icons.RECIPE_BOOK,"Title","Please ask expert for advices",true);
         //Minecraft.getInstance().getToasts().addToast(toast);
@@ -174,14 +176,24 @@ public class NPCInteractionScreen extends Screen {
     private void sendChatMessage() {
         String message = inputField.getValue().trim();
         String npcName = currentNPC.getNPCName();
+        String selectedPrompt = "";
         if (!message.isEmpty()) {
-            String response = GameController.getInstance().interactWithNPC(currentNPC, message);
+            try{
+                selectedPrompt = GuideNPCPromptRouting.route(message, currentNPC);
+            } catch (Exception e) {
+                System.out.println("Error routing: " + e.getMessage());
+            }
+            String response = GameController.getInstance().interactWithNPC(currentNPC, selectedPrompt+"\n\n用户输入："+message);
             inputField.setValue(""); // Clear input field after sending
 
             // 更新聊天历史
             chatHistory.add(new NPCMessage("player", message));
             chatHistory.add(new NPCMessage(currentNPC.getNPCName(), response));
             System.out.println("Response is:" + response);
+
+            // 更新 NPC 的对话历史
+            currentNPC.addDialogueToHistory(new NPCMessage("player", message));
+            currentNPC.addDialogueToHistory(new NPCMessage(currentNPC.getNPCName(), response));
 
             // 刷新聊天面板和提示面板
             this.chatPanel.refreshPanel();
@@ -214,14 +226,14 @@ public class NPCInteractionScreen extends Screen {
     public boolean mouseScrolled(double mouseX, double mouseY, double scroll) {
         double screenWidth = this.width; // 假设 'this.width' 是屏幕宽度
 
-//        if (mouseX < screenWidth * 3 / 3.0) {
-//            // 鼠标在屏幕左侧2/3区域内
-        return chatPanel.mouseScrolled(mouseX, mouseY, scroll);
-//        }
-//        else {
-//            // 鼠标在屏幕右侧1/3区域内
-//            return hintPanel.mouseScrolled(mouseX, mouseY, scroll);
-//        }
+       if (mouseX < screenWidth * 3 / 3.0) {
+           // 鼠标在屏幕左侧2/3区域内
+            return chatPanel.mouseScrolled(mouseX, mouseY, scroll);
+        }
+        else {
+            // 鼠标在屏幕右侧1/3区域内
+            return hintPanel.mouseScrolled(mouseX, mouseY, scroll);
+        }
     }
 
     @Override
@@ -229,10 +241,10 @@ public class NPCInteractionScreen extends Screen {
         this.renderBackground(poseStack);
         super.render(poseStack, mouseX, mouseY, partialTicks);
         this.inputField.render(poseStack, mouseX, mouseY, partialTicks);
-        //this.hintPanel.render(poseStack, mouseX, mouseY, partialTicks); // Render ScrollPanel
+        this.hintPanel.render(poseStack, mouseX, mouseY, partialTicks); // Render ScrollPanel
         this.chatPanel.render(poseStack, mouseX, mouseY, partialTicks); // Render ScrollPanel
         drawCenteredString(poseStack, this.font, "新生第一课", this.width / 2 - 170, 20, 0xFFFFFF);
-        //drawCenteredString(poseStack, this.font, "Expert", this.width / 2 + 65, 20, 0xFFFFFF);
+        drawCenteredString(poseStack, this.font, "Expert", this.width / 2 + 65, 20, 0xFFFFFF);
 
     }
 

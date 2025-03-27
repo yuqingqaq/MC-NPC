@@ -69,12 +69,13 @@ public class ExpertSystem {
         messageHistory.add(new NPCMessage("system", systemPrompt));
         messageHistory.addAll(npc.getDialogueHistory());
 
-        String chatHistoryMarkdown = "```\n" + npc.getChatHistoryAsString() + "\n```";
+        String chatHistoryMarkdown = "下面你会得到一段用户与NPC的对话，请根据对话内容给出你的建议：" + "```\n" + npc.getChatHistoryAsString() + "\n```";
         messageHistory.add(new NPCMessage("user", chatHistoryMarkdown + userInput));
         npc.addDialogueToHistory(new NPCMessage("user", userInput));
 
         System.out.println("Prompt to ExpertGPT:");
         messageHistory.forEach(m -> System.out.println(m.getSender() + ": " + m.getContent()));
+        // System.out.println(chatHistoryMarkdown);
         System.out.println();
         String npcResponse = gptModel.call(messageHistory);
         String cleanedResponse = cleanResponse(npcResponse);

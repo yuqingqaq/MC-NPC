@@ -18,6 +18,9 @@ public class TextToSpeechService {
         if (npcName.equals("图书馆工作人员")) {
             CallOpenAITTS TTSModel = new CallOpenAITTS("tts-1", "config/gpt3keys.txt");
             ttsFile = TTSModel.call(text, "alloy");
+        } else if (npcName.equals("学术写作导师")) {
+            CallOpenAITTS TTSModel = new CallOpenAITTS("tts-1", "config/gpt3keys.txt");
+            ttsFile = TTSModel.call(text, "alloy");
         } else if (npcName.equals("体育馆工作人员")) {
             CallOpenAITTS TTSModel = new CallOpenAITTS("tts-1", "config/gpt3keys.txt");
             ttsFile = TTSModel.call(text, "echo");
