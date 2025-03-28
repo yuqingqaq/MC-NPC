@@ -14,6 +14,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import prompt.TimeBasedPrompts;
+import system.UIScreenManager;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -50,6 +51,8 @@ public class NPCTimeSortedScreen extends Screen {
     protected void init() {
         this.clearWidgets();  // 清除旧的控件
         super.init();
+        UIScreenManager.getInstance().setCurrentScreenState(UIScreenManager.ScreenState.NO_HUD);
+
         int buttonWidth = 100;
         int buttonHeight = 20;
         int leftButtonX = 20;
@@ -183,6 +186,11 @@ public class NPCTimeSortedScreen extends Screen {
         }
     }
 
+    @Override
+    public void onClose() {
+        super.onClose();
+        UIScreenManager.getInstance().setCurrentScreenState(UIScreenManager.ScreenState.DEFAULT);
+    }
     @Override
     public boolean isPauseScreen() {
         return false;

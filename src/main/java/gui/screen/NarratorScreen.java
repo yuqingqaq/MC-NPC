@@ -14,6 +14,7 @@ import net.minecraft.resources.ResourceLocation;
 import prompt.SRLTaskPrompt;
 import system.TaskSystem;
 import prompt.NarratorPrompts;
+import system.UIScreenManager;
 
 import java.util.List;
 
@@ -28,6 +29,7 @@ public class NarratorScreen extends Screen {
     protected void init() {
 
         super.init();
+        UIScreenManager.getInstance().setCurrentScreenState(UIScreenManager.ScreenState.NO_HUD);
 
         int centerY = this.height / 2;
         int centerX = this.width  / 2;
@@ -64,6 +66,11 @@ public class NarratorScreen extends Screen {
         // }
     }
 
+    @Override
+    public void onClose() {
+        super.onClose();
+        UIScreenManager.getInstance().setCurrentScreenState(UIScreenManager.ScreenState.DEFAULT);
+    }
     @Override
     public boolean isPauseScreen() {
         return false;

@@ -21,6 +21,7 @@ import java.util.List;
 
 import speech.TextToSpeechService;
 import system.TaskManager;
+import system.UIScreenManager;
 
 public class NPCInteractionScreen extends Screen {
     private EditBox inputField;
@@ -66,6 +67,7 @@ public class NPCInteractionScreen extends Screen {
 
     @Override
     protected void init() {
+        UIScreenManager.getInstance().setCurrentScreenState(UIScreenManager.ScreenState.NO_HUD);
         // 在聊天界面打开时，自动完成"与一位教授聊天"子任务
         if (currentNPC != null) {
             TaskManager.getInstance().completeSubTaskByTitle("与一位教授聊天", true);
@@ -141,6 +143,7 @@ public class NPCInteractionScreen extends Screen {
             this.toast.hide();
             isToastShown = false;
         }
+        UIScreenManager.getInstance().setCurrentScreenState(UIScreenManager.ScreenState.DEFAULT);
     }
 
     private void toggleRecording() {
@@ -235,6 +238,7 @@ public class NPCInteractionScreen extends Screen {
         //drawCenteredString(poseStack, this.font, "Expert", this.width / 2 + 65, 20, 0xFFFFFF);
 
     }
+
 
     @Override
     public boolean isPauseScreen() {

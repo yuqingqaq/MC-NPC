@@ -10,6 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import npcopenai.NPCOpenAI;
+import system.UIScreenManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +58,7 @@ public class PosterViewScreen extends Screen {
 
     @Override
     protected void init() {
+        UIScreenManager.getInstance().setCurrentScreenState(UIScreenManager.ScreenState.NO_HUD);
         this.leftPos = (this.width - WIDTH) / 2;
         this.topPos = (this.height - HEIGHT) / 2;
 
@@ -160,6 +162,12 @@ public class PosterViewScreen extends Screen {
 
         // 渲染所有组件（包括滚动文本框）
         super.render(poseStack, mouseX, mouseY, partialTick);
+    }
+
+    @Override
+    public void onClose() {
+        super.onClose();
+        UIScreenManager.getInstance().setCurrentScreenState(UIScreenManager.ScreenState.DEFAULT);
     }
 
     @Override

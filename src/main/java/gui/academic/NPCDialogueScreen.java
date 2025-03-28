@@ -6,6 +6,8 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.client.Minecraft;
+import system.UIScreenManager;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +23,8 @@ public class NPCDialogueScreen extends Screen {
 
     @Override
     protected void init() {
+        UIScreenManager.getInstance().setCurrentScreenState(UIScreenManager.ScreenState.NO_HUD);
+
         int centerX = this.width / 2;
         int centerY = this.height / 2;
 
@@ -61,6 +65,12 @@ public class NPCDialogueScreen extends Screen {
         }
 
         super.render(poseStack, mouseX, mouseY, partialTicks);
+    }
+
+    @Override
+    public void onClose() {
+        super.onClose();
+        UIScreenManager.getInstance().setCurrentScreenState(UIScreenManager.ScreenState.DEFAULT);
     }
 
     @Override

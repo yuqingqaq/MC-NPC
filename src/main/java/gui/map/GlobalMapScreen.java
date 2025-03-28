@@ -8,6 +8,7 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.core.BlockPos;
+import system.UIScreenManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,6 +36,7 @@ public class GlobalMapScreen extends Screen {
     @Override
     protected void init() {
         super.init();
+        UIScreenManager.getInstance().setCurrentScreenState(UIScreenManager.ScreenState.NO_HUD);
 
         // 刷新按钮（放在屏幕左下角）
         int buttonWidth = 80;
@@ -159,6 +161,12 @@ public class GlobalMapScreen extends Screen {
                 isLoading = false; // 标记加载完成
             });
         });
+    }
+
+    @Override
+    public void onClose() {
+        super.onClose();
+        UIScreenManager.getInstance().setCurrentScreenState(UIScreenManager.ScreenState.DEFAULT);
     }
 
     @Override

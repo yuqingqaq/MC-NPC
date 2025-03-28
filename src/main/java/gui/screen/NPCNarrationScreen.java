@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import speech.TextToSpeechService;
+import system.UIScreenManager;
 
 public class NPCNarrationScreen extends Screen {
     private EditBox inputField;
@@ -68,6 +69,7 @@ public class NPCNarrationScreen extends Screen {
     protected void init() {
 
         super.init();
+        UIScreenManager.getInstance().setCurrentScreenState(UIScreenManager.ScreenState.NO_HUD);
 
         int centerY = this.height / 2;
         int centerX = this.width  / 2;
@@ -143,6 +145,8 @@ public class NPCNarrationScreen extends Screen {
             this.toast.hide();
             isToastShown = false;
         }
+        UIScreenManager.getInstance().setCurrentScreenState(UIScreenManager.ScreenState.DEFAULT);
+
     }
 
     private void toggleRecording() {

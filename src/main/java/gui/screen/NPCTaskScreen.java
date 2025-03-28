@@ -13,6 +13,7 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import system.UIScreenManager;
 
 import java.util.List;
 
@@ -30,6 +31,7 @@ public class NPCTaskScreen extends Screen {
     @Override
     protected void init() {
         super.init();
+        UIScreenManager.getInstance().setCurrentScreenState(UIScreenManager.ScreenState.NO_HUD);
         hasShownCompletionToast = false;
         checkCompletedNPCs();
     }
@@ -131,6 +133,12 @@ public class NPCTaskScreen extends Screen {
             }));
             yOffset += 30;
         }
+    }
+
+    @Override
+    public void onClose() {
+        super.onClose();
+        UIScreenManager.getInstance().setCurrentScreenState(UIScreenManager.ScreenState.DEFAULT);
     }
     @Override
     public boolean isPauseScreen() {

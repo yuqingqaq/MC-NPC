@@ -4,13 +4,14 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import component.ColoredText;
 import component.TextUtils;
 import gui.academic.writing.EmailEditorScreen;
-// import gui.academic.writing.ExpertInterviewScreen;
+import gui.academic.writing.ExpertInterviewScreen;
 import gui.academic.writing.PaperEditorScreen;
 import model.NPCModel;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
+import system.UIScreenManager;
 
 import java.util.List;
 
@@ -28,6 +29,7 @@ public class NPCDetailScreen extends Screen {
     @Override
     protected void init() {
         super.init();
+        UIScreenManager.getInstance().setCurrentScreenState(UIScreenManager.ScreenState.NO_HUD);
 
         int buttonWidth = 120;
         int buttonHeight = 20;
@@ -35,35 +37,27 @@ public class NPCDetailScreen extends Screen {
         int centerX = this.width / 2;
         int buttonY = this.height - 50;
 
-        // "跟 xxx 聊聊" 按钮
-        // this.addRenderableWidget(new Button(centerX + buttonSpacing, buttonY, buttonWidth, buttonHeight,
-        //         new TextComponent("跟" + npc.getNPCName() + "聊聊"), button -> {
-        //     // 判断 npc 的名字
-        //     if ("邮件写作大师".equals(npc.getNPCName())) {
-        //         // 打开 EmailEditorScreen
-        //         this.minecraft.setScreen(new EmailEditorScreen(npc));
-        //     } else if ("学术写作导师".equals(npc.getNPCName())) {
-        //         // 打开 EmailEditorScreen
-        //         this.minecraft.setScreen(new PaperEditorScreen(npc));
-        //     // }else if ("王教授".equals(npc.getNPCName())) {
-        //     //     // 打开 EmailEditorScreen
-        //     //     this.minecraft.setScreen(new ExpertInterviewScreen("专家访谈", npc));
-        //     } else {
-        //         // 打开 NPCInteractionScreen
-        //         this.minecraft.setScreen(new NPCInteractionScreen(npc));
-        //     }
-        // }
-        // ));
-        //“跟 xxx 聊聊”按钮跳转旁白对话
-        this.addRenderableWidget(new Button(centerX + buttonSpacing, buttonY, buttonWidth, buttonHeight,
-                new TextComponent("跟" + npc.getNPCName() + "聊聊"), button -> {
-            // 判断 npc 的名字
-            if ("学术写作导师".equals(npc.getNPCName())) {
-                // 打开 NPCNarrationScreen
-                this.minecraft.setScreen(new NPCNarrationScreen(npc));
-            }
-        }
-        ));
+         this.addRenderableWidget(new Button(centerX + buttonSpacing, buttonY, buttonWidth, buttonHeight,
+                 new TextComponent("跟" + npc.getNPCName() + "聊聊"), button -> {
+             // 判断 npc 的名字
+             if ("邮件写作大师".equals(npc.getNPCName())) {
+                 // 打开 EmailEditorScreen
+                 this.minecraft.setScreen(new EmailEditorScreen(npc));
+             } else if ("学术写作导师".equals(npc.getNPCName())) {
+                 // 打开 EmailEditorScreen
+                 this.minecraft.setScreen(new PaperEditorScreen(npc));
+              }else if ("王教授".equals(npc.getNPCName())) {
+                  // 打开 EmailEditorScreen
+                  this.minecraft.setScreen(new ExpertInterviewScreen("专家访谈", npc));
+             } else if ("学习导师".equals(npc.getNPCName())) {
+                 // 打开 NPCNarrationScreen
+                 this.minecraft.setScreen(new NPCNarrationScreen(npc));
+             }else {
+                 // 打开 NPCInteractionScreen
+                 this.minecraft.setScreen(new NPCInteractionScreen(npc));
+             }
+         }
+         ));
 
         // "查看线索" 按钮
         // this.addRenderableWidget(new Button(centerX + buttonSpacing, buttonY, buttonWidth, buttonHeight,
@@ -90,8 +84,7 @@ public class NPCDetailScreen extends Screen {
 
         // Render NPC details
         drawString(poseStack, this.minecraft.font, "你在这里遇到了" + npc.getNPCName(), leftAlignX, yPos+=20, 0xFFAAFF);
-        // drawString(poseStack, this.minecraft.font, "身份：" + npc.getRole(), leftAlignX+10, yPos+=20, 0xFFFFFF);
-        drawString(poseStack, this.minecraft.font, npc.getDescription(), leftAlignX+10, yPos+=20, 0xFFFFFF);
+        drawString(poseStack, this.minecraft.font, "身份：" + npc.getRole(), leftAlignX+10, yPos+=20, 0xFFFFFF);
 
         yPos += 10 ;
 
@@ -110,6 +103,12 @@ public class NPCDetailScreen extends Screen {
         // 引导语
         String dialogueIntroduction = "你想要：";
         drawString(poseStack, this.minecraft.font, dialogueIntroduction, leftAlignX, yPos += 40, 0xFFAAFF);
+    }
+
+    @Override
+    public void onClose() {
+        super.onClose();
+        UIScreenManager.getInstance().setCurrentScreenState(UIScreenManager.ScreenState.DEFAULT);
     }
 
     @Override

@@ -12,6 +12,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TextComponent;
 import component.TextEditorWidget;
 import system.TaskManager;
+import system.UIScreenManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +58,7 @@ public abstract class AbstractEditorScreen extends Screen {
     @Override
     protected void init() {
         super.init();
+        UIScreenManager.getInstance().setCurrentScreenState(UIScreenManager.ScreenState.NO_HUD);
 
         int centerY = this.height / 2;
 
@@ -267,6 +269,8 @@ public abstract class AbstractEditorScreen extends Screen {
     @Override
     public void onClose() {
         this.minecraft.setScreen(null);
+        UIScreenManager.getInstance().setCurrentScreenState(UIScreenManager.ScreenState.DEFAULT);
+
     }
     /**
      * 获取所有已完成子任务的outcomes（可选排除当前编辑的子任务）

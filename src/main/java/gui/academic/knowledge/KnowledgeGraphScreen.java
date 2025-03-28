@@ -10,6 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TextComponent;
+import system.UIScreenManager;
 
 import java.util.List;
 
@@ -41,6 +42,7 @@ public class KnowledgeGraphScreen extends Screen {
     @Override
     protected void init() {
         super.init();
+        UIScreenManager.getInstance().setCurrentScreenState(UIScreenManager.ScreenState.NO_HUD);
 
         // 设置左右面板宽度（左侧较窄，右侧较宽）
         leftPanelWidth = this.width / 3 - 20; // 左侧面板宽度约为屏幕的1/3
@@ -137,6 +139,12 @@ public class KnowledgeGraphScreen extends Screen {
                 timelinesButton.setMessage(new TextComponent("✓ Timelines"));
                 break;
         }
+    }
+
+    @Override
+    public void onClose() {
+        super.onClose();
+        UIScreenManager.getInstance().setCurrentScreenState(UIScreenManager.ScreenState.DEFAULT);
     }
 
     @Override

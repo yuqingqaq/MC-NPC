@@ -15,6 +15,7 @@ import net.minecraft.network.chat.TextComponent;
 import speech.AudioPlayer;
 import speech.SpeechHandler;
 import speech.TextToSpeechService;
+import system.UIScreenManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,6 +48,7 @@ public class NPCInteractionScreenwithExpert extends Screen {
     protected void init() {
 
         super.init();
+        UIScreenManager.getInstance().setCurrentScreenState(UIScreenManager.ScreenState.NO_HUD);
 
         int centerY = this.height / 2;
         int centerX = this.width  / 2;
@@ -114,6 +116,8 @@ public class NPCInteractionScreenwithExpert extends Screen {
             this.toast.hide();
             isToastShown = false;
         }
+        UIScreenManager.getInstance().setCurrentScreenState(UIScreenManager.ScreenState.DEFAULT);
+
     }
 
     private void toggleRecording() {

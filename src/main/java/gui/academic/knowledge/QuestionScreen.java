@@ -14,6 +14,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
+import system.UIScreenManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,6 +86,7 @@ public class QuestionScreen extends Screen {
     @Override
     protected void init() {
         super.init();
+        UIScreenManager.getInstance().setCurrentScreenState(UIScreenManager.ScreenState.NO_HUD);
 
         // 标题面板 - 显示在最上方，减小高度
         this.titlePanel = new ContentPanel(
@@ -291,6 +293,12 @@ public class QuestionScreen extends Screen {
             return questionPanel.mouseScrolled(mouseX, mouseY, delta);
         }
         return false;
+    }
+
+    @Override
+    public void onClose() {
+        super.onClose();
+        UIScreenManager.getInstance().setCurrentScreenState(UIScreenManager.ScreenState.DEFAULT);
     }
 
     @Override

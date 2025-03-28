@@ -12,6 +12,7 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import system.StageManager.StageInfo;
 import system.StageManager;
+import system.UIScreenManager;
 
 import java.util.HashMap;
 import java.util.List;
@@ -41,6 +42,7 @@ public class NPCStageBasedScreen extends Screen {
     protected void init() {
         this.clearWidgets();
         super.init();
+        UIScreenManager.getInstance().setCurrentScreenState(UIScreenManager.ScreenState.NO_HUD);
 
         // 跳过已完成的阶段
         if (stageManager.isStageCompleted("INTRO") &&
@@ -246,6 +248,7 @@ public class NPCStageBasedScreen extends Screen {
         super.onClose();
         // 标记INTRO阶段为已完成
         stageManager.markStageCompleted("INTRO");
+        UIScreenManager.getInstance().setCurrentScreenState(UIScreenManager.ScreenState.DEFAULT);
     }
 
     @Override

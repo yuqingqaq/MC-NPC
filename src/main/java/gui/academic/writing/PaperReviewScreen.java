@@ -14,6 +14,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TextComponent;
 import model.NPCModel;
 import system.TaskManager;
+import system.UIScreenManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +63,7 @@ public class PaperReviewScreen extends Screen {
     @Override
     protected void init() {
         super.init();
+        UIScreenManager.getInstance().setCurrentScreenState(UIScreenManager.ScreenState.NO_HUD);
 
         int centerY = this.height / 2;
 
@@ -168,6 +170,8 @@ public class PaperReviewScreen extends Screen {
     @Override
     public void onClose() {
         this.minecraft.setScreen(null);
+        UIScreenManager.getInstance().setCurrentScreenState(UIScreenManager.ScreenState.DEFAULT);
+
     }
 
     private void saveOutcome() {
