@@ -3,6 +3,7 @@ package controller;
 import api.OpenAIGPT;
 import interfaces.GameControllerInterface;
 import model.AdaptiveTaskModel;
+import prompt.TaskPrompts;
 import system.ExpertSystem;
 import system.NPCSystem;
 import clinic.huatuoAPI;
@@ -14,6 +15,7 @@ import model.ItemModel;
 import model.TaskModel;
 import util.JsonLoader;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -51,44 +53,38 @@ public class GameController implements GameControllerInterface {
     private void loadGameData() {
 
 //        npcs = JsonLoader.loadNPCsFromJson("json/psy_sim.json");
-        // npcs = JsonLoader.loadNPCsFromJson("json/campus_tour.json");
-        npcs = JsonLoader.loadNPCsFromJson("json/SRL_NPC_Config.json");
-        backpackItems = JsonLoader.loadObjectListFromJson(
-                "json/playerBackpack.json",
-                "player_backpack",
-                new TypeReference<List<ItemModel>>() {}
-        );
+        npcs = JsonLoader.loadNPCsFromJson("json/campus_tour.json");
+
         adaptiveTasks = JsonLoader.loadObjectListFromJson(
                 "json/adaptive_tasks.json",
                 "adaptive_tasks",
                 new TypeReference<List<AdaptiveTaskModel>>() {}
         );
-        worldObjects = JsonLoader.loadObjectListFromJson(
-                "json/world_objects.json",
-                "world_objects",
-                new TypeReference<List<ItemModel>>() {}
-        );
-        gameAssets = JsonLoader.loadObjectListFromJson(
-                "json/game_assets.json",
-                "game_assets",
-                new TypeReference<List<ItemModel>>() {}
-        );
+
         gptModel = new OpenAIGPT("gpt-4o","config/gpt3keys.txt");
 //        gptModel = new OpenAIGPT("bot-20241220150201-tvbhd","config/doubao.txt");  // Doubao API
-        expertModel = new OpenAIGPT("chatgpt-4o-latest","config/gpt3keys.txt");
-        // expertModel = new OpenAIGPT("gpt-4o-search-preview-2025-03-11","config/gpt3keys.txt");
+        expertModel = new OpenAIGPT("gpt-3.5-turbo","config/gpt3keys.txt");
         clinicModel = new huatuoAPI("huatuogpt-lg-main");
 
         this.npcSystem = new NPCSystem(gptModel,clinicModel);
         this.expertSystem = new ExpertSystem(expertModel);
 
         this.taskSystem = new TaskSystem();
+        // 从配置文件加载任务金币位置信息
         taskCoinLocations = JsonLoader.loadTaskCoinLocations("json/task_coin_location.json");
+
+        // 初始化任务和NPC
         initializeTasksAndNPCs(this.npcs);
+
+        // 将任务位置信息映射到阶段
+        //mapLocationToStages();
+
         knowledgeManager = KnowledgeGraphManager.getInstance();
         knowledgeMonitor = KnowledgeTaskMonitor.getInstance();
         knowledgeMonitor.startMonitoring(); // 启动监控
     }
+
+
 
     public void initializeTasksAndNPCs(List<NPCModel> npcs) {
         for (NPCModel npc : npcs) {
@@ -100,7 +96,9 @@ public class GameController implements GameControllerInterface {
                 String taskLocation = taskCoinLocations.get(npcLocation);
                 if (taskLocation != null) {
                     task.setCoinLocation(taskLocation);
-                    //System.out.println("Task ID: " + task.getTaskId() + ", Location: " + taskLocation);
+
+                    // 将位置信息也设置到TaskSystem的阶段金币位置映射中
+                    taskSystem.setCoinLocationForLocation(npcLocation, taskLocation);
                 } else {
                     System.out.println("No location found for NPC Location: " + npcLocation);
                 }
@@ -110,12 +108,6 @@ public class GameController implements GameControllerInterface {
 
             this.taskSystem.addNPCToStage(npcLocation, npc);
         }
-    }
-    private void initializeView() {
-        for (NPCModel npc : npcs) {
-            view.addNpcTab(npc);
-        }
-        view.loadItemsIntoPanel(backpackItems, worldObjects, gameAssets);
     }
 
     @Override
@@ -163,7 +155,7 @@ public class GameController implements GameControllerInterface {
             return "";
         }
         String language = isMostlyChinese(userInput) ? "zh" : "en";
-        String advice = expertSystem.interact(npc, userInput, language) + "\n----------------------\n";
+        String advice = expertSystem.interact(npc, userInput, language);
         return advice;
     }
     

@@ -12,46 +12,35 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
-// import prompt.TaskPrompts;
-import prompt.SRLTaskPrompt;
+import prompt.TaskPrompts;
 import system.TaskSystem;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class NPCStageBasedScreen extends Screen {
     private static final ResourceLocation COMPLETED = new ResourceLocation("npcopenai", "textures/item/todo.png");
     private static final ResourceLocation PENDING = new ResourceLocation("npcopenai", "textures/item/to_do.png");
 
     private final TaskSystem taskSystem; // 使用 TaskSystem 管理任务和 NPC
-    // private TaskPrompts.TaskStage currentStage = TaskPrompts.TaskStage.INTRO;
-    private SRLTaskPrompt.TaskStage currentStage = SRLTaskPrompt.TaskStage.INTRO;
+    private TaskPrompts.TaskStage currentStage = TaskPrompts.TaskStage.INTRO;
+    private static final List<TaskPrompts.TaskStage> STAGE_ORDER = List.of(
+            TaskPrompts.TaskStage.INTRO,
+            TaskPrompts.TaskStage.ADMIN,
+            TaskPrompts.TaskStage.TA,
+            TaskPrompts.TaskStage.TB,
+            TaskPrompts.TaskStage.TC,
+            TaskPrompts.TaskStage.TD,
+            TaskPrompts.TaskStage.DAOYUAN,
+            TaskPrompts.TaskStage.CONFERENCE,
+            TaskPrompts.TaskStage.LIBRARY,
+            TaskPrompts.TaskStage.GYM,
+            TaskPrompts.TaskStage.END
+    );
 
-    // private static final List<TaskPrompts.TaskStage> STAGE_ORDER = List.of(
-    //         TaskPrompts.TaskStage.INTRO,
-    //         TaskPrompts.TaskStage.ADMIN,
-    //         TaskPrompts.TaskStage.TA,
-    //         TaskPrompts.TaskStage.TB,
-    //         TaskPrompts.TaskStage.TC,
-    //         TaskPrompts.TaskStage.TD,
-    //         TaskPrompts.TaskStage.DAOYUAN,
-    //         TaskPrompts.TaskStage.CONFERENCE,
-    //         TaskPrompts.TaskStage.LIBRARY,
-    //         TaskPrompts.TaskStage.GYM,
-    //         TaskPrompts.TaskStage.END
-    // );
-    private static final List<SRLTaskPrompt.TaskStage> STAGE_ORDER = List.of(
-        SRLTaskPrompt.TaskStage.INTRO,
-        SRLTaskPrompt.TaskStage.Day1,
-        SRLTaskPrompt.TaskStage.TA,
-        SRLTaskPrompt.TaskStage.TB,
-        SRLTaskPrompt.TaskStage.TC,
-        SRLTaskPrompt.TaskStage.TD,
-        SRLTaskPrompt.TaskStage.DAOYUAN,
-        SRLTaskPrompt.TaskStage.CONFERENCE,
-        SRLTaskPrompt.TaskStage.LIBRARY,
-        SRLTaskPrompt.TaskStage.GYM,
-        SRLTaskPrompt.TaskStage.END
-);
+    // 记录玩家已经访问过的NPC
+    private static final Map<TaskPrompts.TaskStage, Boolean> VISITED_NPCS = new HashMap<>();
 
     private int yOffset = 0; // 全局 y 偏移量
 
@@ -66,12 +55,10 @@ public class NPCStageBasedScreen extends Screen {
         super.init();
 
         // 跳过已完成的阶段
-        // if (TaskPrompts.isIntroCompleted() && currentStage == TaskPrompts.TaskStage.INTRO) {
-        //     currentStage = determineLastCompletedStage();
-        // }
-        if (SRLTaskPrompt.isIntroCompleted() && currentStage == SRLTaskPrompt.TaskStage.INTRO) {
+        if (TaskPrompts.isIntroCompleted() && currentStage == TaskPrompts.TaskStage.INTRO) {
             currentStage = determineLastCompletedStage();
         }
+
         int buttonWidth = 100;
         int buttonHeight = 20;
         int leftButtonX = 20;
@@ -91,35 +78,51 @@ public class NPCStageBasedScreen extends Screen {
             }));
         }
 
-        // 添加寻找金币按钮，但仅在非INTRO阶段且有金币可找时显示
-        if (currentStage != TaskPrompts.TaskStage.INTRO && currentStage != TaskPrompts.TaskStage.END) {
-            // 检查是否有金币可找
-            List<BlockPos> coins = GoldCoinTracker.getCoinPositions();
-            if (!coins.isEmpty()) {
-                this.addRenderableWidget(new Button(this.width / 2 - 50, this.height - 30, 100, buttonHeight, new TextComponent("Find Gold Coin"), button -> {
-                    teleportToNearestCoin();
-                }));
-            }
+        // 添加寻找金币按钮，但仅在非INTRO和非END阶段，并且玩家已经访问过该阶段的NPC时显示
+        if (currentStage != TaskPrompts.TaskStage.INTRO && currentStage != TaskPrompts.TaskStage.END
+                && Boolean.TRUE.equals(VISITED_NPCS.get(currentStage))) {
+            this.addRenderableWidget(new Button(this.width / 2 - 50, this.height - 30, 100, buttonHeight, new TextComponent("Find Gold Coin"), button -> {
+                teleportToStageGoldCoin(currentStage);
+            }));
         }
 
         // 关闭按钮
         this.addRenderableWidget(new Button(this.width - 30, 15, 20, 20, new TextComponent("X"), button -> onClose()));
     }
 
-    private void teleportToNearestCoin() {
+    private void teleportToStageGoldCoin(TaskPrompts.TaskStage stage) {
         if (this.minecraft.player != null) {
-            BlockPos playerPos = this.minecraft.player.blockPosition();
-            BlockPos nearestCoin = GoldCoinTracker.findNearestCoin(playerPos);
+            // 从TaskSystem获取该阶段的金币位置
+            String locationStr = GameController.getInstance().getTaskSystem().getStageCoinLocation(stage);
+            if (locationStr != null) {
+                String[] coords = locationStr.split(",");
+                if (coords.length == 3) {
+                    try {
+                        int x = Integer.parseInt(coords[0].trim());
+                        int y = Integer.parseInt(coords[1].trim());
+                        int z = Integer.parseInt(coords[2].trim());
 
-            if (nearestCoin != null) {
-                // 使用命令传送玩家到金币位置附近
-                this.minecraft.player.chat("/tp @s " + nearestCoin.getX() + " " + nearestCoin.getY() + " " + nearestCoin.getZ());
-                onClose(); // 关闭界面
-            } else {
-                // 没有找到金币时提示玩家
-                if (this.minecraft.player != null) {
-                    this.minecraft.player.displayClientMessage(new TextComponent("No gold coins available!"), false);
+                        // 使用命令传送玩家到该阶段的金币位置
+                        this.minecraft.player.chat("/tp @s " + x + " " + y + " " + z);
+                        onClose(); // 关闭界面
+
+                        // 显示提示信息
+                        this.minecraft.player.displayClientMessage(
+                                new TextComponent("Teleported to gold coin location for " + stage.name() + " stage."),
+                                false
+                        );
+                    } catch (NumberFormatException e) {
+                        this.minecraft.player.displayClientMessage(
+                                new TextComponent("Error parsing coordinates for " + stage.name() + " stage."),
+                                false
+                        );
+                    }
                 }
+            } else {
+                this.minecraft.player.displayClientMessage(
+                        new TextComponent("No gold coin location defined for " + stage.name() + " stage."),
+                        false
+                );
             }
         }
     }
@@ -128,7 +131,7 @@ public class NPCStageBasedScreen extends Screen {
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
         renderBackground(poseStack);
 
-        yOffset = 30; // 初始化 y 偏移量
+        yOffset = 20; // 初始化 y 偏移量
         renderTitle(poseStack);
         renderStageContent(poseStack);
         renderNPCList(poseStack);
@@ -137,16 +140,14 @@ public class NPCStageBasedScreen extends Screen {
     }
 
     private void renderTitle(PoseStack poseStack) {
-        // String title = TaskPrompts.getTitle(currentStage);
-        String title = SRLTaskPrompt.getTitle(currentStage);
+        String title = TaskPrompts.getTitle(currentStage);
         drawCenteredString(poseStack, this.font, title, this.width / 2, yOffset, 0xFFFFAA00);
-        yOffset += 40;
+        yOffset += 20;
     }
 
     private void renderStageContent(PoseStack poseStack) {
-        // String content = TaskPrompts.getContent(currentStage);
-        String content = SRLTaskPrompt.getContent(currentStage);
-        List<ColoredText> contentLines = TextUtils.wrapText(content, (int) (this.width / 1.5f), true);
+        String content = TaskPrompts.getContent(currentStage);
+        List<ColoredText> contentLines = TextUtils.wrapText(content, (int) (this.width / 1.3f), true);
 
         for (ColoredText line : contentLines) {
             drawString(poseStack, this.font, line.text, this.width / 2 - 120, yOffset, line.color);
@@ -157,14 +158,24 @@ public class NPCStageBasedScreen extends Screen {
     }
 
     private void renderNPCList(PoseStack poseStack) {
-        // if (currentStage == TaskPrompts.TaskStage.INTRO || currentStage == TaskPrompts.TaskStage.END) {
-        //     return;
-        // }
-        if (currentStage == SRLTaskPrompt.TaskStage.INTRO || currentStage == SRLTaskPrompt.TaskStage.END) {
+        if (currentStage == TaskPrompts.TaskStage.INTRO || currentStage == TaskPrompts.TaskStage.END) {
             return;
         }
 
+        // 获取当前阶段对应的NPC列表
         List<NPCModel> npcs = taskSystem.getNPCsByStage(currentStage.name());
+
+        // 如果当前阶段没有找到NPC(可能是因为阶段名与位置名不一致)，尝试通过映射查找
+        if (npcs.isEmpty()) {
+            // 尝试查找与该阶段相关的位置名称
+            for (Map.Entry<String, List<NPCModel>> entry : taskSystem.getNpcByStage().entrySet()) {
+                if (taskSystem.getStageFromLocation(entry.getKey()) == currentStage) {
+                    npcs = entry.getValue();
+                    break;
+                }
+            }
+        }
+
         if (npcs.isEmpty()) {
             drawCenteredString(poseStack, this.font, "No NPCs for this stage", this.width / 2, yOffset, 0xFFFFFF);
             yOffset += 20;
@@ -184,8 +195,8 @@ public class NPCStageBasedScreen extends Screen {
 
             this.addRenderableWidget(new Button(this.width / 2 + 90, yOffset - 5, 60, 20, new TextComponent("Go"), button -> {
                 teleportToNPC(npcIndex);
-                String content = "你在教室找到了学术写作导师，上前跟他进行对话，他会告诉你该怎么做。";
-                this.minecraft.setScreen(new NarratorScreen(content));
+                // 标记该阶段的NPC已访问
+                VISITED_NPCS.put(currentStage, true);
             }));
 
             yOffset += 25;
@@ -200,11 +211,9 @@ public class NPCStageBasedScreen extends Screen {
     }
 
     private void renderCompletionContent(PoseStack poseStack) {
-
         yOffset += 10;
 
-        // String outCome = TaskPrompts.getOutCome(currentStage);
-        String outCome = SRLTaskPrompt.getOutCome(currentStage);
+        String outCome = TaskPrompts.getOutCome(currentStage);
         List<ColoredText> outComeLines = TextUtils.wrapText(outCome, (int) (this.width / 1.3f), true);
         for (ColoredText line : outComeLines) {
             drawString(poseStack, this.font, line.text, this.width / 2 - 120, yOffset, line.color);
@@ -232,8 +241,7 @@ public class NPCStageBasedScreen extends Screen {
     @Override
     public void onClose() {
         super.onClose();
-        // TaskPrompts.setIntroCompleted(true);
-        SRLTaskPrompt.setIntroCompleted(true);
+        TaskPrompts.setIntroCompleted(true);
     }
 
     @Override
@@ -241,20 +249,22 @@ public class NPCStageBasedScreen extends Screen {
         return false;
     }
 
-    // private TaskPrompts.TaskStage determineLastCompletedStage() {
-    //     for (TaskPrompts.TaskStage stage : STAGE_ORDER) {
-    //         if (!taskSystem.areAllTasksCompletedInStage(stage.name())) {
-    //             return stage;
-    //         }
-    //     }
-    //     return TaskPrompts.TaskStage.END;
-    // }
-    private SRLTaskPrompt.TaskStage determineLastCompletedStage() {
-        for (SRLTaskPrompt.TaskStage stage : STAGE_ORDER) {
+    private TaskPrompts.TaskStage determineLastCompletedStage() {
+        for (TaskPrompts.TaskStage stage : STAGE_ORDER) {
             if (!taskSystem.areAllTasksCompletedInStage(stage.name())) {
                 return stage;
             }
         }
-        return SRLTaskPrompt.TaskStage.END;
+        return TaskPrompts.TaskStage.END;
+    }
+
+    // 重置所有NPC访问状态（可用于测试）
+    public static void resetAllVisitedStatus() {
+        VISITED_NPCS.clear();
+    }
+
+    // 标记指定阶段的NPC已访问（可供外部调用）
+    public static void markStageVisited(TaskPrompts.TaskStage stage) {
+        VISITED_NPCS.put(stage, true);
     }
 }

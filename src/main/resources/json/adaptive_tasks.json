@@ -39,14 +39,6 @@
           "status": "NOT_STARTED"
         },
         {
-          "subTaskId": "3",
-          "title": "文献搜集-Agent Prompt",
-          "description": "收集PaperItem，阅读文献摘要内容，写简短总结",
-          "estimatedTime": "10:00",
-          "completed": false,
-          "status": "NOT_STARTED"
-        },
-        {
           "subTaskId": "4",
           "title": "专家访谈",
           "description": "找到王教授，讨论Agent领域技术",
