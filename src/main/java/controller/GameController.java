@@ -7,6 +7,8 @@ import prompt.TaskPrompts;
 import system.ExpertSystem;
 import system.NPCSystem;
 import clinic.huatuoAPI;
+import system.StageManager;
+import system.StageManager.StageInfo;
 import system.TaskSystem;
 import view.GameView;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -28,9 +30,12 @@ public class GameController implements GameControllerInterface {
     private List<ItemModel> worldObjects;
     private List<ItemModel> gameAssets;
     private List<AdaptiveTaskModel> adaptiveTasks;
+    private List<StageManager.StageInfo> stageInfos;
     private NPCSystem npcSystem;
     private ExpertSystem expertSystem;
     private TaskSystem taskSystem;
+    private StageManager stageManager;
+
     private OpenAIGPT gptModel;
     private OpenAIGPT expertModel;
     private huatuoAPI clinicModel;
@@ -69,46 +74,28 @@ public class GameController implements GameControllerInterface {
         this.npcSystem = new NPCSystem(gptModel,clinicModel);
         this.expertSystem = new ExpertSystem(expertModel);
 
+        // 获取StageManager实例
+        this.stageManager = StageManager.getInstance();
+
+        // 加载阶段信息并设置到StageManager
+        stageInfos = JsonLoader.loadObjectListFromJson(
+                "json/stage_config.json",
+                "stages",
+                new TypeReference<List<StageInfo>>() {}
+        );
+
+        // 将阶段信息设置到StageManager
+        stageManager.setStages(stageInfos);
+
         this.taskSystem = new TaskSystem();
         // 从配置文件加载任务金币位置信息
-        taskCoinLocations = JsonLoader.loadTaskCoinLocations("json/task_coin_location.json");
-
-        // 初始化任务和NPC
-        initializeTasksAndNPCs(this.npcs);
-
-        // 将任务位置信息映射到阶段
-        //mapLocationToStages();
+        //taskCoinLocations = JsonLoader.loadTaskCoinLocations("json/task_coin_location.json");
 
         knowledgeManager = KnowledgeGraphManager.getInstance();
         knowledgeMonitor = KnowledgeTaskMonitor.getInstance();
         knowledgeMonitor.startMonitoring(); // 启动监控
     }
 
-
-
-    public void initializeTasksAndNPCs(List<NPCModel> npcs) {
-        for (NPCModel npc : npcs) {
-            // 获取 NPC 的位置
-            String npcLocation = npc.getLocation();
-            System.out.println("NPC Location: " + npcLocation);
-
-            for (TaskModel task : npc.getTasks()) {
-                String taskLocation = taskCoinLocations.get(npcLocation);
-                if (taskLocation != null) {
-                    task.setCoinLocation(taskLocation);
-
-                    // 将位置信息也设置到TaskSystem的阶段金币位置映射中
-                    taskSystem.setCoinLocationForLocation(npcLocation, taskLocation);
-                } else {
-                    System.out.println("No location found for NPC Location: " + npcLocation);
-                }
-
-                this.taskSystem.addTask(task);
-            }
-
-            this.taskSystem.addNPCToStage(npcLocation, npc);
-        }
-    }
 
     @Override
     public void handleUserInput(String input) {
@@ -190,6 +177,10 @@ public class GameController implements GameControllerInterface {
         return this.taskSystem;
     }
 
+    // 获取StageManager的方法
+    public StageManager getStageManager() {
+        return stageManager;
+    }
     // 可以添加一个重置方法
     public void resetKnowledgeMonitoring() {
         knowledgeMonitor.stopMonitoring();
