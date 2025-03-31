@@ -166,7 +166,6 @@ public class GlobalGuideBookScreen extends Screen {
         this.addRenderableWidget(new Button(this.width - 30, 30, 20, 20,
                 new TextComponent("X"), button -> onClose()));
     }
-
   
 
     private void initSRLTaskButtons() {
@@ -281,8 +280,7 @@ public class GlobalGuideBookScreen extends Screen {
 
         // 绘制主任务标题
         drawCenteredString(poseStack, this.font, currentSRLTask.getTitle(),
-                this.width / 2, yOffset, 0xFFFFAA00);
-        yOffset += 20;
+                this.width / 2 - 30, yOffset, 0xFFFFAA00);
 
         // 渲染任务进度情况
         int completedTasks = 0;
@@ -293,7 +291,7 @@ public class GlobalGuideBookScreen extends Screen {
         }
         String progressText = String.format("进度: %d/%d", completedTasks, sortedSubTasks.size());
         drawCenteredString(poseStack, this.font, progressText,
-                this.width / 2, yOffset, 0xFFFFFFFF);
+                this.width / 2 + 30, yOffset, 0xFFFFFFFF);
         yOffset += 20;
 
         // 渲染当前选中的子任务
@@ -310,14 +308,11 @@ public class GlobalGuideBookScreen extends Screen {
     
     // 新方法：渲染选中的子任务
     private void renderSelectedSubTask(PoseStack poseStack, AdaptiveSubTaskModel subTask) {
-        // 绘制任务标题
-        drawString(poseStack, this.font, "当前任务:", this.width / 2 - 120, yOffset, 0xFFFFFFFF);
-        yOffset += 15;
 
         // 绘制任务图标
         ResourceLocation icon = subTask.getStatus() == AdaptiveSubTaskModel.TaskStatus.COMPLETED ? COMPLETED : PENDING;
         RenderSystem.setShaderTexture(0, icon);
-        blit(poseStack, this.width / 2 - 120, yOffset - 4, 0, 0, 16, 16, 16, 16);
+        blit(poseStack, this.width / 2 - 140, yOffset - 4, 0, 0, 16, 16, 16, 16);
 
         // 绘制任务标题
         int statusColor;
@@ -332,97 +327,200 @@ public class GlobalGuideBookScreen extends Screen {
                 statusColor = 0xFFFFFFFF; // 未开始:白色
         }
 
-        drawString(poseStack, this.font, subTask.getTitle(), this.width / 2 - 100, yOffset, statusColor);
+        drawString(poseStack, this.font, subTask.getTitle(), this.width / 2 - 120, yOffset, statusColor);
         yOffset += 20;
 
-        // 绘制任务描述
-        List<ColoredText> descLines = TextUtils.wrapText(subTask.getDescription(), (int) (this.width / 1.3f), true);
-        for (ColoredText line : descLines) {
-            drawString(poseStack, this.font, line.text, this.width / 2 - 120, yOffset, line.color);
-            yOffset += 10;
+        // 查找对应的SRL阶段
+        SRLStageInfo relatedStage = null;
+        if (srlStageManager != null) {
+            List<SRLStageInfo> stages = srlStageManager.getAllStages();
+            for (SRLStageInfo stage : stages) {
+                if (subTask.getSubTaskId().equals(stage.getRelatedTaskId())) {
+                    relatedStage = stage;
+                    break;
+                }
+            }
         }
-        yOffset += 10;
 
-        // 提示如何完成任务
-        drawString(poseStack, this.font, "提示: 使用SRLQuest任务书可以开始和完成此任务",
-                this.width / 2 - 120, yOffset, 0xFF55AAFF);
-        yOffset += 15;
-
-        // 如果任务已完成，显示任务成果
-        if (subTask.getStatus() == AdaptiveSubTaskModel.TaskStatus.COMPLETED) {
-            renderSubTaskCompletionContent(poseStack, subTask);
-        }
-    }
-    
-    // 新方法：渲染子任务完成内容
-    private void renderSubTaskCompletionContent(PoseStack poseStack, AdaptiveSubTaskModel subTask) {
-        yOffset += 10;
-        drawString(poseStack, this.font, "任务成果:", this.width / 2 - 120, yOffset, 0xFF55FF55);
-        yOffset += 15;
-
-        String outcome = subTask.getOutcome();
-        if (outcome != null && !outcome.isEmpty()) {
-            List<ColoredText> outcomeLines = TextUtils.wrapText(outcome, (int) (this.width / 1.3f), true);
-            for (ColoredText line : outcomeLines) {
-                drawString(poseStack, this.font, line.text, this.width / 2 - 120, yOffset, 0xFFAAAAAA);
+        // 如果找到关联的阶段，显示阶段内容
+        if (relatedStage != null) {
+            
+            // 渲染阶段内容
+            String content = relatedStage.getContent();
+            List<ColoredText> contentLines = TextUtils.wrapText(content, (int) (this.width / 1.3f), true);
+            for (ColoredText line : contentLines) {
+                drawString(poseStack, this.font, line.text, this.width / 2 - 120, yOffset, line.color);
                 yOffset += 10;
             }
+            yOffset += 10;
         } else {
-            drawString(poseStack, this.font, "任务已完成", this.width / 2 - 120, yOffset, 0xFF55FF55);
+            // 如果没有关联阶段，显示任务描述
+            List<ColoredText> descLines = TextUtils.wrapText(subTask.getDescription(), (int) (this.width / 1.3f), true);
+            for (ColoredText line : descLines) {
+                drawString(poseStack, this.font, line.text, this.width / 2 - 120, yOffset, line.color);
+                yOffset += 10;
+            }
+            yOffset += 10;
         }
-    }
 
-    // 根据完成的任务数量和SRLQuest可用性提供不同的阶段提示
-    private void renderTaskStageHint(PoseStack poseStack, int completedTasks) {
+        
+        // 如果任务已完成，显示任务成果
+        if (subTask.getStatus() == AdaptiveSubTaskModel.TaskStatus.COMPLETED) {
+            renderSubTaskCompletionContent(poseStack, subTask, relatedStage);
+        }
+        else{
+            // 显示任务对应的Hint内容
+            renderTaskHint(poseStack, subTask, relatedStage);
+        }
+
+    }
+    
+    // 新方法：根据当前任务和关联阶段渲染提示内容
+    private void renderTaskHint(PoseStack poseStack, AdaptiveSubTaskModel subTask, SRLStageInfo relatedStage) {
+        // 如果有关联阶段，使用阶段信息来确定提示内容
         String hintTitle;
         String hintContent;
         int hintColor = 0xFFFFAA00;
-
-        if (completedTasks == 0) {
-            hintTitle = "开始你的研究";
-            if (srlQuestAvailable) {
-                hintContent = "点击任务列表中的子任务，了解详情并使用SRLQuest开始你的第一个任务：知识图谱学习。";
-            } else {
-                hintContent = "从完成知识图谱学习开始，建立Agent领域的基础认知框架。";
-            }
-        } else if (completedTasks < 3) {
-            hintTitle = "基础知识积累";
-            if (srlQuestAvailable) {
-                hintContent = "你正在积累基础知识。继续使用SRLQuest完成文献搜集任务，为后续研究打下基础。";
-            } else {
-                hintContent = "继续完成文献搜集任务，了解ExpeL和Agent Prompt相关知识。";
-            }
-        } else if (completedTasks < 5) {
-            hintTitle = "深入探索";
-            if (srlQuestAvailable) {
-                hintContent = "是时候寻找专家意见了！找到王教授，进行专家访谈，获取领域专家的指导。";
-            } else {
-                hintContent = "寻找王教授和论文写作辅导员，获取专业指导和建议。";
-            }
-        } else if (completedTasks < sortedSubTasks.size()) {
-            hintTitle = "总结与创新";
-            if (srlQuestAvailable) {
-                hintContent = "你已经收集了丰富的资料和见解，现在可以使用SRLQuest开始撰写报告大纲，整合你的发现。";
-            } else {
-                hintContent = "基于收集的资料和获得的指导，撰写一份结构清晰的报告大纲。";
+        
+        if (relatedStage != null) {
+            // 根据阶段ID或顺序来确定合适的提示内容
+            switch (relatedStage.getId()) {
+                case "KNOWLEDGE_MAP":
+                    hintTitle = "在当前场景中找到需要学习的知识海报，右键点击海报学习";
+                    hintContent = "阅读海报后会获得题目，右键地面即可作答；物品栏中有知识图谱总览，可以随时查看你的学习进度！";
+                    break;
+                    
+                case "LITERATURE_EXPEL":
+                case "LITERATURE_PROMPT":
+                    hintTitle = "在场景中找到需要学习的文献，右键点击地面即可打开阅读界面，";
+                    hintContent = "编辑完成后记得保存哦！";
+                    break;
+                case "EXPERT_INTERVIEW":
+                case "WRITING_GUIDANCE":
+                    hintTitle = "找到王教授，跟他聊聊你的报告选题和想法吧！";
+                    hintContent = "右键点击王教授即可开始对话，记得保存你们的对话内容哦！";
+                    break;
+                    
+                case "REPORT_OUTLINE":
+                    hintTitle = "找到论文写作大师，在那里完成你的报告大纲吧！";
+                    hintContent = "写作中可以随时向大师提问，大师会根据你的进度给出建议，记得保存你的写作内容哦！";
+                    break;
+                    
+                case "END":
+                    hintTitle = "任务完成！";
+                    hintContent = "恭喜你完成了所有Agent研究任务！";
+                    hintColor = 0xFF55FF55;
+                    break;
+                    
+                default:
+                    // 默认提示
+                    hintTitle = "Agent研究任务";
+                    hintContent = "按照指引完成各项任务，逐步掌握Agent领域的知识和技能。";
             }
         } else {
-            hintTitle = "任务完成！";
-            hintContent = "恭喜你完成了所有Agent研究任务！你现在已经掌握了相关领域的基础知识和研究方法。";
-            hintColor = 0xFF55FF55;
+            // 如果没有关联阶段，根据任务标题或ID来确定提示内容
+            switch (subTask.getTitle()) {
+                case "完成知识图谱学习":
+                    hintTitle = "开始你的研究";
+                    hintContent = "知识图谱学习是理解Agent的基础。系统学习Agent的基础概念、关系和原则，构建完整的知识体系。";
+                    break;
+                    
+                case "文献搜集-ExpeL":
+                case "文献搜集-Agent Prompt":
+                    hintTitle = "基础知识积累";
+                    hintContent = "文献搜集是研究的重要环节。阅读并理解前沿文献，掌握领域最新进展和关键技术。";
+                    break;
+                    
+                case "专家访谈":
+                case "找到论文写作辅导员":
+                    hintTitle = "深入探索";
+                    hintContent = "专家意见能提供独特视角。通过与专家交流，获取更深入的见解和指导。";
+                    break;
+                    
+                case "报告大纲撰写":
+                    hintTitle = "总结与创新";
+                    hintContent = "整合所学知识，形成自己的见解。一个好的报告大纲能帮助你更有条理地呈现研究成果。";
+                    break;
+                    
+                default:
+                    // 默认提示
+                    hintTitle = "Agent研究任务";
+                    hintContent = "按照指引完成各项任务，逐步掌握Agent领域的知识和技能。";
+            }
         }
-
+        
         // 渲染提示标题
-        drawString(poseStack, this.font, hintTitle, this.width / 2 - 150, yOffset, hintColor);
+        drawString(poseStack, this.font, "提示: " + hintTitle, this.width / 2 - 120, yOffset, hintColor);
         yOffset += 15;
 
         // 渲染提示内容
         List<ColoredText> hintLines = TextUtils.wrapText(hintContent, (int) (this.width / 1.3f), true);
         for (ColoredText line : hintLines) {
-            drawString(poseStack, this.font, line.text, this.width / 2 - 150, yOffset, 0xFFFFFFFF);
+            drawString(poseStack, this.font, line.text, this.width / 2 - 120, yOffset, 0xFFAAAAAA);
+            yOffset += 10;
+        }
+        yOffset += 5;
+    }
+    
+    // 新方法：渲染子任务完成内容
+    private void renderSubTaskCompletionContent(PoseStack poseStack, AdaptiveSubTaskModel subTask, SRLStageInfo relatedStage) {
+        yOffset += 10;
+        
+        // 1. 首先显示子任务的outcome
+        drawString(poseStack, this.font, "任务成果:", this.width / 2 - 120, yOffset, 0xFF55FF55);
+        yOffset += 15;
+        
+        String taskOutcome = subTask.getOutcome();
+        if (taskOutcome != null && !taskOutcome.isEmpty()) {
+            // 使用通用渲染函数显示子任务outcome
+            renderGenericOutcome(poseStack, taskOutcome, 0xFFAAAAAA);
+        } else {
+            drawString(poseStack, this.font, "任务已完成", this.width / 2 - 120, yOffset, 0xFF55FF55);
+            yOffset += 15;
+        }
+        
+        // 2. 然后显示阶段的outcome（如果有）
+        if (relatedStage != null && relatedStage.getOutcome() != null && !relatedStage.getOutcome().isEmpty()) {
+            // 添加分隔线
+            yOffset += 5;
+            fill(poseStack, this.width / 2 - 120, yOffset, this.width / 2 + 120, yOffset + 1, 0x55FFFFFF);
+            yOffset += 10;
+            
+            drawString(poseStack, this.font, "阶段成果:", this.width / 2 - 120, yOffset, 0xFFFFAA00);
+            yOffset += 15;
+            
+            // 使用通用渲染函数显示阶段outcome
+            renderGenericOutcome(poseStack, relatedStage.getOutcome());
+        }
+    }
+    
+    // 通用的outcome渲染函数，可以指定文本颜色
+    private void renderGenericOutcome(PoseStack poseStack, String outcome, int textColor) {
+        List<ColoredText> outcomeLines = TextUtils.wrapText(outcome, (int) (this.width / 1.3f), true);
+        for (ColoredText line : outcomeLines) {
+            // 使用指定的颜色而不是line.color
+            drawString(poseStack, this.font, line.text, this.width / 2 - 120, yOffset, textColor);
             yOffset += 10;
         }
     }
+    
+    // 通用的outcome渲染函数，使用文本自带颜色
+    private void renderGenericOutcome(PoseStack poseStack, String outcome) {
+        List<ColoredText> outcomeLines = TextUtils.wrapText(outcome, (int) (this.width / 1.3f), true);
+        for (ColoredText line : outcomeLines) {
+            drawString(poseStack, this.font, line.text, this.width / 2 - 120, yOffset, line.color);
+            yOffset += 10;
+        }
+    }
+    
+    private void renderCompletionContent(PoseStack poseStack) {
+        yOffset += 10;
+
+        String outCome = currentDisplayStage.getOutcome();
+        renderGenericOutcome(poseStack, outCome);
+        yOffset += 10;
+    }
+
 
     private void initCampusTourButtons() {
         int buttonWidth = 100;
@@ -519,18 +617,6 @@ public class GlobalGuideBookScreen extends Screen {
                 allTasksCompleted = false;
             }
         }
-    }
-
-    private void renderCompletionContent(PoseStack poseStack) {
-        yOffset += 10;
-
-        String outCome = currentDisplayStage.getOutcome();
-        List<ColoredText> outComeLines = TextUtils.wrapText(outCome, (int) (this.width / 1.3f), true);
-        for (ColoredText line : outComeLines) {
-            drawString(poseStack, this.font, line.text, this.width / 2 - 120, yOffset, line.color);
-            yOffset += 10;
-        }
-        yOffset += 10;
     }
 
     // 传送到指定ID的NPC
