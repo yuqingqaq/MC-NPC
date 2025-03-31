@@ -106,11 +106,8 @@ public class GlobalGuideBookScreen extends Screen {
         
         // 根据SRLQuest是否可用获取排序后的任务列表
         if (currentSRLTask != null) {
-            if (srlQuestAvailable) {
-                this.sortedSubTasks = taskManager.getSortedSubTasks(currentSRLTask);
-            } else {
-                this.sortedSubTasks = new ArrayList<>(currentSRLTask.getSubTasks());
-            }
+            this.sortedSubTasks = taskManager.getSortedSubTasks(currentSRLTask);
+            
             
             // 确保selectedTaskIndex在有效范围内
             if (selectedTaskIndex < 0 || selectedTaskIndex >= sortedSubTasks.size()) {
@@ -503,6 +500,9 @@ public class GlobalGuideBookScreen extends Screen {
                     hintContent = "右键点击王教授即可开始对话，记得保存你们的对话内容哦！";
                     break;
                 case "WRITING_GUIDANCE":
+                    hintTitle = "找到论文写作辅导员";
+                    hintContent = "可以使用传送功能哦！";
+                    break;
                 case "REPORT_OUTLINE":
                     hintTitle = "找到论文写作大师，在那里完成你的报告大纲吧！";
                     hintContent = "写作中可以随时向大师提问，大师会根据你的进度给出建议，记得保存你的写作内容哦！";
@@ -523,25 +523,28 @@ public class GlobalGuideBookScreen extends Screen {
             // 如果没有关联阶段，根据任务标题或ID来确定提示内容
             switch (subTask.getTitle()) {
                 case "完成知识图谱学习":
-                    hintTitle = "开始你的研究";
-                    hintContent = "知识图谱学习是理解Agent的基础。系统学习Agent的基础概念、关系和原则，构建完整的知识体系。";
+                    hintTitle = "在当前场景中找到需要学习的知识海报，右键点击海报学习";
+                    hintContent = "阅读海报后会获得题目，右键地面即可作答；物品栏中有知识图谱总览，可以随时查看你的学习进度！"; 
                     break;
                     
                 case "文献搜集-ExpeL":
                 case "文献搜集-Agent Prompt":
-                    hintTitle = "基础知识积累";
-                    hintContent = "文献搜集是研究的重要环节。阅读并理解前沿文献，掌握领域最新进展和关键技术。";
+                    hintTitle = "在场景中找到需要学习的文献，右键点击地面即可打开阅读界面，";
+                    hintContent = "编辑完成后记得保存哦！";
                     break;
                     
                 case "专家访谈":
+                    hintTitle = "找到王教授，跟他聊聊你的报告选题和想法吧！";
+                    hintContent = "右键点击王教授即可开始对话，记得保存你们的对话内容哦！";
+                    break;
                 case "找到论文写作辅导员":
-                    hintTitle = "深入探索";
-                    hintContent = "专家意见能提供独特视角。通过与专家交流，获取更深入的见解和指导。";
+                    hintTitle = "找到论文写作辅导员";
+                    hintContent = "可以使用传送功能哦！";
                     break;
                     
                 case "报告大纲撰写":
-                    hintTitle = "总结与创新";
-                    hintContent = "整合所学知识，形成自己的见解。一个好的报告大纲能帮助你更有条理地呈现研究成果。";
+                    hintTitle = "找到论文写作大师，在那里完成你的报告大纲吧！";
+                    hintContent = "写作中可以随时向大师提问，大师会根据你的进度给出建议，记得保存你的写作内容哦！";
                     break;
                     
                 default:
