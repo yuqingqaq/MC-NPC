@@ -8,6 +8,7 @@ import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.TextComponent;
 import system.TaskManager;
+import controller.GameController;
 import net.minecraft.client.Minecraft;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,12 +59,18 @@ public class TaskPlanningPanel extends AbstractWidget implements Widget {
                 new TextComponent("开始行动"), btn -> startTask());
     }
 
+   
     // 开始行动的逻辑
-// 开始行动的逻辑
     private void startTask() {
         // 获取排序后的子任务列表
         if (!subTasks.isEmpty()) {
             AdaptiveSubTaskModel firstSubTask = subTasks.get(0); // 获取第一个子任务
+
+            // 如果是SRL任务，标记策略已规划
+            if (GameController.getInstance().isSRLQuestAvailable()) {
+                TaskManager.getInstance().setStrategyPlanned(true);
+                System.out.println("SRL策略规划已完成");
+            }
 
             // 调用 TaskManager 的方法来开始任务，并传入排序后的子任务列表
             TaskManager.getInstance().startSubTask(firstSubTask, subTasks);

@@ -43,7 +43,7 @@ public class GlobalGuideBookScreen extends Screen {
     private SRLStageInfo currentSRLStage;
     private AdaptiveTaskModel currentSRLTask;
     private boolean srlQuestAvailable;  // 标记SRLQuest是否可用
-    private int currentTab = 0;  // 0=校园导览, 1=SRL任务, 2=游戏控制
+    private int currentTab = 1;  // 0=校园导览, 1=SRL任务, 2=游戏控制
 
     // 界面状态
     private int yOffset = 0;
@@ -67,27 +67,35 @@ public class GlobalGuideBookScreen extends Screen {
 
         // 无论SRLQuest是否可用，都初始化基本任务管理
         this.taskManager = TaskManager.getInstance();
+        
+        // 获取任务列表
         List<AdaptiveTaskModel> tasks = taskManager.getTasks();
         if (!tasks.isEmpty()) {
+            // 尝试找到"Agent研究"任务，如果没有则使用第一个任务
             this.currentSRLTask = tasks.stream()
                     .filter(task -> "Agent研究".equals(task.getTitle()))
                     .findFirst()
                     .orElse(tasks.get(0));
 
-            // 获取任务列表，但如果有SRLQuest，排序可能由它处理
-            this.sortedSubTasks = new ArrayList<>(currentSRLTask.getSubTasks());
+            // 初始化子任务列表
+            if (currentSRLTask != null) {
+                // 如果SRLQuest可用，使用它的排序逻辑
+                if (srlQuestAvailable) {
+                    this.sortedSubTasks = taskManager.getSortedSubTasks(currentSRLTask);
+                } else {
+                    // 如果SRLQuest不可用，直接使用任务的子任务列表
+                    this.sortedSubTasks = new ArrayList<>(currentSRLTask.getSubTasks());
+                }
+            }
         }
 
-        // 如果SRLQuest可用，获取SRL阶段管理器和排序后的任务
-        this.srlStageManager = GameController.getInstance().getSRLStageManager();
-        if (srlStageManager != null) {
-            this.currentSRLStage = srlStageManager.getCurrentStage();
+        // 如果SRLQuest可用，获取SRL阶段管理器
+        if (srlQuestAvailable) {
+            this.srlStageManager = GameController.getInstance().getSRLStageManager();
+            if (srlStageManager != null) {
+                this.currentSRLStage = srlStageManager.getCurrentStage();
+            }
         }
-        // 如果SRLQuest可用，获取它排序后的任务列表
-        if (currentSRLTask != null) {
-            this.sortedSubTasks = taskManager.getSortedSubTasks(currentSRLTask);
-        }
-        
     }
 
     @Override
@@ -95,12 +103,13 @@ public class GlobalGuideBookScreen extends Screen {
         this.clearWidgets();
         super.init();
         UIScreenManager.getInstance().setCurrentScreenState(UIScreenManager.ScreenState.NO_HUD);
-        // 如果SRLQuest可用，获取它排序后的任务列表
-
+        
+        // 根据SRLQuest是否可用获取排序后的任务列表
         if (currentSRLTask != null) {
-            this.sortedSubTasks = taskManager.getSortedSubTasks(currentSRLTask);
-            for (AdaptiveSubTaskModel subTask : sortedSubTasks) {
-                System.out.println("Init sortedSubTasks: " + subTask.getTitle());
+            if (srlQuestAvailable) {
+                this.sortedSubTasks = taskManager.getSortedSubTasks(currentSRLTask);
+            } else {
+                this.sortedSubTasks = new ArrayList<>(currentSRLTask.getSubTasks());
             }
             
             // 确保selectedTaskIndex在有效范围内
@@ -127,7 +136,7 @@ public class GlobalGuideBookScreen extends Screen {
         }
 
         // 如果SRL任务可用，跳过已完成的SRL阶段
-        if (srlStageManager != null && currentSRLStage != null &&
+        if (srlQuestAvailable && srlStageManager != null && currentSRLStage != null &&
                 "INTRO".equals(currentSRLStage.getId()) &&
                 srlStageManager.isStageCompleted("INTRO")) {
             currentSRLStage = determineLastCompletedSRLStage();
@@ -173,6 +182,56 @@ public class GlobalGuideBookScreen extends Screen {
         int buttonHeight = 20;
         int leftButtonX = 20;
         int rightButtonX = this.width - buttonWidth - 20;
+
+        // 如果SRLQuest可用且当前是SRL的INTRO或END阶段，添加相应的导航按钮
+        if (srlQuestAvailable && srlStageManager != null && currentSRLStage != null && 
+                ("INTRO".equals(currentSRLStage.getId()) || "END".equals(currentSRLStage.getId()))) {
+            
+            List<SRLStageInfo> stages = srlStageManager.getAllStages();
+            int currentIndex = stages.indexOf(currentSRLStage);
+            
+            // 左导航按钮
+            if (currentIndex > 0) {
+                final int prevIndex = currentIndex - 1;
+                this.addRenderableWidget(new Button(leftButtonX, this.height - 30, buttonWidth, buttonHeight,
+                        new TextComponent("< 上一页"), button -> {
+                    currentSRLStage = stages.get(prevIndex);
+                    this.init();
+                }));
+            }
+
+            // 右导航按钮
+            if (currentIndex < stages.size() - 1) {
+                final int nextIndex = currentIndex + 1;
+                this.addRenderableWidget(new Button(rightButtonX, this.height - 30, buttonWidth, buttonHeight,
+                        new TextComponent("下一页 >"), button -> {
+                    
+                    if ("INTRO".equals(currentSRLStage.getId())) {
+                        srlStageManager.markStageCompleted("INTRO");
+                    }
+                    currentSRLStage = stages.get(nextIndex);
+                    this.init();
+                }));
+            }
+            
+            // 如果是INTRO阶段，添加开始学习按钮
+            if ("INTRO".equals(currentSRLStage.getId())) {
+                this.addRenderableWidget(new Button(this.width / 2 - 50, this.height - 30, 100, buttonHeight,
+                        new TextComponent("开始学习"), button -> {
+                    // 跳过INTRO阶段，进入第一个非INTRO的学习阶段
+                    for (SRLStageInfo stage : stages) {
+                        if (!"INTRO".equals(stage.getId()) && !"END".equals(stage.getId())) {
+                            currentSRLStage = stage;
+                            break;
+                        }
+                    }
+                    srlStageManager.markStageCompleted("INTRO");
+                    this.init();
+                }));
+            }
+            
+            return;
+        }
 
         // 使用taskManager.getSortedSubTasks获取的顺序渲染按钮
         if (currentSRLTask != null && !sortedSubTasks.isEmpty()) {
@@ -275,6 +334,50 @@ public class GlobalGuideBookScreen extends Screen {
         if (currentSRLTask == null) {
             drawCenteredString(poseStack, this.font, "没有可用的SRL任务",
                     this.width / 2, yOffset, 0xFFFF5555);
+            return;
+        }
+
+        // 如果当前是SRL的INTRO或END阶段，显示相应内容
+        if (srlStageManager != null && currentSRLStage != null && 
+                ("INTRO".equals(currentSRLStage.getId()) || "END".equals(currentSRLStage.getId()))) {
+            // 渲染阶段标题
+            drawCenteredString(poseStack, this.font, currentSRLStage.getTitle(),
+                    this.width / 2, yOffset, 0xFFFFAA00);
+            yOffset += 20;
+
+            // 渲染阶段内容
+            String content = currentSRLStage.getContent();
+            List<ColoredText> contentLines = TextUtils.wrapText(content, (int) (this.width / 1.3f), true);
+            for (ColoredText line : contentLines) {
+                drawString(poseStack, this.font, line.text, this.width / 2 - 120, yOffset, line.color);
+                yOffset += 10;
+            }
+            
+            // 如果是END阶段且有outcome，显示outcome
+            if ("END".equals(currentSRLStage.getId()) && 
+                    currentSRLStage.getOutcome() != null && 
+                    !currentSRLStage.getOutcome().isEmpty()) {
+                yOffset += 15;
+                renderGenericOutcome(poseStack, currentSRLStage.getOutcome());
+            }
+            
+            return;
+        }
+
+        // 只有当SRLQuest可用且任务列表为空时，才显示策略提示
+        if (sortedSubTasks.isEmpty() && srlQuestAvailable) {
+            String message = "需要先制定学习策略！";
+            String hint = "请打开 SRLQuest 的策略面板进行任务规划。";
+ 
+            drawCenteredString(poseStack, this.font, message,  this.width / 2, height / 2 - 20, 0xFFFFAA00);
+            drawCenteredString(poseStack, this.font, hint,  this.width / 2, height / 2, 0xFFAAAAAA);
+
+            return;
+        } 
+        // 如果SRLQuest不可用，但任务列表为空，显示一般提示
+        else if (sortedSubTasks.isEmpty()) {
+            drawCenteredString(poseStack, this.font, "暂无可用任务",
+                    this.width / 2, height / 2 - 10, 0xFFAAAAAA);
             return;
         }
 
@@ -396,11 +499,10 @@ public class GlobalGuideBookScreen extends Screen {
                     hintContent = "编辑完成后记得保存哦！";
                     break;
                 case "EXPERT_INTERVIEW":
-                case "WRITING_GUIDANCE":
                     hintTitle = "找到王教授，跟他聊聊你的报告选题和想法吧！";
                     hintContent = "右键点击王教授即可开始对话，记得保存你们的对话内容哦！";
                     break;
-                    
+                case "WRITING_GUIDANCE":
                 case "REPORT_OUTLINE":
                     hintTitle = "找到论文写作大师，在那里完成你的报告大纲吧！";
                     hintContent = "写作中可以随时向大师提问，大师会根据你的进度给出建议，记得保存你的写作内容哦！";
@@ -467,12 +569,13 @@ public class GlobalGuideBookScreen extends Screen {
         yOffset += 10;
         
         // 1. 首先显示子任务的outcome
-        drawString(poseStack, this.font, "任务成果:", this.width / 2 - 120, yOffset, 0xFF55FF55);
-        yOffset += 15;
+
         
         String taskOutcome = subTask.getOutcome();
         if (taskOutcome != null && !taskOutcome.isEmpty()) {
             // 使用通用渲染函数显示子任务outcome
+            drawString(poseStack, this.font, "任务成果:", this.width / 2 - 120, yOffset, 0xFF55FF55);
+            yOffset += 15;
             renderGenericOutcome(poseStack, taskOutcome, 0xFFAAAAAA);
         } else {
             drawString(poseStack, this.font, "任务已完成", this.width / 2 - 120, yOffset, 0xFF55FF55);
@@ -664,9 +767,14 @@ public class GlobalGuideBookScreen extends Screen {
 
         // 如果SRL任务可用，并且SRL阶段管理器存在，标记SRL INTRO阶段为已访问
         if (srlStageManager != null) {
+            // 将状态从"未访问"标记为"已访问"，但不标记为"已完成"
+            // 这样在下次打开指南时，用户还能看到INTRO内容，但知道已经看过
             srlStageManager.markStageVisited("INTRO");
+            
+            // 重置当前选中的标签为SRL任务（便于下次打开）
+            currentTab = 1;
         }
-
+        
         UIScreenManager.getInstance().setCurrentScreenState(UIScreenManager.ScreenState.DEFAULT);
     }
 
@@ -800,7 +908,7 @@ public class GlobalGuideBookScreen extends Screen {
     }
 
     private SRLStageInfo determineLastCompletedSRLStage() {
-        if (srlStageManager == null) return null;
+        if (!srlQuestAvailable || srlStageManager == null) return null;
 
         List<SRLStageInfo> stages = srlStageManager.getAllStages();
         for (SRLStageInfo stage : stages) {

@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.TextComponent;
 import system.TaskManager;
 import system.TimeManager;
+import controller.GameController;
 
 import java.util.List;
 
@@ -48,40 +49,69 @@ public class HUDTask {
         // 获取排序后的子任务列表
         List<AdaptiveSubTaskModel> sortedSubTasks = TaskManager.getInstance().getSortedSubTasks(task);
 
+        // 检查是否是SRL任务且需要制定策略
+        if (GameController.getInstance().isSRLQuestAvailable() && !TaskManager.getInstance().isStrategyPlanned()) {
+            String message = "需要先制定学习策略！";
+            minecraft.font.draw(poseStack, new TextComponent(message), x + 4, y, 0xFFFF0000);
+            return;
+        }
+
         // 在收起状态下仍然显示进行中的子任务
         if (!isExpanded) {
             for (AdaptiveSubTaskModel subTask : sortedSubTasks) {
                 if (subTask.getStatus() == AdaptiveSubTaskModel.TaskStatus.IN_PROGRESS) {
                     String taskText = subTask.getTitle();
-                    String formattedTime = TimeManager.getInstance().formatTime(subTask.getRemainingTime()); // 使用 TimeManager 格式化时间
+                    String formattedTime = TimeManager.getInstance().formatTime(subTask.getRemainingTime());
                     taskText += " " + formattedTime;
                     minecraft.font.draw(poseStack, new TextComponent(taskText), x + 4, y, 0xFFFFA500);
                     y += 10;
                 }
             }
         } else {
-            // 展开状态，显示所有子任务
-            for (AdaptiveSubTaskModel subTask : sortedSubTasks) {
-                int color;
-                String taskText;
+            // 展开状态，显示所有可见的子任务
+            if (!GameController.getInstance().isSRLQuestAvailable()) {
+                // 非SRL模式：显示已完成的任务和第一个未完成的任务
+                for (AdaptiveSubTaskModel subTask : sortedSubTasks) {
+                    int color;
+                    String taskText = subTask.getTitle();
 
-                switch (subTask.getStatus()) {
-                    case COMPLETED:
-                        color = 0xFFADFF2F;
-                        taskText = subTask.getTitle();
-                        break;
-                    case IN_PROGRESS:
-                        color = 0xFFFFA500;
-                        taskText = subTask.getTitle() + " " + TimeManager.getInstance().formatTime(subTask.getRemainingTime());
-                        break;
-                    default:
-                        color = 0xFFAAAAAA;
-                        taskText = subTask.getTitle() ;
-                        break;
+                    if (subTask.getStatus() == AdaptiveSubTaskModel.TaskStatus.COMPLETED) {
+                        color = 0xFFADFF2F; // 已完成任务显示绿色
+                    } else {
+                        color = 0xFFFFA500; // 当前任务显示橙色
+                        taskText += " " + TimeManager.getInstance().formatTime(subTask.getRemainingTime());
+                    }
+
+                    minecraft.font.draw(poseStack, new TextComponent(taskText), x + 4, y, color);
+                    y += 12;
                 }
 
-                minecraft.font.draw(poseStack, new TextComponent(taskText), x + 4, y, color);
-                y += 12;
+                // 如果还有更多任务，显示提示信息
+                if (sortedSubTasks.size() < task.getSubTasks().size()) {
+                    minecraft.font.draw(poseStack, new TextComponent("解锁更多任务..."), x + 4, y, 0xFFAAAAAA);
+                }
+            } else {
+                // SRL模式：显示所有任务
+                for (AdaptiveSubTaskModel subTask : sortedSubTasks) {
+                    int color;
+                    String taskText = subTask.getTitle();
+
+                    switch (subTask.getStatus()) {
+                        case COMPLETED:
+                            color = 0xFFADFF2F;
+                            break;
+                        case IN_PROGRESS:
+                            color = 0xFFFFA500;
+                            taskText += " " + TimeManager.getInstance().formatTime(subTask.getRemainingTime());
+                            break;
+                        default:
+                            color = 0xFFAAAAAA;
+                            break;
+                    }
+
+                    minecraft.font.draw(poseStack, new TextComponent(taskText), x + 4, y, color);
+                    y += 12;
+                }
             }
         }
     }

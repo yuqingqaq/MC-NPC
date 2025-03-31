@@ -20,6 +20,7 @@ public class TaskManager {
 
     // 存储每个主任务对应的排序后的子任务列表
     private Map<AdaptiveTaskModel, List<AdaptiveSubTaskModel>> sortedSubTasksMap;
+    private boolean isStrategyPlanned = false; // 新增：标记是否已制定策略
 
     private TaskManager() {
         loadTasks();
@@ -83,7 +84,57 @@ public class TaskManager {
         if (task == null) {
             return new ArrayList<>();
         }
-        return sortedSubTasksMap.getOrDefault(task, new ArrayList<>(task.getSubTasks()));
+
+        // 如果是SRL任务且还没有制定策略，返回空列表
+        if (GameController.getInstance().isSRLQuestAvailable() && !isStrategyPlanned) {
+            return new ArrayList<>();
+        }
+
+        List<AdaptiveSubTaskModel> taskList = sortedSubTasksMap.getOrDefault(task, new ArrayList<>(task.getSubTasks()));
+
+        // 如果不是SRL任务，只返回已完成的任务和第一个未完成的任务
+        if (!GameController.getInstance().isSRLQuestAvailable()) {
+            List<AdaptiveSubTaskModel> visibleTasks = new ArrayList<>();
+            boolean foundFirstIncomplete = false;
+
+            for (AdaptiveSubTaskModel subTask : taskList) {
+                if (subTask.getStatus() == AdaptiveSubTaskModel.TaskStatus.COMPLETED) {
+                    visibleTasks.add(subTask);
+                } else if (!foundFirstIncomplete) {
+                    visibleTasks.add(subTask);
+                    foundFirstIncomplete = true;
+                }
+            }
+            return visibleTasks;
+        }
+
+        return taskList;
+    }
+
+    // 检查当前任务是否有正在进行的子任务
+    public boolean hasInProgressSubTasks(AdaptiveTaskModel task) {
+        if (task == null) return false;
+        
+        List<AdaptiveSubTaskModel> subTasks = task.getSubTasks();
+        return subTasks.stream().anyMatch(subTask -> 
+            subTask.getStatus() == AdaptiveSubTaskModel.TaskStatus.IN_PROGRESS);
+    }
+
+    // 设置策略规划状态
+    public void setStrategyPlanned(boolean planned) {
+        this.isStrategyPlanned = planned;
+        System.out.println("Strategy planning status set to: " + planned);
+    }
+
+    // 获取策略规划状态
+    public boolean isStrategyPlanned() {
+        return this.isStrategyPlanned;
+    }
+
+    // 重置策略规划状态
+    public void resetStrategyPlanning() {
+        this.isStrategyPlanned = false;
+        System.out.println("Strategy planning status reset");
     }
 
     // 开始一个子任务，同时传入排序后的子任务列表
