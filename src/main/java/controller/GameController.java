@@ -4,12 +4,10 @@ import api.OpenAIGPT;
 import interfaces.GameControllerInterface;
 import model.AdaptiveTaskModel;
 import prompt.TaskPrompts;
-import system.ExpertSystem;
-import system.NPCSystem;
+import system.*;
 import clinic.huatuoAPI;
-import system.StageManager;
 import system.StageManager.StageInfo;
-import system.TaskSystem;
+import system.SRLStageManager.SRLStageInfo;
 import view.GameView;
 import com.fasterxml.jackson.core.type.TypeReference;
 import model.NPCModel;
@@ -31,10 +29,12 @@ public class GameController implements GameControllerInterface {
     private List<ItemModel> gameAssets;
     private List<AdaptiveTaskModel> adaptiveTasks;
     private List<StageManager.StageInfo> stageInfos;
+    private List<SRLStageManager.SRLStageInfo> srlStageInfos;
     private NPCSystem npcSystem;
     private ExpertSystem expertSystem;
     private TaskSystem taskSystem;
     private StageManager stageManager;
+    private SRLStageManager srlStageManager;
 
     private OpenAIGPT gptModel;
     private OpenAIGPT expertModel;
@@ -43,6 +43,8 @@ public class GameController implements GameControllerInterface {
     private Map<String, String> taskCoinLocations; // 任务 ID 和位置的映射
     private KnowledgeGraphManager knowledgeManager;
     private KnowledgeTaskMonitor knowledgeMonitor;
+
+    private boolean srlQuestAvailable = true;
 
     public static GameController getInstance() {
         if (instance == null) {
@@ -76,6 +78,7 @@ public class GameController implements GameControllerInterface {
 
         // 获取StageManager实例
         this.stageManager = StageManager.getInstance();
+        this.srlStageManager = SRLStageManager.getInstance();
 
         // 加载阶段信息并设置到StageManager
         stageInfos = JsonLoader.loadObjectListFromJson(
@@ -83,9 +86,15 @@ public class GameController implements GameControllerInterface {
                 "stages",
                 new TypeReference<List<StageInfo>>() {}
         );
+        srlStageInfos = JsonLoader.loadObjectListFromJson(
+                "json/srl_stage_config.json",
+                "stages",
+                new TypeReference<List<SRLStageInfo>>() {}
+        );
 
         // 将阶段信息设置到StageManager
         stageManager.setStages(stageInfos);
+        srlStageManager.setStages(srlStageInfos);
 
         this.taskSystem = new TaskSystem();
         // 从配置文件加载任务金币位置信息
@@ -153,6 +162,23 @@ public class GameController implements GameControllerInterface {
         return null;
     }
 
+    /**
+     * 检查SRLQuest是否可用
+     * @return SRLQuest的可用状态
+     */
+    public boolean isSRLQuestAvailable() {
+        return srlQuestAvailable;
+    }
+
+    /**
+     * 设置SRLQuest的可用状态
+     * @param available 是否可用
+     */
+    public void setSRLQuestAvailable(boolean available) {
+        this.srlQuestAvailable = available;
+        System.out.println("SRLQuest availability set to: " + available);
+    }
+
     public List<AdaptiveTaskModel> getAdaptiveTasks() {
         return adaptiveTasks;
     }
@@ -180,6 +206,9 @@ public class GameController implements GameControllerInterface {
     // 获取StageManager的方法
     public StageManager getStageManager() {
         return stageManager;
+    }
+    public SRLStageManager getSRLStageManager() {
+        return srlStageManager;
     }
     // 可以添加一个重置方法
     public void resetKnowledgeMonitoring() {
