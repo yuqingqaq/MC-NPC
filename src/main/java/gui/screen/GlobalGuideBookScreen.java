@@ -79,17 +79,15 @@ public class GlobalGuideBookScreen extends Screen {
         }
 
         // 如果SRLQuest可用，获取SRL阶段管理器和排序后的任务
-        if (srlQuestAvailable) {
-            this.srlStageManager = GameController.getInstance().getSRLStageManager();
-            if (srlStageManager != null) {
-                this.currentSRLStage = srlStageManager.getCurrentStage();
-            }
-
-            // 如果SRLQuest可用，获取它排序后的任务列表
-            if (currentSRLTask != null) {
-                this.sortedSubTasks = taskManager.getSortedSubTasks(currentSRLTask);
-            }
+        this.srlStageManager = GameController.getInstance().getSRLStageManager();
+        if (srlStageManager != null) {
+            this.currentSRLStage = srlStageManager.getCurrentStage();
         }
+        // 如果SRLQuest可用，获取它排序后的任务列表
+        if (currentSRLTask != null) {
+            this.sortedSubTasks = taskManager.getSortedSubTasks(currentSRLTask);
+        }
+        
     }
 
     @Override
@@ -97,7 +95,30 @@ public class GlobalGuideBookScreen extends Screen {
         this.clearWidgets();
         super.init();
         UIScreenManager.getInstance().setCurrentScreenState(UIScreenManager.ScreenState.NO_HUD);
+        // 如果SRLQuest可用，获取它排序后的任务列表
 
+        if (currentSRLTask != null) {
+            this.sortedSubTasks = taskManager.getSortedSubTasks(currentSRLTask);
+            for (AdaptiveSubTaskModel subTask : sortedSubTasks) {
+                System.out.println("Init sortedSubTasks: " + subTask.getTitle());
+            }
+            
+            // 确保selectedTaskIndex在有效范围内
+            if (selectedTaskIndex < 0 || selectedTaskIndex >= sortedSubTasks.size()) {
+                // 找到第一个未完成的任务作为默认选中
+                for (int i = 0; i < sortedSubTasks.size(); i++) {
+                    if (sortedSubTasks.get(i).getStatus() != AdaptiveSubTaskModel.TaskStatus.COMPLETED) {
+                        selectedTaskIndex = i;
+                        break;
+                    }
+                }
+                // 如果所有任务都已完成或没有任务，选择第一个
+                if (selectedTaskIndex < 0 && !sortedSubTasks.isEmpty()) {
+                    selectedTaskIndex = 0;
+                }
+            }
+        }
+        
         // 跳过已完成的校园导览阶段
         if (stageManager.isStageCompleted("INTRO") &&
                 currentDisplayStage != null &&
@@ -106,7 +127,7 @@ public class GlobalGuideBookScreen extends Screen {
         }
 
         // 如果SRL任务可用，跳过已完成的SRL阶段
-        if (srlQuestAvailable && srlStageManager != null && currentSRLStage != null &&
+        if (srlStageManager != null && currentSRLStage != null &&
                 "INTRO".equals(currentSRLStage.getId()) &&
                 srlStageManager.isStageCompleted("INTRO")) {
             currentSRLStage = determineLastCompletedSRLStage();
@@ -146,48 +167,7 @@ public class GlobalGuideBookScreen extends Screen {
                 new TextComponent("X"), button -> onClose()));
     }
 
-    private void initCampusTourButtons() {
-        int buttonWidth = 100;
-        int buttonHeight = 20;
-        int leftButtonX = 20;
-        int rightButtonX = this.width - buttonWidth - 20;
-
-        // 获取所有阶段
-        List<StageInfo> stages = stageManager.getAllStages();
-        int currentIndex = stages.indexOf(currentDisplayStage);
-
-        // 左导航按钮
-        if (currentIndex > 0) {
-            this.addRenderableWidget(new Button(leftButtonX, this.height - 30, buttonWidth, buttonHeight,
-                    new TextComponent("< 上一页"), button -> {
-                currentDisplayStage = stages.get(currentIndex - 1);
-                this.init();
-            }));
-        }
-
-        // 右导航按钮
-        if (currentIndex < stages.size() - 1) {
-            this.addRenderableWidget(new Button(rightButtonX, this.height - 30, buttonWidth, buttonHeight,
-                    new TextComponent("下一页 >"), button -> {
-                currentDisplayStage = stages.get(currentIndex + 1);
-                this.init();
-            }));
-        }
-
-        // 添加寻找金币按钮，但仅在非INTRO和非END阶段，并且玩家已经访问过该阶段的NPC时显示
-        if (currentDisplayStage != null &&
-                !"INTRO".equals(currentDisplayStage.getId()) &&
-                !"END".equals(currentDisplayStage.getId()) &&
-                Boolean.TRUE.equals(VISITED_NPCS.get(currentDisplayStage.getId())) &&
-                currentDisplayStage.getCoinLocation() != null &&
-                !currentDisplayStage.getCoinLocation().isEmpty()) {
-
-            findCoinButton = this.addRenderableWidget(new Button(this.width / 2 - 50, this.height - 30, 100, buttonHeight,
-                    new TextComponent("找碎片"), button -> {
-                teleportToCoin(currentDisplayStage.getCoinLocation());
-            }));
-        }
-    }
+  
 
     private void initSRLTaskButtons() {
         int buttonWidth = 100;
@@ -195,25 +175,27 @@ public class GlobalGuideBookScreen extends Screen {
         int leftButtonX = 20;
         int rightButtonX = this.width - buttonWidth - 20;
 
-        // 如果有SRL阶段管理，添加导航按钮
-        if (srlQuestAvailable && srlStageManager != null && currentSRLStage != null) {
-            List<SRLStageInfo> stages = srlStageManager.getAllStages();
-            int currentIndex = stages.indexOf(currentSRLStage);
-
-            // 左导航按钮
-            if (currentIndex > 0) {
+        // 使用taskManager.getSortedSubTasks获取的顺序渲染按钮
+        if (currentSRLTask != null && !sortedSubTasks.isEmpty()) {
+            // 计算当前显示的任务索引
+            if (selectedTaskIndex < 0) selectedTaskIndex = 0;
+            
+            // 如果有上一个任务，添加左导航按钮
+            if (selectedTaskIndex > 0) {
+                final int prevIndex = selectedTaskIndex - 1;
                 this.addRenderableWidget(new Button(leftButtonX, this.height - 30, buttonWidth, buttonHeight,
-                        new TextComponent("< 上一页"), button -> {
-                    currentSRLStage = stages.get(currentIndex - 1);
+                        new TextComponent("< 上一任务"), button -> {
+                    selectedTaskIndex = prevIndex;
                     this.init();
                 }));
             }
 
-            // 右导航按钮
-            if (currentIndex < stages.size() - 1) {
+            // 如果有下一个任务，添加右导航按钮
+            if (selectedTaskIndex < sortedSubTasks.size() - 1) {
+                final int nextIndex = selectedTaskIndex + 1;
                 this.addRenderableWidget(new Button(rightButtonX, this.height - 30, buttonWidth, buttonHeight,
-                        new TextComponent("下一页 >"), button -> {
-                    currentSRLStage = stages.get(currentIndex + 1);
+                        new TextComponent("下一任务 >"), button -> {
+                    selectedTaskIndex = nextIndex;
                     this.init();
                 }));
             }
@@ -225,7 +207,7 @@ public class GlobalGuideBookScreen extends Screen {
             String taskTitle = selectedSubTask.getTitle();
 
             // 只为特定任务提供前往按钮
-            if ("专家访谈".equals(taskTitle) || "寻找论文写作辅导员".equals(taskTitle)) {
+            if ("专家访谈".equals(taskTitle) || "找到论文写作辅导员".equals(taskTitle)) {
                 String npcId = getNpcIdForTask(taskTitle);
 
                 if (npcId != null) {
@@ -242,7 +224,7 @@ public class GlobalGuideBookScreen extends Screen {
     private String getNpcIdForTask(String taskTitle) {
         if ("专家访谈".equals(taskTitle)) {
             return "14"; // 王教授的ID
-        } else if ("寻找论文写作辅导员".equals(taskTitle)) {
+        } else if ("找到论文写作辅导员".equals(taskTitle)) {
             return "13"; // 论文写作专家的ID
         }
         return null;
@@ -286,118 +268,7 @@ public class GlobalGuideBookScreen extends Screen {
         super.render(poseStack, mouseX, mouseY, partialTicks);
     }
 
-    private void renderCampusTour(PoseStack poseStack) {
-        yOffset = 35; // 初始化y偏移量(考虑顶部选项卡)
 
-        if (currentDisplayStage == null) {
-            drawCenteredString(poseStack, this.font, "当前没有阶段信息",
-                    this.width / 2, yOffset, 0xFFFF0000);
-            return;
-        }
-
-        // 渲染标题
-        drawCenteredString(poseStack, this.font, currentDisplayStage.getTitle(),
-                this.width / 2, yOffset, 0xFFFFAA00);
-        yOffset += 20;
-
-        // 渲染内容
-        String content = currentDisplayStage.getContent();
-        List<ColoredText> contentLines = TextUtils.wrapText(content, (int) (this.width / 1.3f), true);
-
-        for (ColoredText line : contentLines) {
-            drawString(poseStack, this.font, line.text, this.width / 2 - 120, yOffset, line.color);
-            yOffset += 10;
-        }
-
-        yOffset += 10;
-
-        // 如果当前阶段不是INTRO或END，渲染NPC信息
-        if (!"INTRO".equals(currentDisplayStage.getId()) && !"END".equals(currentDisplayStage.getId())) {
-            renderNPCInfo(poseStack);
-        }
-
-        // 如果当前阶段已完成，显示完成内容
-        if (stageManager.isStageCompleted(currentDisplayStage.getId()) &&
-                currentDisplayStage.getOutcome() != null &&
-                !currentDisplayStage.getOutcome().isEmpty()) {
-
-            renderCompletionContent(poseStack);
-        }
-
-        // 如果是最后一个阶段（END），添加学习任务提示
-        if ("END".equals(currentDisplayStage.getId())) {
-            // 检查是否所有阶段都已完成
-            boolean allStagesCompleted = true;
-            List<StageInfo> stages = stageManager.getAllStages();
-            for (StageInfo stage : stages) {
-                if (!stageManager.isStageCompleted(stage.getId())) {
-                    allStagesCompleted = false;
-                    break;
-                }
-            }
-
-            if (allStagesCompleted) {
-                yOffset += 15;
-                drawString(poseStack, this.font, "恭喜你完成校园导览！现在你可以开始你的学习任务了。",
-                        this.width / 2 - 170, yOffset, 0xFF55AAFF);
-                yOffset += 15;
-                drawString(poseStack, this.font, "点击上方的'SRL任务'标签探索Agent研究任务。",
-                        this.width / 2 - 170, yOffset, 0xFF55AAFF);
-            }
-        }
-    }
-
-    private void renderControls(PoseStack poseStack) {
-        yOffset = 35;
-
-        // 渲染标题
-        drawCenteredString(poseStack, this.font, "Minecraft 控制指南",
-                this.width / 2, yOffset, 0xFFFFAA00);
-        yOffset += 25;
-
-        // 基本控制说明
-        List<String[]> controls = Arrays.asList(
-                new String[]{"移动", "W, A, S, D 键"},
-                new String[]{"跳跃", "空格键"},
-                new String[]{"潜行", "Shift 键"},
-                new String[]{"打开物品栏", "E 键"},
-                new String[]{"扔出物品", "Q 键"},
-                new String[]{"与NPC互动", "右键点击"},
-                new String[]{"切换第一/第三人称", "F5 键"},
-                new String[]{"切换快捷栏物品", "鼠标滚轮/数字键"},
-                new String[]{"打开/关闭任务界面", "选中任务书右键地面"}
-        );
-
-        // 渲染控制说明
-        int leftColumn = this.width / 2 - 150;
-        int rightColumn = this.width / 2 + 20;
-
-        drawString(poseStack, this.font, "基本控制:", leftColumn, yOffset, 0xFFFFFFFF);
-        yOffset += 15;
-
-        for (String[] control : controls) {
-            drawString(poseStack, this.font, control[0] + ":", leftColumn, yOffset, 0xFFFFFFFF);
-            drawString(poseStack, this.font, control[1], rightColumn, yOffset, 0xFFAAAAAA);
-            yOffset += 15;
-        }
-
-        yOffset += 10;
-        drawString(poseStack, this.font, "游戏技巧:", leftColumn, yOffset, 0xFFFFFFFF);
-        yOffset += 15;
-
-        List<String> tips = Arrays.asList(
-                "探索校园可以获得校徽碎片，收集所有碎片完成校园导览",
-                "在SRL任务界面可以查看和管理你的学习任务"
-        );
-
-        for (String tip : tips) {
-            List<ColoredText> tipLines = TextUtils.wrapText(tip, (int) (this.width / 1.5f), true);
-            for (ColoredText line : tipLines) {
-                drawString(poseStack, this.font, line.text, leftColumn, yOffset, 0xFFAAAAAA);
-                yOffset += 15;
-            }
-        }
-    }
 
     private void renderSRLTasks(PoseStack poseStack) {
         yOffset = 35;
@@ -408,165 +279,49 @@ public class GlobalGuideBookScreen extends Screen {
             return;
         }
 
-        // 如果有SRL阶段管理器且启用了SRLQuest，使用导览模式
-        if (srlQuestAvailable && srlStageManager != null && currentSRLStage != null) {
-            renderSRLStageContent(poseStack);
-        } else {
-            // 否则使用基本任务列表模式
-            renderBasicTaskView(poseStack);
-        }
-    }
-
-    private void renderBasicTaskView(PoseStack poseStack) {
-        // 渲染SRL任务标题
+        // 绘制主任务标题
         drawCenteredString(poseStack, this.font, currentSRLTask.getTitle(),
                 this.width / 2, yOffset, 0xFFFFAA00);
         yOffset += 20;
 
-        // 渲染SRL任务描述
-        List<ColoredText> descLines = TextUtils.wrapText(currentSRLTask.getDescription(), (int) (this.width / 1.3f), true);
-        for (ColoredText line : descLines) {
-            drawString(poseStack, this.font, line.text, this.width / 2 - 150, yOffset, line.color);
-            yOffset += 10;
-        }
-        yOffset += 10;
-
-        // 渲染目标
-        drawString(poseStack, this.font, "目标: " + currentSRLTask.getTarget(),
-                this.width / 2 - 150, yOffset, 0xFFFFFFFF);
-        yOffset += 20;
-
-        // 渲染子任务列表
-        drawString(poseStack, this.font, "子任务:", this.width / 2 - 150, yOffset, 0xFFFFFFFF);
-        yOffset += 15;
-
+        // 渲染任务进度情况
         int completedTasks = 0;
-        for (int i = 0; i < sortedSubTasks.size(); i++) {
-            AdaptiveSubTaskModel subTask = sortedSubTasks.get(i);
+        for (AdaptiveSubTaskModel subTask : sortedSubTasks) {
             if (subTask.getStatus() == AdaptiveSubTaskModel.TaskStatus.COMPLETED) {
                 completedTasks++;
             }
-
-            // 绘制选中背景
-            if (i == selectedTaskIndex) {
-                fill(poseStack, this.width / 2 - 155, yOffset - 2, this.width / 2 + 155, yOffset + 12, 0x80AAAAAA);
-            }
-
-            // 绘制任务图标
-            ResourceLocation icon = subTask.getStatus() == AdaptiveSubTaskModel.TaskStatus.COMPLETED ? COMPLETED : PENDING;
-            RenderSystem.setShaderTexture(0, icon);
-            blit(poseStack, this.width / 2 - 150, yOffset - 4, 0, 0, 16, 16, 16, 16);
-
-            // 绘制任务标题
-            int statusColor;
-            switch (subTask.getStatus()) {
-                case COMPLETED:
-                    statusColor = 0xFF55FF55; // 已完成:绿色
-                    break;
-                case IN_PROGRESS:
-                    statusColor = 0xFFFFAA00; // 进行中:橙色
-                    break;
-                default:
-                    statusColor = 0xFFFFFFFF; // 未开始:白色
-            }
-
-            drawString(poseStack, this.font, subTask.getTitle(), this.width / 2 - 130, yOffset, statusColor);
-
-            // 为每个子任务添加点击区域
-            int finalI = i;
-            this.addRenderableWidget(new Button(this.width / 2 - 155, yOffset - 5, 310, 20, new TextComponent(""), button -> {
-                selectedTaskIndex = finalI;
-                this.init();
-            }) {
-                @Override
-                public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-                    // 透明按钮，不需要绘制内容
-                }
-            });
-
-            yOffset += 20;
         }
-
-        // 显示整体任务进度
-        yOffset += 10;
-        String progressText = String.format("总进度: %d/%d", completedTasks, sortedSubTasks.size());
-        drawString(poseStack, this.font, progressText, this.width / 2 - 150, yOffset, 0xFFFFFFFF);
-        yOffset += 20;
-    }
-
-    // 渲染SRL阶段内容（需要SRLQuest支持）
-    private void renderSRLStageContent(PoseStack poseStack) {
-        // 渲染标题
-        drawCenteredString(poseStack, this.font, currentSRLStage.getTitle(),
-                this.width / 2, yOffset, 0xFFFFAA00);
+        String progressText = String.format("进度: %d/%d", completedTasks, sortedSubTasks.size());
+        drawCenteredString(poseStack, this.font, progressText,
+                this.width / 2, yOffset, 0xFFFFFFFF);
         yOffset += 20;
 
-        // 渲染内容
-        String content = currentSRLStage.getContent();
-        List<ColoredText> contentLines = TextUtils.wrapText(content, (int) (this.width / 1.3f), true);
-
-        for (ColoredText line : contentLines) {
-            drawString(poseStack, this.font, line.text, this.width / 2 - 120, yOffset, line.color);
-            yOffset += 10;
-        }
-
-        yOffset += 10;
-
-        // 如果不是INTRO或END阶段，显示与该阶段关联的任务
-        if (!"INTRO".equals(currentSRLStage.getId()) && !"END".equals(currentSRLStage.getId())) {
-            renderRelatedTask(poseStack);
-        }
-
-        // 如果当前阶段已完成，显示完成内容
-        if (srlStageManager.isStageCompleted(currentSRLStage.getId()) &&
-                currentSRLStage.getOutcome() != null &&
-                !currentSRLStage.getOutcome().isEmpty()) {
-
-            renderSRLCompletionContent(poseStack);
-        }
-
-        // 如果是END阶段，显示总结信息
-        if ("END".equals(currentSRLStage.getId())) {
-            renderSRLSummary(poseStack);
+        // 渲染当前选中的子任务
+        if (!sortedSubTasks.isEmpty()) {
+            // 确保selectedTaskIndex有效
+            if (selectedTaskIndex < 0 || selectedTaskIndex >= sortedSubTasks.size()) {
+                selectedTaskIndex = 0;
+            }
+            
+            // 渲染当前选中的子任务
+            renderSelectedSubTask(poseStack, sortedSubTasks.get(selectedTaskIndex));
         }
     }
-
-    // 渲染与当前SRL阶段关联的任务
-    private void renderRelatedTask(PoseStack poseStack) {
-        if (currentSRLTask == null || sortedSubTasks.isEmpty()) {
-            return;
-        }
-
-        String taskId = currentSRLStage.getRelatedTaskId();
-        if (taskId == null || taskId.isEmpty()) {
-            return;
-        }
-
-        // 查找关联的子任务
-        AdaptiveSubTaskModel relatedSubTask = null;
-        for (AdaptiveSubTaskModel subTask : sortedSubTasks) {  // 使用排序后的子任务列表
-            if (taskId.equals(subTask.getSubTaskId())) {
-                relatedSubTask = subTask;
-                break;
-            }
-        }
-
-        if (relatedSubTask == null) {
-            return;
-        }
-
-        // 渲染任务信息
+    
+    // 新方法：渲染选中的子任务
+    private void renderSelectedSubTask(PoseStack poseStack, AdaptiveSubTaskModel subTask) {
+        // 绘制任务标题
         drawString(poseStack, this.font, "当前任务:", this.width / 2 - 120, yOffset, 0xFFFFFFFF);
         yOffset += 15;
 
         // 绘制任务图标
-        ResourceLocation icon = relatedSubTask.getStatus() == AdaptiveSubTaskModel.TaskStatus.COMPLETED ? COMPLETED : PENDING;
+        ResourceLocation icon = subTask.getStatus() == AdaptiveSubTaskModel.TaskStatus.COMPLETED ? COMPLETED : PENDING;
         RenderSystem.setShaderTexture(0, icon);
         blit(poseStack, this.width / 2 - 120, yOffset - 4, 0, 0, 16, 16, 16, 16);
 
         // 绘制任务标题
         int statusColor;
-        switch (relatedSubTask.getStatus()) {
+        switch (subTask.getStatus()) {
             case COMPLETED:
                 statusColor = 0xFF55FF55; // 已完成:绿色
                 break;
@@ -577,95 +332,44 @@ public class GlobalGuideBookScreen extends Screen {
                 statusColor = 0xFFFFFFFF; // 未开始:白色
         }
 
-        drawString(poseStack, this.font, relatedSubTask.getTitle(), this.width / 2 - 100, yOffset, statusColor);
+        drawString(poseStack, this.font, subTask.getTitle(), this.width / 2 - 100, yOffset, statusColor);
         yOffset += 20;
 
         // 绘制任务描述
-        List<ColoredText> descLines = TextUtils.wrapText(relatedSubTask.getDescription(), (int) (this.width / 1.3f), true);
+        List<ColoredText> descLines = TextUtils.wrapText(subTask.getDescription(), (int) (this.width / 1.3f), true);
         for (ColoredText line : descLines) {
-            drawString(poseStack, this.font, line.text, this.width / 2 - 120, yOffset, 0xFFAAAAAA);
+            drawString(poseStack, this.font, line.text, this.width / 2 - 120, yOffset, line.color);
             yOffset += 10;
         }
         yOffset += 10;
-
-        // 显示任务状态
-        String statusText = "状态: ";
-        switch (relatedSubTask.getStatus()) {
-            case COMPLETED:
-                statusText += "已完成";
-                statusColor = 0xFF55FF55;
-                break;
-            case IN_PROGRESS:
-                statusText += "进行中";
-                statusColor = 0xFFFFAA00;
-                break;
-            default:
-                statusText += "未开始";
-                statusColor = 0xFFFFFFFF;
-        }
-        drawString(poseStack, this.font, statusText, this.width / 2 - 120, yOffset, statusColor);
-        yOffset += 15;
 
         // 提示如何完成任务
         drawString(poseStack, this.font, "提示: 使用SRLQuest任务书可以开始和完成此任务",
                 this.width / 2 - 120, yOffset, 0xFF55AAFF);
         yOffset += 15;
 
-        // 设置选中的任务为当前关联的任务
-        int taskIndex = sortedSubTasks.indexOf(relatedSubTask);
-        if (taskIndex != selectedTaskIndex) {
-            selectedTaskIndex = taskIndex;
+        // 如果任务已完成，显示任务成果
+        if (subTask.getStatus() == AdaptiveSubTaskModel.TaskStatus.COMPLETED) {
+            renderSubTaskCompletionContent(poseStack, subTask);
         }
     }
-
-    // 渲染SRL阶段完成内容
-    private void renderSRLCompletionContent(PoseStack poseStack) {
+    
+    // 新方法：渲染子任务完成内容
+    private void renderSubTaskCompletionContent(PoseStack poseStack, AdaptiveSubTaskModel subTask) {
         yOffset += 10;
         drawString(poseStack, this.font, "任务成果:", this.width / 2 - 120, yOffset, 0xFF55FF55);
         yOffset += 15;
 
-        String outCome = currentSRLStage.getOutcome();
-        List<ColoredText> outComeLines = TextUtils.wrapText(outCome, (int) (this.width / 1.3f), true);
-        for (ColoredText line : outComeLines) {
-            drawString(poseStack, this.font, line.text, this.width / 2 - 120, yOffset, line.color);
-            yOffset += 10;
-        }
-    }
-
-    // 渲染SRL最终总结
-    private void renderSRLSummary(PoseStack poseStack) {
-        int completedTasks = 0;
-        for (AdaptiveSubTaskModel subTask : sortedSubTasks) {
-            if (subTask.getStatus() == AdaptiveSubTaskModel.TaskStatus.COMPLETED) {
-                completedTasks++;
+        String outcome = subTask.getOutcome();
+        if (outcome != null && !outcome.isEmpty()) {
+            List<ColoredText> outcomeLines = TextUtils.wrapText(outcome, (int) (this.width / 1.3f), true);
+            for (ColoredText line : outcomeLines) {
+                drawString(poseStack, this.font, line.text, this.width / 2 - 120, yOffset, 0xFFAAAAAA);
+                yOffset += 10;
             }
-        }
-
-        // 显示任务完成情况
-        yOffset += 10;
-        String progressText = String.format("任务完成: %d/%d", completedTasks, sortedSubTasks.size());
-        drawString(poseStack, this.font, progressText, this.width / 2 - 120, yOffset, 0xFFFFFFFF);
-        yOffset += 20;
-
-        // 如果全部完成，显示祝贺信息
-        if (completedTasks == sortedSubTasks.size()) {
-            drawString(poseStack, this.font, "恭喜你完成了所有Agent研究任务！",
-                    this.width / 2 - 120, yOffset, 0xFF55FF55);
-            yOffset += 15;
-            drawString(poseStack, this.font, "你已经成功掌握了SRL和Agent领域的基础知识。",
-                    this.width / 2 - 120, yOffset, 0xFF55FF55);
         } else {
-            drawString(poseStack, this.font, "你已经完成了部分Agent研究任务。",
-                    this.width / 2 - 120, yOffset, 0xFFFFAA00);
-            yOffset += 15;
-            drawString(poseStack, this.font, "继续努力，完成剩余的任务以获得更全面的学习体验。",
-                    this.width / 2 - 120, yOffset, 0xFFFFAA00);
+            drawString(poseStack, this.font, "任务已完成", this.width / 2 - 120, yOffset, 0xFF55FF55);
         }
-
-        // 提示使用SRLQuest获取更详细的学习报告
-        yOffset += 20;
-        drawString(poseStack, this.font, "提示: 使用SRLQuest任务书可以查看详细的学习报告和反思",
-                this.width / 2 - 120, yOffset, 0xFF55AAFF);
     }
 
     // 根据完成的任务数量和SRLQuest可用性提供不同的阶段提示
@@ -717,6 +421,49 @@ public class GlobalGuideBookScreen extends Screen {
         for (ColoredText line : hintLines) {
             drawString(poseStack, this.font, line.text, this.width / 2 - 150, yOffset, 0xFFFFFFFF);
             yOffset += 10;
+        }
+    }
+
+    private void initCampusTourButtons() {
+        int buttonWidth = 100;
+        int buttonHeight = 20;
+        int leftButtonX = 20;
+        int rightButtonX = this.width - buttonWidth - 20;
+
+        // 获取所有阶段
+        List<StageInfo> stages = stageManager.getAllStages();
+        int currentIndex = stages.indexOf(currentDisplayStage);
+
+        // 左导航按钮
+        if (currentIndex > 0) {
+            this.addRenderableWidget(new Button(leftButtonX, this.height - 30, buttonWidth, buttonHeight,
+                    new TextComponent("< 上一页"), button -> {
+                currentDisplayStage = stages.get(currentIndex - 1);
+                this.init();
+            }));
+        }
+
+        // 右导航按钮
+        if (currentIndex < stages.size() - 1) {
+            this.addRenderableWidget(new Button(rightButtonX, this.height - 30, buttonWidth, buttonHeight,
+                    new TextComponent("下一页 >"), button -> {
+                currentDisplayStage = stages.get(currentIndex + 1);
+                this.init();
+            }));
+        }
+
+        // 添加寻找金币按钮，但仅在非INTRO和非END阶段，并且玩家已经访问过该阶段的NPC时显示
+        if (currentDisplayStage != null &&
+                !"INTRO".equals(currentDisplayStage.getId()) &&
+                !"END".equals(currentDisplayStage.getId()) &&
+                Boolean.TRUE.equals(VISITED_NPCS.get(currentDisplayStage.getId())) &&
+                currentDisplayStage.getCoinLocation() != null &&
+                !currentDisplayStage.getCoinLocation().isEmpty()) {
+
+            findCoinButton = this.addRenderableWidget(new Button(this.width / 2 - 50, this.height - 30, 100, buttonHeight,
+                    new TextComponent("找碎片"), button -> {
+                teleportToCoin(currentDisplayStage.getCoinLocation());
+            }));
         }
     }
 
@@ -830,7 +577,7 @@ public class GlobalGuideBookScreen extends Screen {
         stageManager.markStageCompleted("INTRO");
 
         // 如果SRL任务可用，并且SRL阶段管理器存在，标记SRL INTRO阶段为已访问
-        if (srlQuestAvailable && srlStageManager != null) {
+        if (srlStageManager != null) {
             srlStageManager.markStageVisited("INTRO");
         }
 
@@ -851,6 +598,119 @@ public class GlobalGuideBookScreen extends Screen {
         }
         // 如果所有阶段都已完成，返回END阶段
         return stageManager.getStageById("END");
+    }
+
+    private void renderCampusTour(PoseStack poseStack) {
+        yOffset = 35; // 初始化y偏移量(考虑顶部选项卡)
+
+        if (currentDisplayStage == null) {
+            drawCenteredString(poseStack, this.font, "当前没有阶段信息",
+                    this.width / 2, yOffset, 0xFFFF0000);
+            return;
+        }
+
+        // 渲染标题
+        drawCenteredString(poseStack, this.font, currentDisplayStage.getTitle(),
+                this.width / 2, yOffset, 0xFFFFAA00);
+        yOffset += 20;
+
+        // 渲染内容
+        String content = currentDisplayStage.getContent();
+        List<ColoredText> contentLines = TextUtils.wrapText(content, (int) (this.width / 1.3f), true);
+
+        for (ColoredText line : contentLines) {
+            drawString(poseStack, this.font, line.text, this.width / 2 - 120, yOffset, line.color);
+            yOffset += 10;
+        }
+
+        yOffset += 10;
+
+        // 如果当前阶段不是INTRO或END，渲染NPC信息
+        if (!"INTRO".equals(currentDisplayStage.getId()) && !"END".equals(currentDisplayStage.getId())) {
+            renderNPCInfo(poseStack);
+        }
+
+        // 如果当前阶段已完成，显示完成内容
+        if (stageManager.isStageCompleted(currentDisplayStage.getId()) &&
+                currentDisplayStage.getOutcome() != null &&
+                !currentDisplayStage.getOutcome().isEmpty()) {
+
+            renderCompletionContent(poseStack);
+        }
+
+        // 如果是最后一个阶段（END），添加学习任务提示
+        if ("END".equals(currentDisplayStage.getId())) {
+            // 检查是否所有阶段都已完成
+            boolean allStagesCompleted = true;
+            List<StageInfo> stages = stageManager.getAllStages();
+            for (StageInfo stage : stages) {
+                if (!stageManager.isStageCompleted(stage.getId())) {
+                    allStagesCompleted = false;
+                    break;
+                }
+            }
+
+            if (allStagesCompleted) {
+                yOffset += 15;
+                drawString(poseStack, this.font, "恭喜你完成校园导览！现在你可以开始你的学习任务了。",
+                        this.width / 2 - 170, yOffset, 0xFF55AAFF);
+                yOffset += 15;
+                drawString(poseStack, this.font, "点击上方的'SRL任务'标签探索Agent研究任务。",
+                        this.width / 2 - 170, yOffset, 0xFF55AAFF);
+            }
+        }
+    }
+
+    private void renderControls(PoseStack poseStack) {
+        yOffset = 35;
+
+        // 渲染标题
+        drawCenteredString(poseStack, this.font, "Minecraft 控制指南",
+                this.width / 2, yOffset, 0xFFFFAA00);
+        yOffset += 25;
+
+        // 基本控制说明
+        List<String[]> controls = Arrays.asList(
+                new String[]{"移动", "W, A, S, D 键"},
+                new String[]{"跳跃", "空格键"},
+                new String[]{"潜行", "Shift 键"},
+                new String[]{"打开物品栏", "E 键"},
+                new String[]{"扔出物品", "Q 键"},
+                new String[]{"与NPC互动", "右键点击"},
+                new String[]{"切换第一/第三人称", "F5 键"},
+                new String[]{"切换快捷栏物品", "鼠标滚轮/数字键"},
+                new String[]{"打开/关闭任务界面", "选中任务书右键地面"}
+        );
+
+        // 渲染控制说明
+        int leftColumn = this.width / 2 - 150;
+        int rightColumn = this.width / 2 + 20;
+
+        drawString(poseStack, this.font, "基本控制:", leftColumn, yOffset, 0xFFFFFFFF);
+        yOffset += 15;
+
+        for (String[] control : controls) {
+            drawString(poseStack, this.font, control[0] + ":", leftColumn, yOffset, 0xFFFFFFFF);
+            drawString(poseStack, this.font, control[1], rightColumn, yOffset, 0xFFAAAAAA);
+            yOffset += 15;
+        }
+
+        yOffset += 10;
+        drawString(poseStack, this.font, "游戏技巧:", leftColumn, yOffset, 0xFFFFFFFF);
+        yOffset += 15;
+
+        List<String> tips = Arrays.asList(
+                "探索校园可以获得校徽碎片，收集所有碎片完成校园导览",
+                "在SRL任务界面可以查看和管理你的学习任务"
+        );
+
+        for (String tip : tips) {
+            List<ColoredText> tipLines = TextUtils.wrapText(tip, (int) (this.width / 1.5f), true);
+            for (ColoredText line : tipLines) {
+                drawString(poseStack, this.font, line.text, leftColumn, yOffset, 0xFFAAAAAA);
+                yOffset += 15;
+            }
+        }
     }
 
     private SRLStageInfo determineLastCompletedSRLStage() {

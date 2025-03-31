@@ -44,7 +44,7 @@ public class GameController implements GameControllerInterface {
     private KnowledgeGraphManager knowledgeManager;
     private KnowledgeTaskMonitor knowledgeMonitor;
 
-    private boolean srlQuestAvailable = true;
+    private boolean srlQuestAvailable = false;
 
     public static GameController getInstance() {
         if (instance == null) {
