@@ -21,7 +21,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import npcopenai.NPCOpenAI;
@@ -131,14 +130,14 @@ public class PosterEventHandler {
         // 创建物品
         Item questionItem = null;
 
-        if (questionId.equals("mc_agent_concept")) {
-            questionItem = ItemRegistry.AGENT_CONCEPT.get();
-        } else if (questionId.equals("match_learning_methods")) {
-            questionItem = ItemRegistry.AGENT_RELATIONSHIP.get();
-        } else if (questionId.equals("tf_learning_principle")) {
-            questionItem = ItemRegistry.AGENT_PRINCIPLE.get();
-        } else if (questionId.equals("order_tech_evolution")) {
-            questionItem = ItemRegistry.AGENT_TIMELINE.get();
+        if (questionId.equals("mc_agent_definition")) {
+            questionItem = ItemRegistry.AGENT_DEFINITION.get();
+        } else if (questionId.equals("match_llm_concepts")) {
+            questionItem = ItemRegistry.AGENT_LLMS.get();
+        } else if (questionId.equals("tf_tools_concept")) {
+            questionItem = ItemRegistry.AGENT_TOOLS.get();
+        } else if (questionId.equals("order_workflow_steps")) {
+            questionItem = ItemRegistry.AGENT_WORKFLOW.get();
         }
 
         if (questionItem == null) {
@@ -233,15 +232,17 @@ public class PosterEventHandler {
 
     // 辅助方法：根据类型获取海报数据
     private static PosterManager.PosterData getPosterDataFromType(String posterType) {
-        if (posterType.equals("agent_basic")) {
-            return PosterManager.getInstance().getAgentBasicPosterData();
-        } else if (posterType.equals("agent_evolution")) {
-            return PosterManager.getInstance().getAgentEvolutionPosterData();
-        } else if (posterType.equals("agent_learning")) {
-            return PosterManager.getInstance().getAgentLearningPosterData();
-        } else if (posterType.equals("agent_principles")) {
-            return PosterManager.getInstance().getAgentPrinciplesPosterData();
+        switch (posterType) {
+            case "agent_definition":
+                return PosterManager.getInstance().getAgentDefinitionPosterData();
+            case "llms":
+                return PosterManager.getInstance().getLLMsPosterData();
+            case "tools":
+                return PosterManager.getInstance().getToolsPosterData();
+            case "workflow":
+                return PosterManager.getInstance().getWorkflowPosterData();
+            default:
+                return null;
         }
-        return null;
     }
 }

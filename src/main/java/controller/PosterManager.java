@@ -12,24 +12,24 @@ public class PosterManager {
     private static final Logger LOGGER = Logger.getLogger("PosterManager");
 
     // 存储各种海报数据
-    private final PosterData agentBasicData;
-    private final PosterData agentEvolutionData;
-    private final PosterData agentLearningData;
-    private final PosterData agentPrinciplesData;
+    private final PosterData agentDefinitionData;
+    private final PosterData llmsData;
+    private final PosterData toolsData;
+    private final PosterData workflowData;
 
     private PosterManager() {
         // 初始化各种海报
-        agentBasicData = initAgentBasicPoster();
-        agentEvolutionData = initAgentEvolutionPoster();
-        agentLearningData = initAgentLearningPoster();
-        agentPrinciplesData = initAgentPrinciplesPoster();
+        agentDefinitionData = initAgentDefinitionPoster();
+        llmsData = initLLMsPoster();
+        toolsData = initToolsPoster();
+        workflowData = initWorkflowPoster();
 
         // 输出调试信息
         LOGGER.info("已初始化所有学术海报");
-        logPosterInfo("基础概念", agentBasicData);
-        logPosterInfo("技术演化", agentEvolutionData);
-        logPosterInfo("学习方法", agentLearningData);
-        logPosterInfo("设计原则", agentPrinciplesData);
+        logPosterInfo("智能体定义", agentDefinitionData);
+        logPosterInfo("大型语言模型", llmsData);
+        logPosterInfo("智能体工具", toolsData);
+        logPosterInfo("智能体工作流", workflowData);
     }
 
     private void logPosterInfo(String type, PosterData data) {
@@ -46,105 +46,103 @@ public class PosterManager {
         return instance;
     }
 
-    // 初始化智能体基础概念海报
-    private PosterData initAgentBasicPoster() {
+    // 初始化智能体定义海报
+    private PosterData initAgentDefinitionPoster() {
         List<String> content = new ArrayList<>();
         content.add("智能体(Agent)是能够感知环境并采取行动以实现目标的实体。");
-        content.add("智能体包含感知系统、决策系统和执行系统三个核心部分。");
+        content.add("智能体包含两个核心部分：大脑(AI模型)负责思考和规划，身体(能力和工具)负责执行动作。");
         content.add("关键特性：自主性、反应性、前瞻性和社交能力。");
-        content.add("智能体是人工智能研究的基础单元，是实现智能行为的实体。");
-        content.add("简单智能体直接根据当前感知做出反应，而复杂智能体可维护内部状态。");
+        content.add("智能体的核心是与环境交互的能动性，常用于个人助手、客服和游戏NPC等场景。");
+        content.add("智能体解决问题的方式是通过理解、推理与环境交互的综合能力。");
 
         return new PosterData(
-                "智能体基础概念",
+                "智能体定义",
                 content,
-                "npcopenai:textures/poster/agent_basic.png",
+                "npcopenai:textures/poster/definition.png",
                 "人工智能专家",
-                "agent_concept",
-                "mc_agent_concept"
+                "agent_definition",
+                "mc_agent_definition"
         );
     }
 
-    // 初始化智能体发展演化海报
-    private PosterData initAgentEvolutionPoster() {
+    // 初始化LLMs海报
+    private PosterData initLLMsPoster() {
         List<String> content = new ArrayList<>();
-        content.add("智能体技术演化历程：");
-        content.add("1970年代：基于规则的专家系统出现，使用IF-THEN规则处理特定领域问题");
-        content.add("1980年代：符号AI智能体发展，利用符号表示和逻辑推理解决问题");
-        content.add("1990年代：机器学习智能体兴起，能从数据中学习模式");
-        content.add("2000年代：多智能体系统发展，多个智能体协作解决复杂问题");
-        content.add("2010年代：深度学习智能体崛起，处理大量非结构化数据");
-        content.add("2020年代：大型语言模型智能体出现，具备更强的理解和生成能力");
+        content.add("大型语言模型(LLM)是智能体的核心大脑，擅长理解和生成人类语言。");
+        content.add("LLM工作原理：基于前文预测下一个标记(token)，自回归生成文本。");
+        content.add("消息类型：系统消息定义行为规则，用户和助手消息构成对话。");
+        content.add("特殊标记(Special Tokens)用于界定消息边界和序列结束。");
+        content.add("LLM通过保存对话历史维持上下文，实现连贯的多轮交互。");
+        content.add("虽然LLM只能生成文本，但通过工具调用可以实现更多功能。");
 
         return new PosterData(
-                "智能体技术演化",
+                "大型语言模型",
                 content,
-                "npcopenai:textures/poster/agent_evolution.png",
-                "AI历史学家",
-                "agent_timeline",
-                "order_tech_evolution"
+                "npcopenai:textures/poster/llms.png",
+                "语言模型专家",
+                "llms",
+                "match_llm_concepts"
         );
     }
 
-    // 初始化智能体学习方法海报
-    private PosterData initAgentLearningPoster() {
+    // 初始化Tools海报
+    private PosterData initToolsPoster() {
         List<String> content = new ArrayList<>();
-        content.add("智能体学习方法：");
-        content.add("监督学习：从带标签的示例中学习，如图像分类和文本分类");
-        content.add("无监督学习：在没有标签的情况下发现数据中的模式和结构");
-        content.add("强化学习：通过尝试和错误，最大化累积奖励");
-        content.add("迁移学习：将一个任务中学到的知识应用到另一个任务");
-        content.add("这些学习方式使智能体能够适应环境变化并提高解决问题的能力。");
+        content.add("工具(Tools)是赋予LLM执行能力的函数，弥补模型的局限性。");
+        content.add("工具定义包括：功能描述、预期输入格式和输出结果。");
+        content.add("工具调用流程：LLM生成调用文本 → 智能体解析并执行 → 结果返回给LLM。");
+        content.add("合格工具应补充LLM能力，如计算器弥补数学弱点，搜索提供最新信息。");
+        content.add("工具描述通常采用结构化表达方式，确保模型正确理解和调用。");
+        content.add("工具对于突破LLM静态训练的局限至关重要，使其能处理实时任务。");
 
         return new PosterData(
-                "智能体学习方法",
+                "智能体工具",
                 content,
-                "npcopenai:textures/poster/agent_learning.png",
-                "机器学习专家",
-                "agent_relationship",
-                "match_learning_methods"
+                "npcopenai:textures/poster/tools.png",
+                "工具开发专家",
+                "tools",
+                "tf_tools_concept"
         );
     }
 
-    // 初始化智能体原则海报
-    private PosterData initAgentPrinciplesPoster() {
+    // 初始化Workflow海报
+    private PosterData initWorkflowPoster() {
         List<String> content = new ArrayList<>();
-        content.add("智能体设计与应用原则：");
-        content.add("1. 不是所有智能体都必须具备学习能力 -- 基于固定规则的智能体也可高效工作");
-        content.add("2. 智能体自主性应根据应用场景调整，完全自主可能并非总是最佳选择");
-        content.add("3. 智能体设计应平衡反应性（快速响应）和深思熟虑（规划能力）");
-        content.add("4. 智能体应优先考虑安全性和可控性，特别是在关键应用中");
-        content.add("5. 智能体系统应具有可解释性，使人类能理解其决策过程");
+        content.add("智能体工作流：思考-行动-观察(Thought-Action-Observation)循环。");
+        content.add("思考(Thought)：智能体推理并规划下一步行动，通常采用ReAct方法分解问题。");
+        content.add("行动(Action)：调用合适工具或执行操作，有多种类型如JSON、代码或函数调用。");
+        content.add("观察(Observation)：获取行动结果，整合反馈并调整策略，为下一轮循环提供信息。");
+        content.add("整个循环持续进行，直到智能体实现目标或达到停止条件。");
+        content.add("ReAct是指‘推理’与‘行动’结合，引导智能体逐步思考而非直接输出最终方案。");
 
         return new PosterData(
-                "智能体设计原则",
+                "智能体工作流",
                 content,
-                "npcopenai:textures/poster/agent_principles.png",
-                "AI伦理专家",
-                "agent_principle",
-                "tf_learning_principle"
+                "npcopenai:textures/poster/workflow.png",
+                "智能体工程师",
+                "workflow",
+                "order_workflow_steps"
         );
     }
 
-
-    // 获取智能体基础概念海报数据
-    public PosterData getAgentBasicPosterData() {
-        return agentBasicData;
+    // 获取智能体定义海报数据
+    public PosterData getAgentDefinitionPosterData() {
+        return agentDefinitionData;
     }
 
-    // 获取智能体发展演化海报数据
-    public PosterData getAgentEvolutionPosterData() {
-        return agentEvolutionData;
+    // 获取LLMs海报数据
+    public PosterData getLLMsPosterData() {
+        return llmsData;
     }
 
-    // 获取智能体学习方法海报数据
-    public PosterData getAgentLearningPosterData() {
-        return agentLearningData;
+    // 获取Tools海报数据
+    public PosterData getToolsPosterData() {
+        return toolsData;
     }
 
-    // 获取智能体原则海报数据
-    public PosterData getAgentPrinciplesPosterData() {
-        return agentPrinciplesData;
+    // 获取Workflow海报数据
+    public PosterData getWorkflowPosterData() {
+        return workflowData;
     }
 
     // 海报数据类

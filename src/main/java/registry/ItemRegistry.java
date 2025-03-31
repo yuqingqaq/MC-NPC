@@ -14,10 +14,11 @@ import item.CustomItem;
 import item.TimedCustomItem;
 import item.goldcoin.GoldCoinItem;
 import item.knowledge.*;
-import item.poster.AgentBasicPosterItem;
-import item.poster.AgentEvolutionPosterItem;
-import item.poster.AgentLearningPosterItem;
-import item.poster.AgentPrinciplesPosterItem;
+
+import item.poster.WorkflowPosterItem;
+import item.poster.LLMsPosterItem;
+import item.poster.AgentDefinitionPosterItem;
+import item.poster.ToolsPosterItem;
 import item.paper.ExcelPaperItem;
 import item.paper.AgentPromptPaperItem;
 import org.apache.logging.log4j.LogManager;
@@ -40,31 +41,31 @@ public class ItemRegistry {
     public static final RegistryObject<Item> KNOWLEDGE_JOURNAL = ITEMS.register("knowledge_journal", KnowledgeJournalItem::new);
 
     // 知识问题物品 - 使用QuestionItem并指定对应的问题ID
-    public static final RegistryObject<Item> AGENT_CONCEPT = ITEMS.register("agent_concept",
-            () -> new QuestionItem("mc_agent_concept_1"));
+    //选择题 - 定义
+    public static final RegistryObject<Item> AGENT_DEFINITION = ITEMS.register("agent_concept",
+            () -> new QuestionItem("mc_agent_definition_1"));
+    //连线题 - LLMS
+    public static final RegistryObject<Item> AGENT_LLMS = ITEMS.register("agent_relationship",
+            () -> new QuestionItem("match_llm_concepts_1"));
+    //判断题 - Tools
+    public static final RegistryObject<Item> AGENT_TOOLS = ITEMS.register("agent_principle",
+            () -> new QuestionItem("tf_tools_concept_1"));
+    //排序题 - workflow
+    public static final RegistryObject<Item> AGENT_WORKFLOW = ITEMS.register("agent_timeline",
+            () -> new QuestionItem("order_workflow_steps"));
 
-    public static final RegistryObject<Item> AGENT_RELATIONSHIP = ITEMS.register("agent_relationship",
-            () -> new QuestionItem("match_learning_methods_1"));
+    // 新版本海报物品
+    public static final RegistryObject<Item> AGENT_DEFINITION_POSTER = ITEMS.register("agent_definition",
+            AgentDefinitionPosterItem::new);
 
-    public static final RegistryObject<Item> AGENT_PRINCIPLE = ITEMS.register("agent_principle",
-            () -> new QuestionItem("tf_learning_principle_1"));
+    public static final RegistryObject<Item> LLMS_POSTER = ITEMS.register("agent_llms",
+            LLMsPosterItem::new);
 
-    public static final RegistryObject<Item> AGENT_TIMELINE = ITEMS.register("agent_timeline",
-            () -> new QuestionItem("order_tech_evolution"));
+    public static final RegistryObject<Item> TOOLS_POSTER = ITEMS.register("agent_tools",
+            ToolsPosterItem::new);
 
-    // 海报物品
-    public static final RegistryObject<Item> AGENT_BASIC_POSTER = ITEMS.register("agent_basic",
-            AgentBasicPosterItem::new);
-
-    public static final RegistryObject<Item> AGENT_EVOLUTION_POSTER = ITEMS.register("agent_evolution",
-            AgentEvolutionPosterItem::new);
-
-    public static final RegistryObject<Item> AGENT_LEARNING_POSTER = ITEMS.register("agent_learning",
-            AgentLearningPosterItem::new);
-
-    public static final RegistryObject<Item> AGENT_PRINCIPLES_POSTER = ITEMS.register("agent_principles",
-            AgentPrinciplesPosterItem::new);
-
+    public static final RegistryObject<Item> WORKFLOW_POSTER = ITEMS.register("agent_workflow",
+            WorkflowPosterItem::new);
 
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -104,19 +105,19 @@ public class ItemRegistry {
             // 注册知识学习物品
             itemRegistryEvent.getRegistry().registerAll(
                     KNOWLEDGE_JOURNAL.get(),
-                    AGENT_CONCEPT.get(),
-                    AGENT_RELATIONSHIP.get(),
-                    AGENT_PRINCIPLE.get(),
-                    AGENT_TIMELINE.get()
+                    AGENT_DEFINITION.get(),
+                    AGENT_LLMS.get(),
+                    AGENT_TOOLS.get(),
+                    AGENT_WORKFLOW.get()
             );
             LOGGER.info("Knowledge learning items registered.");
 
             // 注册海报物品
             itemRegistryEvent.getRegistry().registerAll(
-                    AGENT_BASIC_POSTER.get(),
-                    AGENT_EVOLUTION_POSTER.get(),
-                    AGENT_LEARNING_POSTER.get(),
-                    AGENT_PRINCIPLES_POSTER.get()
+                    AGENT_DEFINITION_POSTER.get(),
+                    LLMS_POSTER.get(),
+                    TOOLS_POSTER.get(),
+                    WORKFLOW_POSTER.get()
             );
             LOGGER.info("Academic poster items registered.");
         }

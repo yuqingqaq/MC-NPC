@@ -6,217 +6,230 @@ public class QuestionRepository {
     private static final Map<String, QuestionData> questionDataMap = new HashMap<>();
 
     static {
-        // 初始化多选题数据
-        initMultipleChoiceData();
+        // 初始化智能体定义相关的多选题
+        initAgentDefinitionQuestions();
 
-        // 初始化匹配题数据
-        initMatchingData();
+        // 初始化大型语言模型相关的匹配题
+        initLLMMatchingQuestions();
 
-        // 初始化排序题数据
-        initOrderingData();
+        // 初始化智能体工具相关的判断题
+        initToolsTrueFalseQuestions();
 
-        // 初始化判断题数据
-        initTrueFalseData();
+        // 初始化智能体工作流相关的排序题
+        initWorkflowOrderingQuestions();
     }
 
-    private static void initMultipleChoiceData() {
-        // Intelligent Agent概念题目1
-        MultipleChoiceData agentConcept1 = new MultipleChoiceData(
-                "mc_agent_concept_1",
-                "Agent Fundamentals",
-                "Question Expert",
-                "Intelligent Agent",
-                "Which of the following best defines an 'Intelligent Agent'?",
+    private static void initAgentDefinitionQuestions() {
+        // 智能体定义题目1
+        MultipleChoiceData agentDefinition1 = new MultipleChoiceData(
+                "mc_agent_definition_1",
+                "智能体基础",
+                "智能体专家",
+                "智能体定义",
+                "什么是智能体(Agent)?",
                 Arrays.asList(
-                        "A computer program that performs tasks automatically",
-                        "An entity that perceives its environment and takes actions to achieve goals",
-                        "A robot with humanlike capabilities",
-                        "Any software that can communicate with users"
-                ),
-                1,  // 0-based index, second option is correct
-                "mc_agent_concept_2" // 下一题的ID
-        );
-        questionDataMap.put(agentConcept1.getId(), agentConcept1);
-
-        // Intelligent Agent概念题目2
-        MultipleChoiceData agentConcept2 = new MultipleChoiceData(
-                "mc_agent_concept_2",
-                "Agent Components",
-                "Question Expert",
-                "Agent Architecture",
-                "What are the three core components of an intelligent agent?",
-                Arrays.asList(
-                        "Learning, Planning, Acting",
-                        "Perception, Decision, Action",
-                        "Memory, Computation, Output",
-                        "Algorithm, Database, Interface"
+                        "仅处理静态文本的系统",
+                        "能推理、规划并使用工具与环境交互的系统",
+                        "仅回答问题的聊天机器人",
+                        "提供信息但无法执行任务的百科全书"
                 ),
                 1,  // 第二个选项是正确答案
-                "mc_agent_concept_3" // 下一题的ID
+                "mc_agent_definition_2" // 下一题的ID
         );
-        questionDataMap.put(agentConcept2.getId(), agentConcept2);
+        questionDataMap.put(agentDefinition1.getId(), agentDefinition1);
 
-        // Intelligent Agent概念题目3
-        MultipleChoiceData agentConcept3 = new MultipleChoiceData(
-                "mc_agent_concept_3",
-                "Agent Characteristics",
-                "Question Expert",
-                "Agent Autonomy",
-                "What is autonomy in the context of intelligent agents?",
+        // 智能体定义题目2
+        MultipleChoiceData agentDefinition2 = new MultipleChoiceData(
+                "mc_agent_definition_2",
+                "智能体组成",
+                "智能体专家",
+                "智能体结构",
+                "智能体的两个核心部分是什么?",
                 Arrays.asList(
-                        "The ability to operate without any human intervention",
-                        "The ability to make decisions based on internal state rather than just current percepts",
-                        "The ability to learn from past experiences",
-                        "The ability to adapt to changing environments"
+                        "输入设备和输出设备",
+                        "大脑(AI模型)和身体(能力与工具)",
+                        "数据库和用户界面",
+                        "硬件和软件"
                 ),
                 1,  // 第二个选项是正确答案
-                "mc_agent_concept_4" // 下一题的ID
+                "mc_agent_definition_3" // 下一题的ID
         );
-        questionDataMap.put(agentConcept3.getId(), agentConcept3);
+        questionDataMap.put(agentDefinition2.getId(), agentDefinition2);
 
-        // Intelligent Agent概念题目4
-        MultipleChoiceData agentConcept4 = new MultipleChoiceData(
-                "mc_agent_concept_4",
-                "Agent Functions",
-                "Question Expert",
-                "Agent Sensing",
-                "What's the primary purpose of the perception system in an intelligent agent?",
+        // 智能体定义题目3
+        MultipleChoiceData agentDefinition3 = new MultipleChoiceData(
+                "mc_agent_definition_3",
+                "智能体特性",
+                "智能体专家",
+                "智能体能力",
+                "以下哪个是智能体的关键特性?",
                 Arrays.asList(
-                        "To communicate with other agents",
-                        "To execute actions in the environment",
-                        "To gather information about the environment",
-                        "To process and store memories"
+                        "只能处理文本信息",
+                        "必须具有实体形态",
+                        "自主性和与环境交互的能力",
+                        "只能执行预设的脚本"
                 ),
                 2,  // 第三个选项是正确答案
+                "mc_agent_definition_4" // 下一题的ID
+        );
+        questionDataMap.put(agentDefinition3.getId(), agentDefinition3);
+
+        // 智能体定义题目4
+        MultipleChoiceData agentDefinition4 = new MultipleChoiceData(
+                "mc_agent_definition_4",
+                "智能体应用",
+                "智能体专家",
+                "智能体实例",
+                "以下哪个是AI智能体的实际例子?",
+                Arrays.asList(
+                        "常见问题解答页面",
+                        "Siri或Alexa等虚拟助手",
+                        "简单计算器",
+                        "预设行为的游戏角色"
+                ),
+                1,  // 第二个选项是正确答案
                 "" // 没有下一题
         );
-        questionDataMap.put(agentConcept4.getId(), agentConcept4);
+        questionDataMap.put(agentDefinition4.getId(), agentDefinition4);
     }
 
-    private static void initMatchingData() {
-        // Agent Learning Methods匹配题1
-        Map<Integer, Integer> learningMatches1 = new HashMap<>();
-        learningMatches1.put(0, 0); // Supervised -> labeled examples
-        learningMatches1.put(1, 1); // Unsupervised -> patterns without labels
-        learningMatches1.put(2, 2); // Reinforcement -> trial and error
+    private static void initLLMMatchingQuestions() {
+        // LLM概念匹配题1
+        Map<Integer, Integer> llmMatches1 = new HashMap<>();
+        llmMatches1.put(0, 0); // 大语言模型 -> 理解并生成人类语言的AI
+        llmMatches1.put(1, 1); // 标记(Token) -> LLM处理的基本单位
+        llmMatches1.put(2, 2); // 自回归性 -> 一次生成的输出成为下次输入
 
-        MatchingData learningMethods1 = new MatchingData(
-                "match_learning_methods_1",
-                "Agent Learning",
-                "Question Expert",
-                "Basic Learning Methods",
+        MatchingData llmConcepts1 = new MatchingData(
+                "match_llm_concepts_1",
+                "语言模型基础",
+                "语言模型专家",
+                "LLM基本概念",
                 Arrays.asList(
-                        "Supervised Learning",
-                        "Unsupervised Learning",
-                        "Reinforcement Learning"
+                        "大型语言模型(LLM)",
+                        "标记(Token)",
+                        "自回归性"
                 ),
                 Arrays.asList(
-                        "Learning from labeled examples",
-                        "Finding patterns without labels",
-                        "Learning through trial and error"
+                        "理解并生成人类语言的深度学习模型",
+                        "LLM处理信息的基本单位，类似于词语",
+                        "一次通过的输出成为下一次的输入"
                 ),
-                learningMatches1,
-                "match_learning_methods_2" // 下一题的ID
+                llmMatches1,
+                "match_llm_concepts_2" // 下一题的ID
         );
-        questionDataMap.put(learningMethods1.getId(), learningMethods1);
+        questionDataMap.put(llmConcepts1.getId(), llmConcepts1);
 
-        // Agent Learning Methods匹配题2
-        Map<Integer, Integer> learningMatches2 = new HashMap<>();
-        learningMatches2.put(0, 0); // Transfer -> applying knowledge
-        learningMatches2.put(1, 1); // Few-shot -> limited examples
-        learningMatches2.put(2, 2); // Self-supervised -> own supervision
+        // LLM消息类型匹配题
+        Map<Integer, Integer> llmMatches2 = new HashMap<>();
+        llmMatches2.put(0, 0); // 系统消息 -> 定义模型行为的指令
+        llmMatches2.put(1, 1); // 用户消息 -> 人类输入的内容
+        llmMatches2.put(2, 2); // 助手消息 -> 模型生成的回复
 
-        MatchingData learningMethods2 = new MatchingData(
-                "match_learning_methods_2",
-                "Agent Learning",
-                "Question Expert",
-                "Advanced Learning Methods",
+        MatchingData llmConcepts2 = new MatchingData(
+                "match_llm_concepts_2",
+                "LLM消息类型",
+                "语言模型专家",
+                "LLM对话结构",
                 Arrays.asList(
-                        "Transfer Learning",
-                        "Few-shot Learning",
-                        "Self-supervised Learning"
+                        "系统消息",
+                        "用户消息",
+                        "助手消息"
                 ),
                 Arrays.asList(
-                        "Applying knowledge from one task to another",
-                        "Learning from a very limited number of examples",
-                        "Learning by generating own supervision signal"
+                        "定义模型应如何表现的持久性指令",
+                        "人类输入的查询或指令",
+                        "模型生成的回复内容"
                 ),
-                learningMatches2,
-                "match_learning_methods_3" // 下一题的ID
+                llmMatches2,
+                "match_llm_concepts_3" // 下一题的ID
         );
-        questionDataMap.put(learningMethods2.getId(), learningMethods2);
+        questionDataMap.put(llmConcepts2.getId(), llmConcepts2);
 
-        // Agent Environment匹配题
-        Map<Integer, Integer> environmentMatches = new HashMap<>();
-        environmentMatches.put(0, 0); // Observable -> fully visible
-        environmentMatches.put(1, 1); // Deterministic -> predictable
-        environmentMatches.put(2, 2); // Static -> unchanging
+        // 特殊标记匹配题
+        Map<Integer, Integer> tokenMatches = new HashMap<>();
+        tokenMatches.put(0, 0); // 特殊标记 -> 标记序列边界
+        tokenMatches.put(1, 1); // EOS标记 -> 表示序列结束
+        tokenMatches.put(2, 2); // 聊天模板 -> 保存对话历史
 
-        MatchingData environmentTypes = new MatchingData(
-                "match_learning_methods_3",
-                "Agent Environments",
-                "Question Expert",
-                "Environment Properties",
+        MatchingData specialTokens = new MatchingData(
+                "match_llm_concepts_3",
+                "LLM特殊组件",
+                "语言模型专家",
+                "LLM特殊元素",
                 Arrays.asList(
-                        "Fully Observable",
-                        "Deterministic",
-                        "Static"
+                        "特殊标记(Special Tokens)",
+                        "序列结束标记(EOS Token)",
+                        "聊天模板(Chat Template)"
                 ),
                 Arrays.asList(
-                        "Agent can perceive complete state of environment",
-                        "Next state is completely determined by current state and action",
-                        "Environment doesn't change while agent is thinking"
+                        "用于标记消息边界和角色的特殊符号",
+                        "指示模型生成过程结束的标记",
+                        "保存对话历史并维持上下文的结构"
                 ),
-                environmentMatches,
+                tokenMatches,
                 "" // 没有下一题
         );
-        questionDataMap.put(environmentTypes.getId(), environmentTypes);
+        questionDataMap.put(specialTokens.getId(), specialTokens);
     }
 
-    private static void initOrderingData() {
-        // Agent Technology Evolution排序题
-        OrderingData techEvolution = new OrderingData(
-                "order_tech_evolution",
-                "Agent History",
-                "Question Expert",
-                "Agent Technology Evolution",
-                Arrays.asList(
-                        "Rule-based Expert Systems (1970s)",
-                        "Symbolic AI Agents (1980s)",
-                        "Machine Learning Agents (1990s)",
-                        "Multi-Agent Systems (2000s)",
-                        "Deep Learning Agents (2010s)",
-                        "Large Language Model Agents (2020s)"
-                ),
-                "" // 没有下一题
-        );
-        questionDataMap.put(techEvolution.getId(), techEvolution);
-    }
-
-    private static void initTrueFalseData() {
-        // Agent Learning Principle判断题1
-        TrueFalseData learningPrinciple1 = new TrueFalseData(
-                "tf_learning_principle_1",
-                "Agent Principles",
-                "Question Expert",
-                "All intelligent agents must have the capability to learn from experience.",
+    private static void initToolsTrueFalseQuestions() {
+        // 工具定义判断题1
+        TrueFalseData toolsConcept1 = new TrueFalseData(
+                "tf_tools_concept_1",
+                "智能体工具",
+                "工具开发专家",
+                "工具可以让LLM直接访问外部数据，无需中间处理。",
                 false,
-                "While learning is an important capability for many advanced agents, some intelligent agents operate using fixed rule sets or expert systems without learning capabilities. These can still be considered intelligent agents if they can perceive their environment and take actions to achieve goals.",
-                "tf_learning_principle_2" // 下一题的ID
+                "这是错误的。LLM本身只能生成文本，它通过生成工具调用的文本，让智能体解析并执行工具调用，再将结果返回给LLM。LLM并不能直接访问外部数据，而是通过智能体作为中介。",
+                "tf_tools_concept_2" // 下一题的ID
         );
-        questionDataMap.put(learningPrinciple1.getId(), learningPrinciple1);
+        questionDataMap.put(toolsConcept1.getId(), toolsConcept1);
 
-        // Agent Safety Principle判断题2
-        TrueFalseData safetyPrinciple = new TrueFalseData(
-                "tf_learning_principle_2",
-                "Agent Principles",
-                "Question Expert",
-                "The higher the autonomy of an agent, the better it will always perform in any environment.",
+        // 工具设计判断题2
+        TrueFalseData toolsConcept2 = new TrueFalseData(
+                "tf_tools_concept_2",
+                "智能体工具",
+                "工具开发专家",
+                "优秀的工具设计应该是结构化的，包含明确的功能描述和输入格式。",
+                true,
+                "这是正确的。优秀的工具设计应该采用结构化表达方式，清晰描述工具功能和预期的输入格式，这样LLM才能正确理解如何调用工具。虽然没有强制的格式要求，但精确、连贯的描述对于工具的有效使用至关重要。",
+                "tf_tools_concept_3" // 下一题的ID
+        );
+        questionDataMap.put(toolsConcept2.getId(), toolsConcept2);
+
+        // 工具作用判断题3
+        TrueFalseData toolsConcept3 = new TrueFalseData(
+                "tf_tools_concept_3",
+                "智能体工具",
+                "工具开发专家",
+                "工具的主要作用是替代LLM，而不是增强LLM的能力。",
                 false,
-                "Higher autonomy is not always better. The optimal level of autonomy depends on the specific task, environment, and safety requirements. In critical systems or when human values need to be precisely represented, limited autonomy with human oversight may be preferable.",
+                "这是错误的。工具的主要作用是增强和补充LLM的能力，而不是替代它。例如，计算器工具补充LLM在数学计算方面的弱点，搜索工具提供最新信息以突破LLM训练数据的时间限制。工具和LLM相互配合，发挥各自优势。",
                 "" // 没有下一题
         );
-        questionDataMap.put(safetyPrinciple.getId(), safetyPrinciple);
+        questionDataMap.put(toolsConcept3.getId(), toolsConcept3);
+    }
+
+    private static void initWorkflowOrderingQuestions() {
+        // 工作流程排序题
+        OrderingData workflowSteps = new OrderingData(
+                "order_workflow_steps",
+                "智能体工作流",
+                "智能体工程师",
+                "智能体思考-行动-观察循环的正确顺序",
+                Arrays.asList(
+                        "接收用户指令",
+                        "思考分析任务",
+                        "规划执行步骤",
+                        "调用相关工具",
+                        "观察行动结果",
+                        "根据反馈调整",
+                        "生成最终回应"
+                ),
+                "" // 没有下一题
+        );
+        questionDataMap.put(workflowSteps.getId(), workflowSteps);
     }
 
     // 根据ID获取题目数据

@@ -123,16 +123,28 @@ public abstract class BasePosterItem extends Item {
     }
 
     // 辅助方法：根据类型获取海报数据
+    // 辅助方法：根据类型获取海报数据
     protected PosterManager.PosterData getPosterDataFromType(String posterType) {
-        if (posterType.equals("agent_basic")) {
-            return PosterManager.getInstance().getAgentBasicPosterData();
-        } else if (posterType.equals("agent_evolution")) {
-            return PosterManager.getInstance().getAgentEvolutionPosterData();
-        } else if (posterType.equals("agent_learning")) {
-            return PosterManager.getInstance().getAgentLearningPosterData();
-        } else if (posterType.equals("agent_principles")) {
-            return PosterManager.getInstance().getAgentPrinciplesPosterData();
+        switch (posterType) {
+            case "agent_definition":
+                return PosterManager.getInstance().getAgentDefinitionPosterData();
+            case "llms":
+                return PosterManager.getInstance().getLLMsPosterData();
+            case "tools":
+                return PosterManager.getInstance().getToolsPosterData();
+            case "workflow":
+                return PosterManager.getInstance().getWorkflowPosterData();
+            // 为向后兼容保留旧的映射
+            case "agent_basic":
+                return PosterManager.getInstance().getAgentDefinitionPosterData();
+            case "agent_evolution":
+                return PosterManager.getInstance().getLLMsPosterData();
+            case "agent_learning":
+                return PosterManager.getInstance().getToolsPosterData();
+            case "agent_principles":
+                return PosterManager.getInstance().getWorkflowPosterData();
+            default:
+                return null;
         }
-        return null;
     }
 }

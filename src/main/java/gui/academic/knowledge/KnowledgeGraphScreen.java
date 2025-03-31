@@ -15,18 +15,18 @@ import system.UIScreenManager;
 import java.util.List;
 
 public class KnowledgeGraphScreen extends Screen {
-    private static final String TITLE = "Agent Knowledge Graph";
+    private static final String TITLE = "智能体知识图谱";
 
     // 界面元素
     private Button closeButton;
-    private Button conceptsButton;
-    private Button relationshipsButton;
-    private Button principlesButton;
-    private Button timelinesButton;
+    private Button agentDefinitionButton;
+    private Button llmsButton;
+    private Button toolsButton;
+    private Button workflowButton;
     private Button checkTaskButton;
 
     // 当前选中的类别
-    private String selectedCategory = "Concepts";
+    private String selectedCategory = "智能体定义";
 
     // 布局常量
     private int leftPanelWidth;
@@ -62,40 +62,40 @@ public class KnowledgeGraphScreen extends Screen {
         int buttonWidth = 100;
         int buttonsY = 25; // 向上移动按钮
 
-        this.conceptsButton = this.addRenderableWidget(new Button(
+        this.agentDefinitionButton = this.addRenderableWidget(new Button(
                 this.width / 5 - buttonWidth / 2 - 15,
                 buttonsY,
                 buttonWidth,
                 20,
-                new TextComponent("Concepts"),
-                button -> selectCategory("Concepts")
+                new TextComponent("智能体定义"),
+                button -> selectCategory("智能体定义")
         ));
 
-        this.relationshipsButton = this.addRenderableWidget(new Button(
+        this.llmsButton = this.addRenderableWidget(new Button(
                 2 * this.width / 5 - buttonWidth / 2 - 5,
                 buttonsY,
                 buttonWidth,
                 20,
-                new TextComponent("Relationships"),
-                button -> selectCategory("Relationships")
+                new TextComponent("大型语言模型"),
+                button -> selectCategory("大型语言模型")
         ));
 
-        this.principlesButton = this.addRenderableWidget(new Button(
+        this.toolsButton = this.addRenderableWidget(new Button(
                 3 * this.width / 5 - buttonWidth / 2 + 5,
                 buttonsY,
                 buttonWidth,
                 20,
-                new TextComponent("Principles"),
-                button -> selectCategory("Principles")
+                new TextComponent("智能体工具"),
+                button -> selectCategory("智能体工具")
         ));
 
-        this.timelinesButton = this.addRenderableWidget(new Button(
+        this.workflowButton = this.addRenderableWidget(new Button(
                 4 * this.width / 5 - buttonWidth / 2 + 15,
                 buttonsY,
                 buttonWidth,
                 20,
-                new TextComponent("Timelines"),
-                button -> selectCategory("Timelines")
+                new TextComponent("智能体工作流"),
+                button -> selectCategory("智能体工作流")
         ));
 
         // 高亮当前选中的类别
@@ -107,7 +107,7 @@ public class KnowledgeGraphScreen extends Screen {
                 5,
                 100,
                 20,
-                new TextComponent("Check Task"),
+                new TextComponent("检查任务"),
                 button -> KnowledgeTaskMonitor.getInstance().manualCheck()
         ));
     }
@@ -119,24 +119,24 @@ public class KnowledgeGraphScreen extends Screen {
 
     private void updateButtonStyles() {
         // 重置所有按钮样式
-        conceptsButton.setMessage(new TextComponent("Concepts"));
-        relationshipsButton.setMessage(new TextComponent("Relationships"));
-        principlesButton.setMessage(new TextComponent("Principles"));
-        timelinesButton.setMessage(new TextComponent("Timelines"));
+        agentDefinitionButton.setMessage(new TextComponent("智能体定义"));
+        llmsButton.setMessage(new TextComponent("大型语言模型"));
+        toolsButton.setMessage(new TextComponent("智能体工具"));
+        workflowButton.setMessage(new TextComponent("智能体工作流"));
 
         // 高亮选中的按钮
         switch(selectedCategory) {
-            case "Concepts":
-                conceptsButton.setMessage(new TextComponent("✓ Concepts"));
+            case "智能体定义":
+                agentDefinitionButton.setMessage(new TextComponent("✓ 智能体定义"));
                 break;
-            case "Relationships":
-                relationshipsButton.setMessage(new TextComponent("✓ Relationships"));
+            case "大型语言模型":
+                llmsButton.setMessage(new TextComponent("✓ 大型语言模型"));
                 break;
-            case "Principles":
-                principlesButton.setMessage(new TextComponent("✓ Principles"));
+            case "智能体工具":
+                toolsButton.setMessage(new TextComponent("✓ 智能体工具"));
                 break;
-            case "Timelines":
-                timelinesButton.setMessage(new TextComponent("✓ Timelines"));
+            case "智能体工作流":
+                workflowButton.setMessage(new TextComponent("✓ 智能体工作流"));
                 break;
         }
     }
@@ -182,17 +182,17 @@ public class KnowledgeGraphScreen extends Screen {
 
         // 根据当前选择的类别渲染内容
         switch(selectedCategory) {
-            case "Concepts":
-                renderConceptsView(poseStack, contentX, contentY, contentWidth);
+            case "智能体定义":
+                renderAgentDefinitionView(poseStack, contentX, contentY, contentWidth);
                 break;
-            case "Relationships":
-                renderRelationshipsView(poseStack, contentX, contentY, contentWidth);
+            case "大型语言模型":
+                renderLLMsView(poseStack, contentX, contentY, contentWidth);
                 break;
-            case "Principles":
-                renderPrinciplesView(poseStack, contentX, contentY, contentWidth);
+            case "智能体工具":
+                renderToolsView(poseStack, contentX, contentY, contentWidth);
                 break;
-            case "Timelines":
-                renderTimelinesView(poseStack, contentX, contentY, contentWidth);
+            case "智能体工作流":
+                renderWorkflowView(poseStack, contentX, contentY, contentWidth);
                 break;
         }
 
@@ -204,17 +204,17 @@ public class KnowledgeGraphScreen extends Screen {
         GameController controller = GameController.getInstance();
 
         // 左侧面板标题
-        drawString(poseStack, this.font, "Knowledge Progress", 20, 60, 0xFFFFAA);
+        drawString(poseStack, this.font, "知识进度", 20, 60, 0xFFFFAA);
 
         // 整体进度
         int overallProgress = controller.getKnowledgeGraphCompletion();
-        String overallText = "Overall Progress: " + overallProgress + "%";
+        String overallText = "总体进度: " + overallProgress + "%";
         drawString(poseStack, this.font, overallText, 20, 80, 0xFFFFFF);
         renderProgressBar(poseStack, 20, 90, leftPanelWidth - 20, 10, overallProgress);
 
         // 各领域进度
-        String[] areas = {"基础概念", "关系理解", "原则验证", "发展时间线"};
-        String[] labels = {"Concepts", "Relationships", "Principles", "Timelines"};
+        String[] areas = {"智能体定义", "大型语言模型", "智能体工具", "智能体工作流"};
+        String[] labels = {"智能体定义", "大型语言模型", "智能体工具", "智能体工作流"};
 
         for (int i = 0; i < areas.length; i++) {
             // 确保每次都重新获取最新进度
@@ -236,13 +236,13 @@ public class KnowledgeGraphScreen extends Screen {
         }
     }
 
-    // 绘制概念区域时保证内容不超出面板
-    private void renderConceptsView(PoseStack poseStack, int x, int y, int width) {
+    // 绘制智能体定义区域
+    private void renderAgentDefinitionView(PoseStack poseStack, int x, int y, int width) {
         KnowledgeGraphManager manager = KnowledgeGraphManager.getInstance();
         List<String> concepts = manager.getAcquiredConcepts();
 
         // 标题上移
-        drawString(poseStack, this.font, "Acquired Agent Concepts", x, y, 0xFFFFAA);
+        drawString(poseStack, this.font, "已获取的智能体概念", x, y, 0xFFFFAA);
         y += 20;
 
         // 分隔线
@@ -254,7 +254,7 @@ public class KnowledgeGraphScreen extends Screen {
 
         int itemsPerColumn = 0;
         if (concepts.isEmpty()) {
-            drawString(poseStack, this.font, "No concepts acquired yet", x, y, 0xAAAAAA);
+            drawString(poseStack, this.font, "尚未获取任何智能体概念", x, y, 0xAAAAAA);
         } else {
             // 使用两列布局展示概念，限制显示数量
             itemsPerColumn = (conceptDisplayLimit + 1) / 2;
@@ -288,10 +288,10 @@ public class KnowledgeGraphScreen extends Screen {
             if (concepts.size() > conceptDisplayLimit) {
                 int moreY = y + Math.min(itemsPerColumn, conceptDisplayLimit % itemsPerColumn) * 25;
                 if (conceptDisplayLimit >= itemsPerColumn) {
-                    drawString(poseStack, this.font, "(+" + (concepts.size() - conceptDisplayLimit) + " more...)",
+                    drawString(poseStack, this.font, "(还有 " + (concepts.size() - conceptDisplayLimit) + " 个概念...)",
                             column2X, moreY + 5, 0xAAAAAA);
                 } else {
-                    drawString(poseStack, this.font, "(+" + (concepts.size() - conceptDisplayLimit) + " more...)",
+                    drawString(poseStack, this.font, "(还有 " + (concepts.size() - conceptDisplayLimit) + " 个概念...)",
                             column1X, moreY + 5, 0xAAAAAA);
                 }
             }
@@ -307,7 +307,7 @@ public class KnowledgeGraphScreen extends Screen {
         }
 
         // 底部提示，使用换行处理
-        String tipText = "Collect glowing books to learn more concepts!";
+        String tipText = "收集发光的书籍来学习更多智能体概念！";
         drawWrappedText(poseStack, tipText, x, this.height - 30, width, 0xAAAAAA, false);
     }
 
@@ -319,12 +319,12 @@ public class KnowledgeGraphScreen extends Screen {
 
         if (nodeCount == 0) {
             // 如果没有节点，绘制提示信息
-            drawCenteredString(poseStack, this.font, "Knowledge network will appear here", centerX, centerY, 0xAAAAAA);
+            drawCenteredString(poseStack, this.font, "知识网络将在此处显示", centerX, centerY, 0xAAAAAA);
             return;
         }
 
         // 绘制标题
-        drawCenteredString(poseStack, this.font, "Knowledge Network", centerX, centerY - radius - 15, 0xFFFFAA);
+        drawCenteredString(poseStack, this.font, "知识关联网络", centerX, centerY - radius - 15, 0xFFFFAA);
 
         // 绘制中心节点
         fill(poseStack, centerX - 8, centerY - 8, centerX + 8, centerY + 8, 0xFFFFDD00);
@@ -356,7 +356,6 @@ public class KnowledgeGraphScreen extends Screen {
         }
     }
 
-
     // 辅助绘制线段的方法
     private void drawLine(PoseStack poseStack, int x1, int y1, int x2, int y2, int color) {
         // 简化的线段绘制
@@ -377,22 +376,13 @@ public class KnowledgeGraphScreen extends Screen {
         }
     }
 
-    // 绘制带换行功能的文本
-    private void drawWrappedText(PoseStack poseStack, String text, int x, int y, int maxWidth, int color, boolean isWhite) {
-        List<ColoredText> lines = TextUtils.wrapText(text, maxWidth, isWhite);
-        for (int i = 0; i < lines.size(); i++) {
-            ColoredText line = lines.get(i);
-            drawString(poseStack, this.font, line.text, x, y + i * 12, line.color);
-        }
-    }
-
-    // 同样为关系视图添加自适应功能
-    private void renderRelationshipsView(PoseStack poseStack, int x, int y, int width) {
+    // 绘制LLMs视图
+    private void renderLLMsView(PoseStack poseStack, int x, int y, int width) {
         KnowledgeGraphManager manager = KnowledgeGraphManager.getInstance();
         List<String> relationships = manager.getMasteredRelationships();
 
         // 标题上移
-        drawString(poseStack, this.font, "Mastered Relationship Categories", x, y, 0xFFFFAA);
+        drawString(poseStack, this.font, "掌握的大型语言模型特性", x, y, 0xFFFFAA);
         y += 20;
 
         // 分隔线
@@ -402,11 +392,11 @@ public class KnowledgeGraphScreen extends Screen {
         int availableHeight = this.height - y - 40; // 减去底部提示的高度
 
         if (relationships.isEmpty()) {
-            drawString(poseStack, this.font, "No relationship categories mastered yet", x, y, 0xAAAAAA);
+            drawString(poseStack, this.font, "尚未掌握任何LLM特性", x, y, 0xAAAAAA);
 
             y += 30;
-            drawCenteredString(poseStack, this.font, "Example Relationship Structure:", x + width/2, y, 0xFFFFAA);
-            renderRelationshipExample(poseStack, x, y + 20, width);
+            drawCenteredString(poseStack, this.font, "示例LLM结构:", x + width/2, y, 0xFFFFAA);
+            renderLLMExample(poseStack, x, y + 20, width);
 
         } else {
             // 计算可以显示的关系数量
@@ -416,7 +406,7 @@ public class KnowledgeGraphScreen extends Screen {
             int listWidth = width / 2 - 20;
 
             // 绘制关系列表标题
-            drawString(poseStack, this.font, "Categories:", x, y, 0xFFFFAA);
+            drawString(poseStack, this.font, "已掌握特性:", x, y, 0xFFFFAA);
 
             y += 15;
             // 绘制关系列表
@@ -445,7 +435,7 @@ public class KnowledgeGraphScreen extends Screen {
             if (relationships.size() > relationshipLimit) {
                 int moreY = y + relationshipLimit * 40;
                 if (moreY + 20 <= this.height - 40) {
-                    drawString(poseStack, this.font, "(+" + (relationships.size() - relationshipLimit) + " more...)",
+                    drawString(poseStack, this.font, "(还有 " + (relationships.size() - relationshipLimit) + " 项...)",
                             x + 10, moreY, 0xAAAAAA);
                 }
             }
@@ -453,130 +443,94 @@ public class KnowledgeGraphScreen extends Screen {
             // 只有当有足够空间时才显示关系图
             int graphHeight = Math.min(200, availableHeight - 40);
             if (graphHeight >= 100) {
-                renderRelationshipGraph(poseStack, x + listWidth + 30, y + 20, listWidth, relationships, graphHeight);
+                renderLLMStructure(poseStack, x + listWidth + 30, y + 20, listWidth, relationships, graphHeight);
             }
         }
 
         // 底部提示，使用换行处理
-        String tipText = "Use the Concept Workbench to build more connections!";
+        String tipText = "使用概念工作台构建更多LLM知识联系！";
         drawWrappedText(poseStack, tipText, x, this.height - 30, width, 0xAAAAAA, false);
     }
 
-
-    // 绘制关系图示例
-    private void renderRelationshipExample(PoseStack poseStack, int x, int y, int width) {
+    // 绘制LLM示例
+    private void renderLLMExample(PoseStack poseStack, int x, int y, int width) {
         int centerX = x + width / 2;
 
-        // 绘制两个示例概念框
-        int box1X = centerX - 100;
-        int box2X = centerX + 20;
+        // 绘制简化的LLM结构图
         int boxY = y + 20;
-        int boxWidth = 80;
+        int boxWidth = 100;
         int boxHeight = 30;
 
-        // 第一个概念框
-        fill(poseStack, box1X, boxY, box1X + boxWidth, boxY + boxHeight, 0x6600AA00);
-        drawCenteredString(poseStack, this.font, "Concept A", box1X + boxWidth/2, boxY + 10, 0xFFFFFF);
+        // 系统消息框
+        fill(poseStack, centerX - boxWidth/2, boxY, centerX + boxWidth/2, boxY + boxHeight, 0x66AA0000);
+        drawCenteredString(poseStack, this.font, "系统消息", centerX, boxY + 10, 0xFFFFFF);
 
-        // 第二个概念框
-        fill(poseStack, box2X, boxY, box2X + boxWidth, boxY + boxHeight, 0x6600AA00);
-        drawCenteredString(poseStack, this.font, "Concept B", box2X + boxWidth/2, boxY + 10, 0xFFFFFF);
+        // 用户消息框
+        int userBoxY = boxY + boxHeight + 20;
+        fill(poseStack, centerX - boxWidth/2, userBoxY, centerX + boxWidth/2, userBoxY + boxHeight, 0x6600AA00);
+        drawCenteredString(poseStack, this.font, "用户消息", centerX, userBoxY + 10, 0xFFFFFF);
+
+        // 助手消息框
+        int assistantBoxY = userBoxY + boxHeight + 20;
+        fill(poseStack, centerX - boxWidth/2, assistantBoxY, centerX + boxWidth/2, assistantBoxY + boxHeight, 0x660000AA);
+        drawCenteredString(poseStack, this.font, "助手消息", centerX, assistantBoxY + 10, 0xFFFFFF);
 
         // 绘制连接线
-        drawLine(poseStack, box1X + boxWidth, boxY + boxHeight/2, box2X, boxY + boxHeight/2, 0xFFFFFFFF);
-
-        // 绘制关系标签背景
-        int labelX = centerX - 40;
-        int labelY = boxY - 15;
-        int labelWidth = 80;
-        int labelHeight = 20;
-        fill(poseStack, labelX, labelY, labelX + labelWidth, labelY + labelHeight, 0x660000AA);
-
-        // 绘制关系标签
-        drawCenteredString(poseStack, this.font, "Relates To", centerX, labelY + 6, 0xFFFFFF);
+        drawLine(poseStack, centerX, boxY + boxHeight, centerX, userBoxY, 0xFFFFFFFF);
+        drawLine(poseStack, centerX, userBoxY + boxHeight, centerX, assistantBoxY, 0xFFFFFFFF);
 
         // 绘制说明文本
-        drawCenteredString(poseStack, this.font, "Relationships connect different concepts in meaningful ways",
-                centerX, boxY + boxHeight + 30, 0xAAAAAA);
+        drawCenteredString(poseStack, this.font, "LLM使用不同类型的消息构建对话",
+                centerX, assistantBoxY + boxHeight + 20, 0xAAAAAA);
     }
 
-    // 2. 修复关系图绘制函数，移除重复的标题
-    private void renderRelationshipGraph(PoseStack poseStack, int x, int y, int width, List<String> relationships, int height) {
-        // 确定绘制几个关系示例
-        int relationCount = Math.min(relationships.size(), 3); // 最多绘制3个关系
+    // 绘制LLM结构
+    private void renderLLMStructure(PoseStack poseStack, int x, int y, int width, List<String> relationships, int height) {
+        // 绘制LLM结构图
+        int centerX = x + width / 2;
+        int centerY = y + height / 2;
 
-        if (relationCount > 0) {
-            // 移除重复的标题，因为已经在主函数中添加了
+        // 绘制LLM核心
+        fill(poseStack, centerX - 40, centerY - 20, centerX + 40, centerY + 20, 0x66AA0000);
+        drawCenteredString(poseStack, this.font, "LLM核心", centerX, centerY, 0xFFFFFF);
 
-            int graphY = y;
+        // 计算半径
+        int radius = Math.min(width / 2 - 30, height / 2 - 30);
+        radius = Math.max(radius, 40); // 最小半径
 
-            // 画一个框表示知识图谱的边界
-            fill(poseStack, x, graphY, x + width, graphY + height, 0x22FFFFFF);
+        // 绘制已掌握的特性
+        int relationCount = Math.min(relationships.size(), 4); // 最多显示4个
+        for (int i = 0; i < relationCount; i++) {
+            double angle = (Math.PI * 2 * i) / relationCount;
+            int featureX = (int)(centerX + Math.cos(angle) * radius);
+            int featureY = (int)(centerY + Math.sin(angle) * radius);
 
-            // 绘制中心概念
-            int centerX = x + width / 2;
-            int centerY = graphY + height / 2;
+            // 绘制连接线
+            drawLine(poseStack, centerX, centerY, featureX, featureY, 0xFFFFFFFF);
 
-            // 中心概念圆
-            fill(poseStack, centerX - 25, centerY - 12, centerX + 25, centerY + 12, 0x660000AA);
-            drawCenteredString(poseStack, this.font, "Agent", centerX, centerY, 0xFFFFFF);
+            // 特性框
+            int boxWidth = 60;
+            int boxHeight = 20;
+            fill(poseStack, featureX - boxWidth/2, featureY - boxHeight/2,
+                    featureX + boxWidth/2, featureY + boxHeight/2, 0x660000AA);
 
-            // 计算适当的半径
-            int radius = Math.min(width / 2 - 30, height / 2 - 30);
-            radius = Math.max(radius, 40); // 最小半径
-
-            // 绘制放射状的关系和相关概念
-            for (int i = 0; i < relationCount; i++) {
-                double angle = (Math.PI * 2 * i) / relationCount;
-
-                int relatedX = (int)(centerX + Math.cos(angle) * radius);
-                int relatedY = (int)(centerY + Math.sin(angle) * radius);
-
-                // 绘制关系线
-                drawLine(poseStack, centerX, centerY, relatedX, relatedY, 0xFFFFFFFF);
-
-                // 绘制关系概念框
-                int boxWidth = 60;
-                int boxHeight = 20;
-                fill(poseStack, relatedX - boxWidth/2, relatedY - boxHeight/2,
-                        relatedX + boxWidth/2, relatedY + boxHeight/2, 0x6600AA00);
-
-                // 截短关系名称以适合框
-                String relationName = relationships.get(i);
-                if (this.font.width(relationName) > boxWidth - 10) {
-                    relationName = relationName.substring(0, Math.min(8, relationName.length())) + "...";
-                }
-
-                drawCenteredString(poseStack, this.font, relationName,
-                        relatedX, relatedY - 3, 0xFFFFFF);
-
-                // 绘制关系类型标签（仅当有足够空间时）
-                if (radius > 60) {
-                    int midX = (centerX + relatedX) / 2;
-                    int midY = (centerY + relatedY) / 2;
-
-                    // 调整标签位置以避免与线重叠
-                    double perpAngle = angle + Math.PI/2;
-                    int labelOffset = 10;
-                    int labelX = (int)(midX + Math.cos(perpAngle) * labelOffset);
-                    int labelY = (int)(midY + Math.sin(perpAngle) * labelOffset);
-
-                    fill(poseStack, labelX - 20, labelY - 10, labelX + 20, labelY + 10, 0x88000000);
-                    drawCenteredString(poseStack, this.font, "Type " + (i+1), labelX, labelY, 0xFFFFAA);
-                }
+            // 截短特性名称
+            String featureName = relationships.get(i);
+            if (this.font.width(featureName) > boxWidth - 10) {
+                featureName = featureName.substring(0, Math.min(8, featureName.length())) + "...";
             }
+
+            drawCenteredString(poseStack, this.font, featureName, featureX, featureY - 3, 0xFFFFFF);
         }
     }
 
-
-
-    // 3. 修复原则视图中状态和内容重叠的问题
-    private void renderPrinciplesView(PoseStack poseStack, int x, int y, int width) {
+    // 绘制Tools视图
+    private void renderToolsView(PoseStack poseStack, int x, int y, int width) {
         KnowledgeGraphManager manager = KnowledgeGraphManager.getInstance();
-        List<String> principles = manager.getValidatedPrinciples();
+        List<String> tools = manager.getValidatedPrinciples();
 
         // 标题上移
-        drawString(poseStack, this.font, "Validated Agent Principles", x, y, 0xFFFFAA);
+        drawString(poseStack, this.font, "已验证的智能体工具原则", x, y, 0xFFFFAA);
         y += 20;
 
         // 分隔线
@@ -585,167 +539,218 @@ public class KnowledgeGraphScreen extends Screen {
 
         // 计算可用空间
         int availableHeight = this.height - y - 40; // 减去底部提示的空间
-        int principleHeight = 80; // 增加每个原则卡片的高度，避免内容重叠
-        int displayLimit = Math.max(1, availableHeight / principleHeight);
+        int toolHeight = 80; // 每个工具卡片的高度
+        int displayLimit = Math.max(1, availableHeight / toolHeight);
 
-        if (principles.isEmpty()) {
-            drawString(poseStack, this.font, "No principles validated yet", x, y, 0xAAAAAA);
+        if (tools.isEmpty()) {
+            drawString(poseStack, this.font, "尚未验证任何工具原则", x, y, 0xAAAAAA);
+
+            // 添加工具示例图
+            y += 30;
+            renderToolExample(poseStack, x, y, width);
         } else {
-            for (int i = 0; i < Math.min(principles.size(), displayLimit); i++) {
-                // 为每个原则创建一个卡片样式的展示
-                int cardY = y + i * principleHeight;
+            for (int i = 0; i < Math.min(tools.size(), displayLimit); i++) {
+                // 为每个工具创建一个卡片样式的展示
+                int cardY = y + i * toolHeight;
 
                 // 卡片背景
                 fill(poseStack, x, cardY, x + width - 10, cardY + 70, 0x44000000);
 
-                // 原则编号和标题
-                drawString(poseStack, this.font, "Principle " + (i+1) + ":", x + 10, cardY + 10, 0xFFFFAA);
+                // 工具编号和标题
+                drawString(poseStack, this.font, "原则 " + (i+1) + ":", x + 10, cardY + 10, 0xFFFFAA);
 
-                // 截断过长的原则名称
-                String principleName = principles.get(i);
-                if (this.font.width(principleName) > width - 120) {
-                    principleName = principleName.substring(0, Math.min(25, principleName.length())) + "...";
+                // 截断过长的工具名称
+                String toolName = tools.get(i);
+                if (this.font.width(toolName) > width - 120) {
+                    toolName = toolName.substring(0, Math.min(25, toolName.length())) + "...";
                 }
-                drawString(poseStack, this.font, principleName, x + 100, cardY + 10, 0xFFFFFF);
+                drawString(poseStack, this.font, toolName, x + 100, cardY + 10, 0xFFFFFF);
 
                 // 分隔线
                 fill(poseStack, x + 10, cardY + 25, x + width - 20, cardY + 26, 0x44FFFFFF);
 
-                // 原则描述（减少描述长度，确保不会与状态重叠）
-                String description = "This principle defines fundamental behaviors for intelligent agents.";
+                // 工具描述
+                String description = "该原则定义了智能体工具的基本行为和使用方式。";
                 drawString(poseStack, this.font, description, x + 10, cardY + 35, 0xCCCCCC);
 
-                // 原则状态 - 移到下一行，避免重叠
-                drawString(poseStack, this.font, "Status: ", x + 10, cardY + 55, 0xCCCCCC);
-                drawString(poseStack, this.font, "Validated ✓", x + 60, cardY + 55, 0xFF00FF00);
+                // 工具状态
+                drawString(poseStack, this.font, "状态: ", x + 10, cardY + 55, 0xCCCCCC);
+                drawString(poseStack, this.font, "已验证 ✓", x + 60, cardY + 55, 0xFF00FF00);
             }
 
-            // 如果原则太多，显示"更多..."
-            if (principles.size() > displayLimit) {
-                int moreY = y + displayLimit * principleHeight;
-                drawString(poseStack, this.font, "(+" + (principles.size() - displayLimit) + " more principles...)",
+            // 如果工具太多，显示"更多..."
+            if (tools.size() > displayLimit) {
+                int moreY = y + displayLimit * toolHeight;
+                drawString(poseStack, this.font, "(还有 " + (tools.size() - displayLimit) + " 个原则...)",
                         x + 10, moreY + 5, 0xAAAAAA);
             }
         }
 
         // 底部提示，使用换行处理
-        String tipText = "Activate Verification Devices to test your knowledge!";
+        String tipText = "激活验证设备来测试你的工具知识！";
         drawWrappedText(poseStack, tipText, x, this.height - 30, width, 0xAAAAAA, false);
     }
 
-    // 4. 修复时间线视图中节点标题重叠问题
-    private void renderTimelineExample(PoseStack poseStack, int x, int y, int width) {
-        // 时间线水平线
-        fill(poseStack, x, y + 20, x + width - 10, y + 22, 0xFFFFFFFF);
+    // 绘制工具示例
+    private void renderToolExample(PoseStack poseStack, int x, int y, int width) {
+        int centerX = x + width / 2;
 
-        // 时间点
-        int numPoints = 5;
-        String[] years = {"1950", "1970", "1990", "2010", "2023"};
-        String[] events = {"Early AI", "Expert Systems", "Neural Networks", "Deep Learning", "Today"};
+        // 绘制工具流程图
+        // LLM框
+        int boxY = y + 20;
+        int boxWidth = 80;
+        int boxHeight = 30;
+        fill(poseStack, centerX - 100 - boxWidth/2, boxY, centerX - 100 + boxWidth/2, boxY + boxHeight, 0x66AA0000);
+        drawCenteredString(poseStack, this.font, "LLM", centerX - 100, boxY + 10, 0xFFFFFF);
 
-        for (int i = 0; i < numPoints; i++) {
-            int pointX = x + 10 + (width - 30) * i / (numPoints - 1);
+        // 工具框
+        fill(poseStack, centerX + 100 - boxWidth/2, boxY, centerX + 100 + boxWidth/2, boxY + boxHeight, 0x660000AA);
+        drawCenteredString(poseStack, this.font, "工具", centerX + 100, boxY + 10, 0xFFFFFF);
 
-            // 时间点标记
-            fill(poseStack, pointX - 3, y + 17, pointX + 3, y + 25, 0xFFFF0000);
+        // 箭头1：LLM -> 工具
+        drawLine(poseStack, centerX - 100 + boxWidth/2, boxY + boxHeight/2,
+                centerX + 100 - boxWidth/2, boxY + boxHeight/2, 0xFFFFFFFF);
+        drawCenteredString(poseStack, this.font, "调用", centerX, boxY + boxHeight/2 - 10, 0xFFFFAA);
 
-            // 年份标签
-            drawCenteredString(poseStack, this.font, years[i], pointX, y + 35, 0xFFFFFF);
+        // 箭头2：工具 -> LLM（返回结果）
+        int arrowY = boxY + boxHeight + 20;
+        drawLine(poseStack, centerX + 100, boxY + boxHeight,
+                centerX + 100, arrowY, 0xFFFFFFFF);
+        drawLine(poseStack, centerX + 100, arrowY,
+                centerX - 100, arrowY, 0xFFFFFFFF);
+        drawLine(poseStack, centerX - 100, arrowY,
+                centerX - 100, boxY + boxHeight, 0xFFFFFFFF);
+        drawCenteredString(poseStack, this.font, "返回结果", centerX, arrowY + 10, 0xFFFFAA);
 
-            // 事件标签 - 为了避免重叠，偶数和奇数点位置交错放置
-            int eventY = (i % 2 == 0) ? y : y - 15;
-            drawCenteredString(poseStack, this.font, events[i], pointX, eventY, 0xFFFFAA);
-        }
-
-        // 描述文本 - 放到时间线下方足够远的位置
-        drawCenteredString(poseStack, this.font, "Timelines show the historical development of agent technologies",
-                x + width/2, y + 60, 0xAAAAAA);
+        // 描述
+        drawCenteredString(poseStack, this.font, "工具通过补充LLM能力扩展智能体功能",
+                centerX, arrowY + 40, 0xAAAAAA);
     }
 
-    // 5. 修复时间线可视化中的文本重叠问题
-    private void renderTimelinesVisualization(PoseStack poseStack, int x, int y, int width, List<String> timelines) {
-        drawString(poseStack, this.font, "Historical Development:", x, y, 0xFFFFAA);
-
-        y += 20;
-
-        // 时间线容器
-        fill(poseStack, x, y, x + width - 10, y + 100, 0x22FFFFFF);
-
-        // 根据实际时间线绘制
-        for (int i = 0; i < Math.min(timelines.size(), 2); i++) { // 最多显示两条时间线
-            int timelineY = y + 10 + i * 40;
-
-            // 时间线名称
-            drawString(poseStack, this.font, timelines.get(i) + ":", x, timelineY - 50, 0xFFFFFF);
-
-            // 时间线水平线
-            fill(poseStack, x + 10, timelineY, x + width - 20, timelineY + 2, 0xFFFFFFFF);
-
-            // 在时间线上添加6个关键点
-            for (int j = 0; j < 6; j++) {
-                int pointX = x + 10 + (width - 30) * j / 5;
-
-                // 时间点标记
-                int markerColor = (j % 2 == 0) ? 0xFFFF0000 : 0xFF00FFFF;
-                fill(poseStack, pointX - 3, timelineY - 3, pointX + 3, timelineY + 5, markerColor);
-
-                // 时间点简短说明 - 交错放置事件标签，避免重叠
-                if (j % 2 == 0) { // 偶数事件放在上方
-                    String eventText = "Event " + (j+1);
-                    drawCenteredString(poseStack, this.font, eventText, pointX, timelineY - 15, 0xFFFFAA);
-                } else { // 奇数事件放在下方
-                    String eventText = "Event " + (j+1);
-                    drawCenteredString(poseStack, this.font, eventText, pointX, timelineY + 15, 0xFFFFAA);
-                }
-            }
-        }
-    }
-
-    // 6. 修复时间线视图底部文字没有换行的问题
-    private void renderTimelinesView(PoseStack poseStack, int x, int y, int width) {
+    // 绘制Workflow视图
+    private void renderWorkflowView(PoseStack poseStack, int x, int y, int width) {
         KnowledgeGraphManager manager = KnowledgeGraphManager.getInstance();
-        List<String> timelines = manager.getMasteredTimelines();
+        List<String> workflows = manager.getMasteredTimelines();
 
         // 标题上移
-        drawString(poseStack, this.font, "Agent Development Timelines", x, y, 0xFFFFAA);
+        drawString(poseStack, this.font, "智能体工作流程", x, y, 0xFFFFAA);
         y += 20;
 
         // 分隔线
         fill(poseStack, x, y, x + width - 10, y + 1, 0x66FFFFFF);
         y += 10;
 
-        if (timelines.isEmpty()) {
-            drawString(poseStack, this.font, "No timelines mastered yet", x, y, 0xAAAAAA);
+        if (workflows.isEmpty()) {
+            drawString(poseStack, this.font, "尚未掌握任何工作流程", x, y, 0xAAAAAA);
 
-            // 显示示例时间线 - 上移
+            // 显示示例工作流程
             y += 30;
-            drawCenteredString(poseStack, this.font, "Example Timeline Structure:", x + width/2, y - 10, 0xFFFFAA);
-            renderTimelineExample(poseStack, x, y + 20, width);
+            drawCenteredString(poseStack, this.font, "示例工作流程结构:", x + width/2, y - 10, 0xFFFFAA);
+            renderWorkflowExample(poseStack, x, y + 20, width);
         } else {
-            // 显示时间线列表
-            for (int i = 0; i < timelines.size(); i++) {
-                drawString(poseStack, this.font, "• " + timelines.get(i), x, y + i * 25, 0xFFFFFF);
+            // 显示工作流程列表
+            for (int i = 0; i < workflows.size(); i++) {
+                drawString(poseStack, this.font, "• " + workflows.get(i), x, y + i * 25, 0xFFFFFF);
             }
 
-            // 时间线可视化 - 上移
-            y += Math.max(60, timelines.size() * 25 + 10);
-            renderTimelinesVisualization(poseStack, x, y, width, timelines);
+            // 工作流程可视化
+            y += Math.max(60, workflows.size() * 25 + 10);
+            renderWorkflowVisualization(poseStack, x, y, width, workflows);
         }
 
-        // 底部提示 - 让提示占据整个宽度
-        String tipText = "Visit the Time Corridor to arrange more historical events!";
+        // 底部提示
+        String tipText = "访问时间走廊来掌握更多工作流程步骤！";
         fill(poseStack, x, this.height - 30, x + width - 10, this.height - 10, 0x33000000);
         drawString(poseStack, this.font, tipText, x + 10, this.height - 25, 0xAAAAAA);
     }
 
-    // 7. 对所有视图的底部提示使用统一的样式
-    private void renderBottomTip(PoseStack poseStack, int x, int y, int width, String text) {
-        // 半透明背景
-        fill(poseStack, x, y, x + width - 10, y + 20, 0x33000000);
-        // 提示文本
-        drawString(poseStack, this.font, text, x + 10, y + 5, 0xAAAAAA);
+    // 绘制工作流程示例
+    private void renderWorkflowExample(PoseStack poseStack, int x, int y, int width) {
+        int centerX = x + width / 2;
+
+        // 绘制工作流循环图
+        String[] steps = {"思考", "行动", "观察"};
+        int radius = 80;
+        int centerY = y + radius + 20;
+
+        // 绘制中心点
+        fill(poseStack, centerX - 5, centerY - 5, centerX + 5, centerY + 5, 0xFFFFFFFF);
+
+        // 绘制三个步骤点和连接线
+        for (int i = 0; i < 3; i++) {
+            double angle = (Math.PI * 2 * i) / 3 - Math.PI / 2; // 从顶部开始
+            int stepX = (int)(centerX + Math.cos(angle) * radius);
+            int stepY = (int)(centerY + Math.sin(angle) * radius);
+
+            // 绘制步骤点
+            fill(poseStack, stepX - 30, stepY - 15, stepX + 30, stepY + 15, 0x66000000 | (0x0000FF << (8*i)));
+            drawCenteredString(poseStack, this.font, steps[i], stepX, stepY, 0xFFFFFF);
+
+            // 绘制到中心的连接线
+            drawLine(poseStack, centerX, centerY, stepX, stepY, 0xAAFFFFFF);
+
+            // 绘制步骤间的弧线（简化为直线）
+            int nextI = (i + 1) % 3;
+            double nextAngle = (Math.PI * 2 * nextI) / 3 - Math.PI / 2;
+            int nextX = (int)(centerX + Math.cos(nextAngle) * radius);
+            int nextY = (int)(centerY + Math.sin(nextAngle) * radius);
+
+            drawLine(poseStack, stepX, stepY, nextX, nextY, 0xAAFFFFFF);
+        }
+
+        // 绘制说明
+        drawCenteredString(poseStack, this.font, "智能体通过思考-行动-观察循环解决问题",
+                centerX, centerY + radius + 20, 0xAAAAAA);
     }
 
+    // 绘制工作流程可视化
+    private void renderWorkflowVisualization(PoseStack poseStack, int x, int y, int width, List<String> workflows) {
+        drawString(poseStack, this.font, "工作流程细节:", x, y, 0xFFFFAA);
+
+        y += 20;
+
+        // 工作流程容器
+        fill(poseStack, x, y, x + width - 10, y + 180, 0x22FFFFFF);
+
+        // 绘制ReAct流程详情
+        // 思考步骤
+        int stepY = y + 20;
+        fill(poseStack, x + 10, stepY, x + width - 20, stepY + 30, 0x44AA0000);
+        drawCenteredString(poseStack, this.font, "1. 思考(Thought)", x + width/2, stepY + 10, 0xFFFFFF);
+        drawString(poseStack, this.font, "• 分析当前状态并规划下一步", x + 20, stepY + 40, 0xCCCCCC);
+
+        // 箭头
+        int arrowY = stepY + 60;
+        drawCenteredString(poseStack, this.font, "↓", x + width/2, arrowY, 0xFFFFFF);
+
+        // 行动步骤
+        int actionY = arrowY + 10;
+        fill(poseStack, x + 10, actionY, x + width - 20, actionY + 30, 0x4400AA00);
+        drawCenteredString(poseStack, this.font, "2. 行动(Action)", x + width/2, actionY + 10, 0xFFFFFF);
+        drawString(poseStack, this.font, "• 执行选定的操作或工具调用", x + 20, actionY + 40, 0xCCCCCC);
+
+        // 箭头
+        int arrow2Y = actionY + 60;
+        drawCenteredString(poseStack, this.font, "↓", x + width/2, arrow2Y, 0xFFFFFF);
+
+        // 观察步骤
+        int observeY = arrow2Y + 10;
+        fill(poseStack, x + 10, observeY, x + width - 20, observeY + 30, 0x440000AA);
+        drawCenteredString(poseStack, this.font, "3. 观察(Observation)", x + width/2, observeY + 10, 0xFFFFFF);
+        drawString(poseStack, this.font, "• 获取行动结果并整合反馈", x + 20, observeY + 40, 0xCCCCCC);
+
+        // 循环箭头回到顶部
+        drawString(poseStack, this.font, "循环直到目标完成", x + width - 150, observeY + 40, 0xFFFFAA);
+    }
+
+    // 绘制带换行功能的文本
+    private void drawWrappedText(PoseStack poseStack, String text, int x, int y, int maxWidth, int color, boolean isWhite) {
+        List<ColoredText> lines = TextUtils.wrapText(text, maxWidth, isWhite);
+        for (int i = 0; i < lines.size(); i++) {
+            ColoredText line = lines.get(i);
+            drawString(poseStack, this.font, line.text, x, y + i * 12, line.color);
+        }
+    }
 
     @Override
     public boolean isPauseScreen() {

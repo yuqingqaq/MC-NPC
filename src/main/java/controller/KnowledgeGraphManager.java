@@ -26,10 +26,10 @@ public class KnowledgeGraphManager {
 
     private KnowledgeGraphManager() {
         // 初始化任务相关的知识图谱目标
-        completionStatus.put("基础概念", 0); // 0%完成度
-        completionStatus.put("关系理解", 0);
-        completionStatus.put("原则验证", 0);
-        completionStatus.put("发展时间线", 0);
+        completionStatus.put("智能体定义", 0); // 0%完成度
+        completionStatus.put("大型语言模型", 0);
+        completionStatus.put("智能体工具", 0);
+        completionStatus.put("智能体工作流", 0);
     }
 
     public static synchronized KnowledgeGraphManager getInstance() {
@@ -44,7 +44,7 @@ public class KnowledgeGraphManager {
      */
     public void addConcept(String conceptName) {
         acquiredConcepts.add(conceptName);
-        updateCompletionStatus("基础概念");
+        updateCompletionStatus("智能体定义");
     }
 
     /**
@@ -52,7 +52,7 @@ public class KnowledgeGraphManager {
      */
     public void addRelationship(String relationshipCategory) {
         masteredRelationships.add(relationshipCategory);
-        updateCompletionStatus("关系理解");
+        updateCompletionStatus("大型语言模型");
     }
 
     /**
@@ -60,7 +60,7 @@ public class KnowledgeGraphManager {
      */
     public void addPrinciple(String principle) {
         validatedPrinciples.add(principle);
-        updateCompletionStatus("原则验证");
+        updateCompletionStatus("智能体工具");
     }
 
     /**
@@ -68,7 +68,7 @@ public class KnowledgeGraphManager {
      */
     public void addTimeline(String timeline) {
         masteredTimelines.add(timeline);
-        updateCompletionStatus("发展时间线");
+        updateCompletionStatus("智能体工作流");
     }
 
     /**
@@ -79,21 +79,21 @@ public class KnowledgeGraphManager {
         int targetTotal = 0;
 
         switch(knowledgeArea) {
-            case "基础概念":
+            case "智能体定义":
                 currentTotal = acquiredConcepts.size();
-                targetTotal = 4; // 目标是掌握5个概念
+                targetTotal = 4; // 目标是掌握4个概念
                 break;
-            case "关系理解":
+            case "大型语言模型":
                 currentTotal = masteredRelationships.size();
-                targetTotal = 3; // 目标是掌握3个关系类别
+                targetTotal = 3; // 目标是掌握3个LLM特性
                 break;
-            case "原则验证":
+            case "智能体工具":
                 currentTotal = validatedPrinciples.size();
-                targetTotal = 2; // 目标是验证2个原则
+                targetTotal = 2; // 目标是验证2个工具原则
                 break;
-            case "发展时间线":
+            case "智能体工作流":
                 currentTotal = masteredTimelines.size();
-                targetTotal = 1; // 目标是掌握1个时间线
+                targetTotal = 1; // 目标是掌握1个工作流程
                 break;
         }
 
