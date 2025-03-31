@@ -102,7 +102,7 @@ public class NPCStageBasedScreen extends Screen {
             String[] coords = locationStr.split(",");
             if (coords.length == 3) {
                 try {
-                    int x = Integer.parseInt(coords[0].trim());
+                    int x = Integer.parseInt(coords[0].trim()) + 5;
                     int y = Integer.parseInt(coords[1].trim());
                     int z = Integer.parseInt(coords[2].trim());
 

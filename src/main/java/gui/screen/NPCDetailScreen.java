@@ -43,7 +43,7 @@ public class NPCDetailScreen extends Screen {
              if ("邮件写作大师".equals(npc.getNPCName())) {
                  // 打开 EmailEditorScreen
                  this.minecraft.setScreen(new EmailEditorScreen(npc));
-             } else if ("学术写作导师".equals(npc.getNPCName())) {
+             } else if ("论文写作大师".equals(npc.getNPCName())) {
                  // 打开 EmailEditorScreen
                  this.minecraft.setScreen(new PaperEditorScreen(npc));
               }else if ("王教授".equals(npc.getNPCName())) {
