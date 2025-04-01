@@ -891,9 +891,6 @@ public class GlobalGuideBookScreen extends Screen {
             yOffset += 15;
         }
 
-        yOffset += 10;
-        drawString(poseStack, this.font, "游戏技巧:", leftColumn, yOffset, 0xFFFFFFFF);
-        yOffset += 15;
 
         List<String> tips = Arrays.asList(
                 "探索校园可以获得校徽碎片，收集所有碎片完成校园导览",

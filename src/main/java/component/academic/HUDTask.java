@@ -51,8 +51,8 @@ public class HUDTask {
 
         // 检查是否是SRL任务且需要制定策略
         if (GameController.getInstance().isSRLQuestAvailable() && !TaskManager.getInstance().isStrategyPlanned()) {
-            String message = "需要先制定学习策略！";
-            minecraft.font.draw(poseStack, new TextComponent(message), x + 4, y, 0xFFFF0000);
+            //String message = "需要先制定学习策略！";
+            //minecraft.font.draw(poseStack, new TextComponent(message), x + 4, y, 0xFFFF0000);
             return;
         }
 
