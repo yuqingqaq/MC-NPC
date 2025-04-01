@@ -66,7 +66,7 @@ public class OrderingPanel extends BaseQuestionPanel {
                 y + CONTENT_START_Y + getContentHeight() - 30,
                 buttonWidth,
                 20,
-                new TextComponent("Move Up"),
+                new TextComponent("上移"),
                 button -> moveItem(-1)
         );
 
@@ -75,7 +75,7 @@ public class OrderingPanel extends BaseQuestionPanel {
                 y + CONTENT_START_Y + getContentHeight() - 30,
                 buttonWidth,
                 20,
-                new TextComponent("Move Down"),
+                new TextComponent("下移"),
                 button -> moveItem(1)
         );
     }
@@ -140,13 +140,13 @@ public class OrderingPanel extends BaseQuestionPanel {
         renderBackground(poseStack);
 
         // 绘制标题和说明
-        String title = "Arrange in the correct order: " + orderingTopic;
-        String instructions = "Select an item, then use Move Up/Down buttons to reorder.";
+        String title = "按正确顺序排列： " + orderingTopic;
+        String instructions = "选择一个项目，然后使用“上移/下移”按钮重新排序。";
         renderTitleAndInstructions(poseStack, title, instructions);
 
         // 如果没有选择项，添加提示
         if (selectedItemIndex == -1) {
-            drawString(poseStack, "Click on an item to select it first",
+            drawString(poseStack, "单击某个项目首先选择它",
                     x + (width / 2) - 100,
                     y + CONTENT_START_Y + getContentHeight(),
                     0xFFAAAA);
@@ -176,9 +176,7 @@ public class OrderingPanel extends BaseQuestionPanel {
 
     @Override
     public String getCorrectFeedback() {
-        return "Perfect! You've arranged everything in the correct order.\n" +
-                "You now understand the logical progression of " + orderingTopic;
-    }
+        return "太棒了！你把所有东西都按正确的顺序排列了! \n"     }
 
     @Override
     public String getIncorrectFeedback() {
@@ -192,12 +190,13 @@ public class OrderingPanel extends BaseQuestionPanel {
         }
 
         if (firstErrorIndex != -1) {
-            return "That's not quite the right order.\n" +
-                    "Check the placement of \"" + currentOrder.get(firstErrorIndex) + "\"";
+        return "顺序不太正确。" +
+        "检查 " + currentOrder.get(firstErrorIndex) + "的位置";
         } else {
-            return "That's not quite the right order.\n" +
-                    "Think about the logical sequence.";
+        return "顺序不太正确。" +
+        "考虑一下逻辑顺序。";
         }
+    
     }
 
     @Override
@@ -213,10 +212,10 @@ public class OrderingPanel extends BaseQuestionPanel {
 
         if (firstErrorIndex != -1) {
             String hintItem = currentOrder.get(firstErrorIndex);
-            return "Give a hint about where \"" + hintItem +
-                    "\" should be placed in the " + orderingTopic + " timeline";
-        } else {
-            return "Provide a hint about the correct order for " + orderingTopic;
+            return "提示 " + hintItem +
+            " 应放在 " + orderingTopic + " 时间轴的哪个位置";
+            } else {
+            return "提示 " + orderingTopic + " 的正确顺序";
         }
     }
 
@@ -225,4 +224,5 @@ public class OrderingPanel extends BaseQuestionPanel {
         // 记录玩家掌握了这个顺序
         GameController.getInstance().addTimelineToKnowledgeGraph(orderingTopic);
     }
+
 }

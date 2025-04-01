@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ExpertInterviewScreen extends Screen {
-    private static final String TITLE = "Expert Interview";
+    private static final String TITLE = "专家访谈";
 
     // NPC交互部分
     private EditBox inputField;
@@ -88,7 +88,7 @@ public class ExpertInterviewScreen extends Screen {
                 centerY + 65,
                 leftPanelWidth - 80,
                 20,
-                new TextComponent("Enter Message"));
+                new TextComponent("发送消息"));
         this.addWidget(this.inputField);
 
         // 录音按钮
@@ -97,7 +97,7 @@ public class ExpertInterviewScreen extends Screen {
                 centerY + 90,
                 110,
                 20,
-                new TextComponent("Start Recording"),
+                new TextComponent("开始录音"),
                 button -> toggleRecording()));
 
         // 发送按钮
@@ -148,7 +148,7 @@ public class ExpertInterviewScreen extends Screen {
                 centerY + 90,
                 rightPanelWidth - 40,
                 20,
-                new TextComponent("Save Summary"),
+                new TextComponent("保存总结"),
                 button -> saveOutcome()
         ));
 
@@ -164,8 +164,8 @@ public class ExpertInterviewScreen extends Screen {
         this.chatPanel.refreshPanel();
 
         // 提示Toast
-        TextComponent title = new TextComponent("Interview Complete?");
-        TextComponent messageContent = new TextComponent("Write a summary and save it!");
+        TextComponent title = new TextComponent("访谈完成了吗?");
+        TextComponent messageContent = new TextComponent("来写个总结吧！");
         this.toast = new TutorialToast(TutorialToast.Icons.RECIPE_BOOK, title, messageContent, true);
     }
 
@@ -198,14 +198,14 @@ public class ExpertInterviewScreen extends Screen {
         if (!speechHandler.isRecording()) {
             try {
                 speechHandler.startRecording();
-                recordButton.setMessage(new TextComponent("Stop Recording"));
+                recordButton.setMessage(new TextComponent("录音停止"));
             } catch (Exception e) {
                 System.out.println("Error starting recording: " + e.getMessage());
             }
         } else {
             try {
                 String audioDataText = speechHandler.stopRecording();
-                recordButton.setMessage(new TextComponent("Start Recording"));
+                recordButton.setMessage(new TextComponent("=开始录音"));
                 inputField.setValue(new String(audioDataText));
                 sendChatMessage();
             } catch (Exception e) {
@@ -317,8 +317,8 @@ public class ExpertInterviewScreen extends Screen {
 
         // 绘制标题和分区标题
         drawCenteredString(poseStack, this.font, TITLE, this.width / 2, 10, 0xFFFFFF);
-        drawString(poseStack, this.font, "Chat with " + currentNPC.getNPCName(), 20, 20, 0xFFFFFF);
-        drawString(poseStack, this.font, "Interview Summary", this.width * 3 / 5 + 20, 20, 0xFFFFFF);
+        drawString(poseStack, this.font, "与" + currentNPC.getNPCName() + "对话", 20, 20, 0xFFFFFF);
+        drawString(poseStack, this.font, "访谈总结", this.width * 3 / 5 + 20, 20, 0xFFFFFF);
 
         // 渲染各个面板和组件
         this.chatPanel.render(poseStack, mouseX, mouseY, partialTicks);

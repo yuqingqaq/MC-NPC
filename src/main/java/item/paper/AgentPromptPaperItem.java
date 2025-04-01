@@ -20,21 +20,21 @@ public class AgentPromptPaperItem extends BasePaperItem {
     
     private static List<String> createPaperContent() {
         return Arrays.asList(
-            "Abstract:\n",
-            "As large language models (LLMs) become increasingly powerful, the way we instruct these models—known as prompting—has emerged as a critical research area. This paper investigates advanced prompting techniques specifically designed for LLM agents that perform complex tasks requiring reasoning, planning, and multi-step execution. We present a systematic analysis of prompting strategies and their impact on agent performance across diverse domains including problem-solving, tool use, and multi-agent collaboration.\n",
-            "Our research introduces a novel framework for constructing effective agent prompts, considering elements such as role specification, task decomposition, reasoning guidance, and self-reflection mechanisms. Through extensive empirical evaluation, we demonstrate that carefully crafted prompts can significantly enhance agent capabilities without modifying the underlying model parameters, effectively serving as a form of 'soft programming' for LLM agents.\n",
-            "\nPrompting Framework:\n",
-            "We propose a structured approach to agent prompting with four key components:\n",
-            "1. Agent Identity: Clearly defining the agent's role, expertise, and communication style\n",
-            "2. Task Structuring: Breaking complex tasks into manageable steps with clear evaluation criteria\n",
-            "3. Reasoning Scaffolds: Providing frameworks that guide the agent's thinking process (e.g., Chain-of-Thought, Tree-of-Thought)\n",
-            "4. Feedback Mechanisms: Implementing self-criticism and refinement processes\n",
-            "\nExperimental Results:\n",
-            "Our experiments show that agents equipped with structured prompts outperform baseline approaches by 37% on problem-solving benchmarks and 42% on tool-use tasks. We observe especially strong improvements in tasks requiring multi-step reasoning and planning. Additionally, we find that different prompt structures are optimal for different task types, suggesting the need for task-specific prompt engineering.\n",
-            "\nApplications:\n",
-            "We demonstrate the practical applications of our prompting techniques in several domains, including automated research assistants, coding agents, and collaborative problem-solving systems. Case studies reveal that well-designed prompts enable agents to complete complex tasks that would otherwise require human intervention or more specialized training.\n",
-            "\nConclusion:\n",
-            "Our findings highlight prompting as a powerful yet underexplored mechanism for shaping agent behavior and capabilities. The techniques presented in this paper offer a practical approach to significantly enhancing LLM agent performance without requiring model retraining, making advanced AI capabilities more accessible and customizable for diverse applications."
+            "摘要:\n",
+            "随着大型语言模型（LLM）变得越来越强大，我们指示这些模型的方式——即提示——已成为一个关键的研究领域。本文研究了专为执行复杂任务（需要推理、规划和多步骤执行）的LLM智能体设计的高级提示技术。我们对提示策略及其在包括问题解决、工具使用和多智能体协作在内的各个领域的智能体性能影响进行了系统分析。\n",
+            "我们的研究引入了一种构建有效智能体提示的新框架，考虑了角色规范、任务分解、推理指导和自我反思机制等元素。通过广泛的实证评估，我们证明精心设计的提示可以显著增强智能体的能力，而无需修改底层模型参数，实际上充当了LLM智能体的“软编程”形式。\n",
+            "\n提示框架:\n",
+            "我们提出了一种结构化的智能体提示方法，包含四个关键组件：\n",
+            "1. 智能体身份：明确定义智能体的角色、专业知识和沟通风格\n",
+            "2. 任务结构化：将复杂任务分解为可管理的步骤，并设定明确的评估标准\n",
+            "3. 推理支架：提供指导智能体思维过程的框架（例如，链式思维、树式思维）\n",
+            "4. 反馈机制：实施自我批评和改进过程\n",
+            "\n实验结果:\n",
+            "我们的实验表明，配备结构化提示的智能体在问题解决基准测试中比基线方法高出37%，在工具使用任务中高出42%。我们观察到在需要多步骤推理和规划的任务中，改进尤为显著。此外，我们发现不同的提示结构对不同的任务类型是最优的，这表明需要进行任务特定的提示工程。\n",
+            "\n应用:\n",
+            "我们展示了我们的提示技术在多个领域的实际应用，包括自动化研究助手、编码智能体和协作问题解决系统。案例研究表明，精心设计的提示使智能体能够完成复杂任务，这些任务通常需要人工干预或更专业的培训。\n",
+            "\n结论:\n",
+            "我们的研究结果强调了提示作为一种强大但未被充分探索的机制，用于塑造智能体行为和能力。本文介绍的技术提供了一种实用的方法，可以显著增强LLM智能体的性能，而无需进行模型再训练，使得高级AI能力在各种应用中更易于访问和定制。"
         );
     }
 }

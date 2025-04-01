@@ -32,7 +32,7 @@ public class TrueFalsePanel extends BaseQuestionPanel {
                 y + CONTENT_START_Y + getStatementHeight() + BUTTONS_Y_OFFSET,
                 80,
                 20,
-                new TextComponent("TRUE"),
+                new TextComponent("正确"),
                 button -> selectAnswer(true)
         );
 
@@ -42,21 +42,21 @@ public class TrueFalsePanel extends BaseQuestionPanel {
                 y + CONTENT_START_Y + getStatementHeight() + BUTTONS_Y_OFFSET,
                 80,
                 20,
-                new TextComponent("FALSE"),
+                new TextComponent("错误"),
                 button -> selectAnswer(false)
         );
     }
 
     private void selectAnswer(boolean answer) {
         // 重置按钮样式
-        trueButton.setMessage(new TextComponent("TRUE"));
-        falseButton.setMessage(new TextComponent("FALSE"));
+        trueButton.setMessage(new TextComponent("正确"));
+        falseButton.setMessage(new TextComponent("错误"));
 
         // 高亮选中的按钮
         if (answer) {
-            trueButton.setMessage(new TextComponent("✓ TRUE"));
+            trueButton.setMessage(new TextComponent("✓ 正确"));
         } else {
-            falseButton.setMessage(new TextComponent("✓ FALSE"));
+            falseButton.setMessage(new TextComponent("✓ 错误"));
         }
 
         userAnswer = answer;
@@ -79,7 +79,7 @@ public class TrueFalsePanel extends BaseQuestionPanel {
         renderBackground(poseStack);
 
         // 绘制标题
-        renderTitleAndInstructions(poseStack, "Evaluate this statement:", "");
+        renderTitleAndInstructions(poseStack, "判断下面这句话的正误:", "");
 
         // 绘制陈述句 - 居中显示
         String[] lines = statement.split("\n");
@@ -90,11 +90,11 @@ public class TrueFalsePanel extends BaseQuestionPanel {
                     0xFFFFFF);
         }
 
-        // 绘制提示
-        drawString(poseStack, "Is this statement TRUE or FALSE?",
-                x + (width / 2) - 100,
-                y + CONTENT_START_Y + getStatementHeight() + 10,
-                0xFFFFFF);
+        // // 绘制提示
+        // drawString(poseStack, "Is this statement TRUE or FALSE?",
+        //         x + (width / 2) - 100,
+        //         y + CONTENT_START_Y + getStatementHeight() + 10,
+        //         0xFFFFFF);
     }
 
     @Override
@@ -114,21 +114,17 @@ public class TrueFalsePanel extends BaseQuestionPanel {
 
     @Override
     public String getCorrectFeedback() {
-        return "Correct! Your understanding is accurate.\n" +
-                "Explanation: " + explanation;
+        return "正确！你的理解很准确。";
     }
 
     @Override
     public String getIncorrectFeedback() {
-        return "That's not quite right.\n" +
-                "The statement is actually " + (isTrue ? "TRUE" : "FALSE") + ".\n" +
-                "Explanation: " + explanation;
+        return "这不太正确。" + "该语句实际上是" + (isTrue ? "正确" : "错误") + "解释：" + explanation;
     }
 
     @Override
     public String getHintPrompt() {
-        return "Provide a simple explanation why the statement \"" + statement + "\" is " +
-                (isTrue ? "TRUE" : "FALSE");
+        return "简单解释一下为什么语句 " + statement + "是 " +(isTrue ? "正确" : "错误");
     }
 
     @Override

@@ -199,8 +199,8 @@ public class MatchingPanel extends BaseQuestionPanel {
         renderBackground(poseStack);
 
         // 绘制标题和说明
-        String title = "Match the concepts: " + conceptCategory;
-        String instructions = "Click items on both sides to create or remove matches.\nComplete all matches then click Submit.";
+        String title = "概念连线：" + conceptCategory;
+        String instructions = "单击两侧的项目即可创建或取消连线。\n完成所有匹配，然后点击“提交”。";
         renderTitleAndInstructions(poseStack, title, instructions);
 
         // 绘制连线
@@ -288,8 +288,8 @@ public class MatchingPanel extends BaseQuestionPanel {
 
     @Override
     public String getCorrectFeedback() {
-        return "Perfect! All matches are correct.\n" +
-                "You've mastered the relationships between these concepts.";
+        return "完美！所有匹配均正确。" +
+                "你已经掌握了这些概念之间的关系。";
     }
 
     @Override
@@ -302,13 +302,13 @@ public class MatchingPanel extends BaseQuestionPanel {
             }
         }
 
-        return "You got " + correctCount + " out of " + correctMatches.size() + " matches correct.\n" +
-                "Check your connections and try again.";
+        return "你做对了 " + correctCount + "/" + correctMatches.size() + " 连线题目！" +
+                "再检查一下吧！";
     }
 
     @Override
     public String getHintPrompt() {
-        return "Provide a hint about the relationships between concepts in " + conceptCategory;
+        return "提供关于概念之间关系的提示： " + conceptCategory;
     }
 
     @Override

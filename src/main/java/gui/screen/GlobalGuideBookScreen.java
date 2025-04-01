@@ -90,11 +90,10 @@ public class GlobalGuideBookScreen extends Screen {
         }
 
         // 如果SRLQuest可用，获取SRL阶段管理器
-        if (srlQuestAvailable) {
             this.srlStageManager = GameController.getInstance().getSRLStageManager();
             if (srlStageManager != null) {
                 this.currentSRLStage = srlStageManager.getCurrentStage();
-            }
+            
         }
     }
 
@@ -133,7 +132,7 @@ public class GlobalGuideBookScreen extends Screen {
         }
 
         // 如果SRL任务可用，跳过已完成的SRL阶段
-        if (srlQuestAvailable && srlStageManager != null && currentSRLStage != null &&
+        if (srlStageManager != null && currentSRLStage != null &&
                 "INTRO".equals(currentSRLStage.getId()) &&
                 srlStageManager.isStageCompleted("INTRO")) {
             currentSRLStage = determineLastCompletedSRLStage();
@@ -181,7 +180,7 @@ public class GlobalGuideBookScreen extends Screen {
         int rightButtonX = this.width - buttonWidth - 20;
 
         // 如果SRLQuest可用且当前是SRL的INTRO或END阶段，添加相应的导航按钮
-        if (srlQuestAvailable && srlStageManager != null && currentSRLStage != null && 
+        if (srlStageManager != null && currentSRLStage != null && 
                 ("INTRO".equals(currentSRLStage.getId()) || "END".equals(currentSRLStage.getId()))) {
             
             List<SRLStageInfo> stages = srlStageManager.getAllStages();
@@ -901,17 +900,10 @@ public class GlobalGuideBookScreen extends Screen {
                 "在SRL任务界面可以查看和管理你的学习任务"
         );
 
-        for (String tip : tips) {
-            List<ColoredText> tipLines = TextUtils.wrapText(tip, (int) (this.width / 1.5f), true);
-            for (ColoredText line : tipLines) {
-                drawString(poseStack, this.font, line.text, leftColumn, yOffset, 0xFFAAAAAA);
-                yOffset += 15;
-            }
-        }
     }
 
     private SRLStageInfo determineLastCompletedSRLStage() {
-        if (!srlQuestAvailable || srlStageManager == null) return null;
+        if (srlStageManager == null) return null;
 
         List<SRLStageInfo> stages = srlStageManager.getAllStages();
         for (SRLStageInfo stage : stages) {

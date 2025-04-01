@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PaperReviewScreen extends Screen {
-    private static final String TITLE = "Paper Review";
+    private static final String TITLE = "论文材料阅读";
 
     private ContentPanel paperContentPanel; // 用于显示论文内容的滚动面板
     private TextEditorWidget textEditor;        // 可编辑区域（正文）
@@ -113,7 +113,7 @@ public class PaperReviewScreen extends Screen {
                 centerY + 65,
                 80,
                 20,
-                new TextComponent("Save"),
+                new TextComponent("保存"),
                 button -> saveOutcome()
         ));
 
@@ -123,7 +123,7 @@ public class PaperReviewScreen extends Screen {
                 centerY + 90,
                 100,
                 20,
-                new TextComponent("Get Advice"),
+                new TextComponent("获取总结建议"),
                 button -> generateAdvice()
         ));
 
@@ -159,8 +159,8 @@ public class PaperReviewScreen extends Screen {
                 textEditor.setText(outcome);
 
                 // 添加一条信息到提示历史，指示已加载之前的工作
-                hintHistory.add("Previous work loaded for task: " + currentSubTask.getTitle());
-                hintHistory.add("Status: " + currentSubTask.getStatus().toString());
+                hintHistory.add("前置查询: " + currentSubTask.getTitle());
+                hintHistory.add("状态: " + currentSubTask.getStatus().toString());
                 hintHistory.add("----------------------");
                 hintHistory.add("");
             }
@@ -239,7 +239,7 @@ public class PaperReviewScreen extends Screen {
         String advice = GameController.getInstance().interactWithExpert(npcModel, combinedInput);
 
         // 将建议和分隔符添加到历史记录中
-        hintHistory.add("Advice: " + advice);
+        hintHistory.add("建议: " + advice);
         hintHistory.add("----------------------");
 
         // 刷新提示面板

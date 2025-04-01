@@ -70,7 +70,7 @@ public class MultipleChoicePanel extends BaseQuestionPanel {
         renderBackground(poseStack);
 
         // 绘制标题和问题
-        String title = "Concept: " + conceptName;
+        String title = "概念： " + conceptName;
         renderTitleAndInstructions(poseStack, title, question);
     }
 
@@ -97,20 +97,19 @@ public class MultipleChoicePanel extends BaseQuestionPanel {
 
     @Override
     public String getCorrectFeedback() {
-        return "Correct! You've mastered this concept.\n" +
-                "Concept added to your Knowledge Graph.";
+        return "正确！您已掌握此概念。" ;
     }
-
+    
     @Override
     public String getIncorrectFeedback() {
-        return "That's not quite right.\n" +
-                "The correct answer is: " + options.get(correctOption);
+        return "不太正确。" +
+        "正确答案是：" + options.get(correctOption);
     }
-
+    
     @Override
     public String getHintPrompt() {
-        return "Explain why \"" + options.get(correctOption) +
-                "\" is the correct definition of " + conceptName;
+        return "解释原因 \"" + options.get(correctOption) +
+        "\" 是 " + conceptName + " 的正确定义";
     }
 
     @Override

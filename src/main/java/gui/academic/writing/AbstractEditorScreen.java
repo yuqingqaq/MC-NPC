@@ -88,7 +88,7 @@ public abstract class AbstractEditorScreen extends Screen {
                 centerY + 70,  // 放在正文输入框下方，问题输入框上方
                 80,
                 20,
-                new TextComponent("Save"),
+                new TextComponent("保存"),
                 button -> saveContent()
         ));
 
@@ -102,7 +102,7 @@ public abstract class AbstractEditorScreen extends Screen {
                 centerY + 90,
                 100,
                 20,
-                new TextComponent("Get Advice"),
+                new TextComponent("获取写作建议"),
                 button -> generateAdvice()
         ));
 
@@ -143,7 +143,7 @@ public abstract class AbstractEditorScreen extends Screen {
                 bodyField.setText(outcome);
 
                 // 如果有标题格式，尝试提取标题
-                if (outcome.startsWith("Title: ")) {
+                if (outcome.startsWith("标题： ")) {
                     int endOfTitle = outcome.indexOf("\n\n");
                     if (endOfTitle > 7) { // "Title: ".length() = 7
                         String title = outcome.substring(7, endOfTitle);
@@ -178,7 +178,7 @@ public abstract class AbstractEditorScreen extends Screen {
 
         if (body.isEmpty()) {
             Minecraft.getInstance().player.displayClientMessage(
-                    new TextComponent("Content is empty! Please write something before saving."), true
+                    new TextComponent("内容为空！"), true
             );
             return;
         }
@@ -292,8 +292,8 @@ public abstract class AbstractEditorScreen extends Screen {
 
                 String outcome = subTask.getOutcome();
                 if (outcome != null && !outcome.isEmpty()) {
-                    builder.append("Task: ").append(subTask.getTitle()).append("\n");
-                    builder.append("Outcome: ").append(outcome).append("\n");
+                    builder.append("任务: ").append(subTask.getTitle()).append("\n");
+                    builder.append("任务成果: ").append(outcome).append("\n");
                     builder.append("----------------------").append("\n\n");
                     hasOutcomes = true;
                 }
@@ -323,7 +323,7 @@ public abstract class AbstractEditorScreen extends Screen {
             // 组合完整内容
             String fullContent = chatHistoryMarkdown;
             if (referenceBuilder.length() > 0) {
-                fullContent += "\n\nPrevious Task Outcomes:\n" + referenceBuilder.toString();
+                fullContent += "\n\n前置任务成果:\n" + referenceBuilder.toString();
             }
             fullContent += "\n" + markdownContent;
 
@@ -367,8 +367,8 @@ public abstract class AbstractEditorScreen extends Screen {
         }
 
         // 绘制导航栏文字 - 调换位置
-        drawCenteredString(poseStack, this.font, "Outcomes", outcomesTabX + tabWidth/2, tabY + 6, showingAdvicePanel ? 0xAAAAAA : 0xFFFFFF);
-        drawCenteredString(poseStack, this.font, "Advice", adviceTabX + tabWidth/2, tabY + 6, showingAdvicePanel ? 0xFFFFFF : 0xAAAAAA);
+        drawCenteredString(poseStack, this.font, "成果", outcomesTabX + tabWidth/2, tabY + 6, showingAdvicePanel ? 0xAAAAAA : 0xFFFFFF);
+        drawCenteredString(poseStack, this.font, "建议", adviceTabX + tabWidth/2, tabY + 6, showingAdvicePanel ? 0xFFFFFF : 0xAAAAAA);
 
         super.render(poseStack, mouseX, mouseY, partialTicks);
 

@@ -71,7 +71,7 @@ public class FeedbackPanel extends GuiComponent { // 继承GuiComponent以使用
 
         // 绘制标题
         Font font = Minecraft.getInstance().font;
-        String title = isCorrect ? "Correct!" : "Not quite right...";
+        String title = isCorrect ? "正确!" : "再想想...";
         font.draw(poseStack, title, x + PADDING, y + PADDING, 0xFFFFFFFF);
 
         // 绘制处理过的彩色文本

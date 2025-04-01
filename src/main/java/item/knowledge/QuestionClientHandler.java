@@ -30,7 +30,7 @@ public class QuestionClientHandler {
     public static void openQuestionScreen(QuestionData questionData, NPCModel npcModel) {
         // 创建适合的QuestionScreen实例
         QuestionScreen screen = new QuestionScreen(
-                "Agent Knowledge - " + questionData.getCategory(),
+                questionData.getCategory(),
                 npcModel
         );
 

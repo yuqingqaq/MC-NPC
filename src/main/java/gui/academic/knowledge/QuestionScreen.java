@@ -121,7 +121,7 @@ public class QuestionScreen extends Screen {
                     submitY,
                     80,
                     SUBMIT_BUTTON_HEIGHT,
-                    new TextComponent("Submit"),
+                    new TextComponent("提交"),
                     button -> checkAnswer()
             ));
 
@@ -131,7 +131,7 @@ public class QuestionScreen extends Screen {
                     submitY + SUBMIT_BUTTON_HEIGHT + 5,
                     80,
                     NEXT_BUTTON_HEIGHT,
-                    new TextComponent("Next Question"),
+                    new TextComponent("下一题"),
                     button -> goToNextQuestion()
             ));
             this.nextButton.visible = false;
@@ -194,7 +194,7 @@ public class QuestionScreen extends Screen {
             );
 
             // 显示反馈
-            feedbackPanel.setFeedback(false, feedback + "\n\nHint: " + expertHint);
+            feedbackPanel.setFeedback(false, feedback + "\n\n提示: " + expertHint);
         }
 
         showFeedback = true;
