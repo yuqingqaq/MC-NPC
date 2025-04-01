@@ -10,7 +10,7 @@ public class PaperEditorScreen extends AbstractEditorScreen {
 
     public PaperEditorScreen(NPCModel npc) {
         // 设置要保存内容的任务为"报告大纲撰写"
-        super(npc, "与 " + currentNPC.getNPCName() + " 讨论论文写作", OUTLINE_TASK_TITLE);
+        super(npc, "学习报告大纲写作", OUTLINE_TASK_TITLE);
 
         // 打开界面时，自动完成"找到论文写作辅导员"任务，并显示通知
         TaskManager.getInstance().completeSubTaskByTitle(FIND_ADVISOR_TASK_TITLE, true);
@@ -20,7 +20,7 @@ public class PaperEditorScreen extends AbstractEditorScreen {
 
     @Override
     protected String getScreenTitle() {
-        return "与 " + currentNPC.getNPCName() + " 讨论论文写作";
+        return "学习报告大纲写作";
     }
 
     @Override

@@ -106,7 +106,7 @@ public class ExpertInterviewScreen extends Screen {
                 centerY + 90,
                 80,
                 20,
-                new TextComponent("Send"),
+                new TextComponent("发送"),
                 button -> sendChatMessage()));
 
         // 聊天记录面板

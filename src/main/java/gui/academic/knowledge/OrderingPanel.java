@@ -176,7 +176,7 @@ public class OrderingPanel extends BaseQuestionPanel {
 
     @Override
     public String getCorrectFeedback() {
-        return "太棒了！你把所有东西都按正确的顺序排列了! \n"     }
+        return "太棒了！你把所有东西都按正确的顺序排列了! \n" ; }
 
     @Override
     public String getIncorrectFeedback() {
