@@ -89,12 +89,12 @@ public class ScrollableTextBox extends ScrollPanel {
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {
-
+    public NarrationPriority narrationPriority() {
+        return NarrationPriority.NONE;
     }
 
     @Override
-    public NarrationPriority narrationPriority() {
-        return null;
+    public void updateNarration(NarrationElementOutput narrationElementOutput) {
+        // 实现辅助功能描述
     }
 }
