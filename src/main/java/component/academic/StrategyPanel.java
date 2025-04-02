@@ -24,6 +24,19 @@ public class StrategyPanel extends ScrollPanel {
         this.font = mc.font;
         this.onStrategyClick = onStrategyClick;
         this.strategyList = List.copyOf(strategies.keySet()); // 获取策略的标题
+        // 寻找并默认选择"协作规划"
+        for (int i = 0; i < strategyList.size(); i++) {
+            if ("协作规划".equals(strategyList.get(i))) {
+                this.selectedStrategyIndex = i;
+                break;
+            }
+        }
+
+        // 如果找不到"协作规划"且列表不为空，则选择第一个
+        if (this.selectedStrategyIndex == -1 && !strategyList.isEmpty()) {
+            this.selectedStrategyIndex = 0;
+        }
+
     }
 
     @Override
@@ -61,6 +74,21 @@ public class StrategyPanel extends ScrollPanel {
         return false;
     }
 
+    // 获取当前选中的策略
+    public String getSelectedStrategy() {
+        if (selectedStrategyIndex >= 0 && selectedStrategyIndex < strategyList.size()) {
+            return strategyList.get(selectedStrategyIndex);
+        }
+        return null;
+    }
+
+    // 设置选中的策略索引
+    public void setSelectedStrategyIndex(int index) {
+        if (index >= 0 && index < strategyList.size()) {
+            this.selectedStrategyIndex = index;
+        }
+    }
+
     @Override
     public boolean isMouseOver(double mouseX, double mouseY) {
         return mouseX >= left && mouseX <= left + width && mouseY >= top && mouseY <= top + height;
@@ -77,4 +105,4 @@ public class StrategyPanel extends ScrollPanel {
     }
 
 
-} 
+}

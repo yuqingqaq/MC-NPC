@@ -31,7 +31,7 @@ public class StrategyScreen extends Screen {
     @Override
     protected void init() {
         UIScreenManager.getInstance().setCurrentScreenState(UIScreenManager.ScreenState.NO_HUD);
-        
+
         // 获取当前任务
         AdaptiveTaskModel currentTask = UITaskManager.getInstance().getCurrentTaskInOverview();
         if (currentTask == null) {
@@ -54,6 +54,21 @@ public class StrategyScreen extends Screen {
         // 创建左侧的策略面板
         this.strategyPanel = new StrategyPanel(minecraft, 80, this.height - 40, 40, 20, strategies, this::onStrategySelected);
         this.addRenderableWidget(strategyPanel);
+
+        // 找到"协作规划"的索引并设置为默认选中
+        int cooperativePlanningIndex = -1;
+        for (int i = 0; i < taskStrategies.size(); i++) {
+            if ("协作规划".equals(taskStrategies.get(i))) {
+                cooperativePlanningIndex = i;
+                break;
+            }
+        }
+
+        // 如果找到了"协作规划"，设置为默认选中并触发选择事件
+        if (cooperativePlanningIndex != -1) {
+            strategyPanel.setSelectedStrategyIndex(cooperativePlanningIndex);
+            onStrategySelected("协作规划");
+        }
     }
 
     private void onStrategySelected(String strategy) {
@@ -73,14 +88,14 @@ public class StrategyScreen extends Screen {
             // Initialize DialoguePanel
             List<NPCMessage> chatHistory = new ArrayList<>();
             chatHistory.add(new NPCMessage("npc", "欢迎开始对话！"));
-            
+
             this.rightPanel = new DialoguePanel(
-                minecraft,
-                rightPanelX,         // x
-                40,                  // y
-                rightPanelWidth,     // width
-                this.height - 60,    // height
-                chatHistory
+                    minecraft,
+                    rightPanelX,         // x
+                    40,                  // y
+                    rightPanelWidth,     // width
+                    this.height - 60,    // height
+                    chatHistory
             );
         } else if ("自行规划".equals(strategy)) {
             // 从当前任务中获取子任务
@@ -88,7 +103,7 @@ public class StrategyScreen extends Screen {
             for (AdaptiveSubTaskModel subTask : currentTask.getSubTasks()) {
                 tasks.add(subTask);
             }
-            
+
             this.rightPanel = new TaskPlanningPanel(rightPanelX + 40, 30, (int)(rightPanelWidth/1.5), this.height - 60, tasks);
         } else if ("协作规划".equals(strategy)) {
             // 从当前任务中获取子任务
