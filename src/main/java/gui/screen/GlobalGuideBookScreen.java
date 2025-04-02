@@ -548,8 +548,8 @@ public class GlobalGuideBookScreen extends Screen {
                     hintContent = "阅读海报后会获得题目，右键地面即可作答；物品栏中有知识图谱总览，可以随时查看你的学习进度！"; 
                     break;
                     
-                case "文献搜集-ExpeL":
-                case "文献搜集-Agent Prompt":
+                case "文献搜集-CoT":
+                case "文献搜集-ToolFormer":
                     hintTitle = "在场景中找到需要学习的文献，右键点击地面即可打开阅读界面，";
                     hintContent = "编辑完成后记得保存哦！";
                     break;

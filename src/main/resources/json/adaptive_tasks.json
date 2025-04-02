@@ -24,7 +24,7 @@
         },
         {
           "subTaskId": "2",
-          "title": "文献搜集-ExpeL",
+          "title": "文献搜集-CoT",
           "description": "收集PaperItem，阅读文献摘要内容，写简短总结",
           "estimatedTime": "5:00",
           "completed": false,
@@ -32,7 +32,7 @@
         },
         {
           "subTaskId": "3",
-          "title": "文献搜集-Agent Prompt",
+          "title": "文献搜集-ToolFormer",
           "description": "收集PaperItem，阅读文献摘要内容，写简短总结",
           "estimatedTime": "5:00",
           "completed": false,
