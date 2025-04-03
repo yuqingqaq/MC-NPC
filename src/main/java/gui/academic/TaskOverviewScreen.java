@@ -45,6 +45,8 @@ public class TaskOverviewScreen extends Screen {
             if(UITaskManager.getInstance().getCurrentTaskInOverview() == null){
                 currentTask = adaptiveTasks.get(0);
                 UITaskManager.getInstance().setCurrentTaskInOverview(currentTask); // 设置当前任务
+                TaskManager.getInstance().setCurrentTaskInOverview(currentTask);
+                System.out.println("current task: " + currentTask.getTitle());
             }
             else{
                 currentTask = UITaskManager.getInstance().getCurrentTaskInOverview();

@@ -9,7 +9,7 @@
       "resources": ["知识图谱", "参考文献", "领域专家", "论文写作专家"],
       "location": "实验室",
       "estimatedTime": "40:00",
-      "strategies": ["自行规划", "协作规划"],
+      "strategies": ["协作规划"],
       "summary": {},
       "completed": false,
       "notes": "需要与团队成员讨论",

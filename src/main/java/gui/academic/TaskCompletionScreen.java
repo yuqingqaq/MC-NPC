@@ -45,12 +45,7 @@ public class TaskCompletionScreen extends Screen {
         if (this.task == null) {
             // 尝试从TaskManager获取当前任务
             this.task = TaskManager.getInstance().getCurrentTaskInOverview();
-
-            if (this.task == null) {
-                // 处理任务为空的情况
-                UIScreenManager.getInstance().switchToTaskOverviewScreen();
-                return;
-            }
+            System.out.println("this.task == null");
         }
 
         // 初始化导航栏

@@ -428,6 +428,13 @@ public class TaskPlanningSupportPanel extends AbstractWidget implements Widget {
             // 调用 TaskManager 的方法来开始任务，并传入排序后的子任务列表
             TaskManager.getInstance().startSubTask(firstSubTask, subTasks);
             System.out.println("开始子任务: " + firstSubTask.getTitle());
+
+            // 显示ESC键提示
+            if (Minecraft.getInstance().player != null) {
+                Minecraft.getInstance().player.displayClientMessage(
+                        new TextComponent("任务开始！按ESC键可随时返回游戏"), false
+                );
+            }
         }
     }
 
