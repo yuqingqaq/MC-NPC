@@ -57,12 +57,19 @@ public class ExpertSystem {
                 systemPrompt = ExpertPromptConfig.QUESTION_MASTER_PROMPT;
             }
         }
-        else {
-            // 默认使用心理健康 Prompt
+        else if ("Mental Health".equals(npc.getNPCName().trim())) {
             if ("zh".equals(language)) {
-                systemPrompt = ExpertPromptConfig.SYSTEM_PROMPT_IN_CHINESE;
+                systemPrompt = ExpertPromptConfig.MENTAL_SYSTEM_PROMPT_IN_CHINESE;
             } else {
-                systemPrompt = ExpertPromptConfig.SYSTEM_PROMPT;
+                systemPrompt = ExpertPromptConfig.MENTAL_SYSTEM_PROMPT;
+            }
+        }
+        else {
+            // 默认使用Prompt
+            if ("zh".equals(language)) {
+                systemPrompt = ExpertPromptConfig.SYSTEM_PROMPT_DEFAULT_IN_CHINESE;
+            } else {
+                systemPrompt = ExpertPromptConfig.SYSTEM_PROMPT_DEFAULT;
             }
         }
         List<NPCMessage> messageHistory = new ArrayList<>();
