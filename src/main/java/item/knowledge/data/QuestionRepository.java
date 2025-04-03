@@ -24,7 +24,7 @@ public class QuestionRepository {
         MultipleChoiceData agentDefinition1 = new MultipleChoiceData(
                 "mc_agent_definition_1",
                 "智能体基础",
-                "智能体专家",
+                "Question Expert",
                 "智能体定义",
                 "什么是智能体(Agent)?",
                 Arrays.asList(
@@ -42,7 +42,7 @@ public class QuestionRepository {
         MultipleChoiceData agentDefinition2 = new MultipleChoiceData(
                 "mc_agent_definition_2",
                 "智能体组成",
-                "智能体专家",
+                "Question Expert",
                 "智能体结构",
                 "智能体的两个核心部分是什么?",
                 Arrays.asList(
@@ -60,7 +60,7 @@ public class QuestionRepository {
         MultipleChoiceData agentDefinition3 = new MultipleChoiceData(
                 "mc_agent_definition_3",
                 "智能体特性",
-                "智能体专家",
+                "Question Expert",
                 "智能体能力",
                 "以下哪个是智能体的关键特性?",
                 Arrays.asList(
@@ -78,7 +78,7 @@ public class QuestionRepository {
         MultipleChoiceData agentDefinition4 = new MultipleChoiceData(
                 "mc_agent_definition_4",
                 "智能体应用",
-                "智能体专家",
+                "Question Expert",
                 "智能体实例",
                 "以下哪个是AI智能体的实际例子?",
                 Arrays.asList(
@@ -103,7 +103,7 @@ public class QuestionRepository {
         MatchingData llmConcepts1 = new MatchingData(
                 "match_llm_concepts_1",
                 "语言模型基础",
-                "语言模型专家",
+                "Question Expert",
                 "LLM基本概念",
                 Arrays.asList(
                         "大型语言模型(LLM)",
@@ -129,7 +129,7 @@ public class QuestionRepository {
         MatchingData llmConcepts2 = new MatchingData(
                 "match_llm_concepts_2",
                 "LLM消息类型",
-                "语言模型专家",
+                "Question Expert",
                 "LLM对话结构",
                 Arrays.asList(
                         "系统消息",
@@ -155,7 +155,7 @@ public class QuestionRepository {
         MatchingData specialTokens = new MatchingData(
                 "match_llm_concepts_3",
                 "LLM特殊组件",
-                "语言模型专家",
+                "Question Expert",
                 "LLM特殊元素",
                 Arrays.asList(
                         "特殊标记(Special Tokens)",
@@ -178,7 +178,7 @@ public class QuestionRepository {
         TrueFalseData toolsConcept1 = new TrueFalseData(
                 "tf_tools_concept_1",
                 "智能体工具",
-                "工具开发专家",
+                "Question Expert",
                 "工具可以让LLM直接访问外部数据，无需中间处理。",
                 false,
                 "这是错误的。LLM本身只能生成文本，它通过生成工具调用的文本，让智能体解析并执行工具调用，再将结果返回给LLM。LLM并不能直接访问外部数据，而是通过智能体作为中介。",
@@ -190,7 +190,7 @@ public class QuestionRepository {
         TrueFalseData toolsConcept2 = new TrueFalseData(
                 "tf_tools_concept_2",
                 "智能体工具",
-                "工具开发专家",
+                "Question Expert",
                 "优秀的工具设计应该是结构化的，包含明确的功能描述和输入格式。",
                 true,
                 "这是正确的。优秀的工具设计应该采用结构化表达方式，清晰描述工具功能和预期的输入格式，这样LLM才能正确理解如何调用工具。虽然没有强制的格式要求，但精确、连贯的描述对于工具的有效使用至关重要。",
@@ -202,7 +202,7 @@ public class QuestionRepository {
         TrueFalseData toolsConcept3 = new TrueFalseData(
                 "tf_tools_concept_3",
                 "智能体工具",
-                "工具开发专家",
+                "Question Expert",
                 "工具的主要作用是替代LLM，而不是增强LLM的能力。",
                 false,
                 "这是错误的。工具的主要作用是增强和补充LLM的能力，而不是替代它。例如，计算器工具补充LLM在数学计算方面的弱点，搜索工具提供最新信息以突破LLM训练数据的时间限制。工具和LLM相互配合，发挥各自优势。",
@@ -216,7 +216,7 @@ public class QuestionRepository {
         OrderingData workflowSteps = new OrderingData(
                 "order_workflow_steps",
                 "智能体工作流",
-                "智能体工程师",
+                "Question Expert",
                 "智能体思考-行动-观察循环的正确顺序",
                 Arrays.asList(
                         "接收用户指令",
