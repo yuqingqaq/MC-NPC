@@ -49,7 +49,7 @@
         {
           "subTaskId": "5",
           "title": "报告大纲撰写",
-          "description": "根据概念学习、文献搜集和专家访谈的结果写一份报告大纲",
+          "description": "根据概念学习、文献搜集的结果写一份报告大纲",
           "estimatedTime": "15:00",
           "completed": false,
           "status": "NOT_STARTED"

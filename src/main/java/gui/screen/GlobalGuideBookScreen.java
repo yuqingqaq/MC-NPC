@@ -426,10 +426,9 @@ public class GlobalGuideBookScreen extends Screen {
             renderSelectedSubTask(poseStack, sortedSubTasks.get(selectedTaskIndex));
         }
     }
-    
+
     // 新方法：渲染选中的子任务
     private void renderSelectedSubTask(PoseStack poseStack, AdaptiveSubTaskModel subTask) {
-
         // 绘制任务图标
         ResourceLocation icon = subTask.getStatus() == AdaptiveSubTaskModel.TaskStatus.COMPLETED ? COMPLETED : PENDING;
         RenderSystem.setShaderTexture(0, icon);
@@ -451,21 +450,77 @@ public class GlobalGuideBookScreen extends Screen {
         drawString(poseStack, this.font, subTask.getTitle(), this.width / 2 - 120, yOffset, statusColor);
         yOffset += 20;
 
-        // 查找对应的SRL阶段
-        SRLStageInfo relatedStage = null;
-        if (srlStageManager != null) {
-            List<SRLStageInfo> stages = srlStageManager.getAllStages();
-            for (SRLStageInfo stage : stages) {
-                if (subTask.getSubTaskId().equals(stage.getRelatedTaskId())) {
-                    relatedStage = stage;
-                    break;
-                }
+        // 查找对应的SRL阶段 - 根据标题匹配
+        SRLStageInfo relatedStage = findStageByTaskTitle(subTask.getTitle());
+
+        // 渲染任务内容
+        renderTaskContent(poseStack, subTask, relatedStage);
+
+        // 如果任务已完成，显示任务成果
+        if (subTask.getStatus() == AdaptiveSubTaskModel.TaskStatus.COMPLETED) {
+            renderSubTaskCompletionContent(poseStack, subTask, relatedStage);
+        }
+        else {
+            // 显示任务对应的Hint内容
+            renderTaskHint(poseStack, subTask);
+        }
+    }
+
+    // 新增方法：根据任务标题查找相关阶段
+    private SRLStageInfo findStageByTaskTitle(String taskTitle) {
+        if (srlStageManager == null) return null;
+
+        List<SRLStageInfo> stages = srlStageManager.getAllStages();
+
+        // 根据任务标题匹配对应的阶段
+        for (SRLStageInfo stage : stages) {
+            // 知识图谱任务
+            if (taskTitle.contains("知识图谱") && "KNOWLEDGE_MAP".equals(stage.getId())) {
+                return stage;
+            }
+
+            // 文献任务 - CoT
+            if ((taskTitle.contains("CoT") ||
+                    (taskTitle.contains("文献") && taskTitle.contains("CoT"))) &&
+                    "LITERATURE_COT".equals(stage.getId())) {
+                return stage;
+            }
+
+            // 文献任务 - ToolFormer
+            if ((taskTitle.contains("ToolFormer") ||
+                    (taskTitle.contains("文献") && taskTitle.contains("ToolFormer"))) &&
+                    "LITERATURE_TOOLFORMER".equals(stage.getId())) {
+                return stage;
+            }
+
+            // 专家访谈
+            if (taskTitle.contains("专家") && "EXPERT_INTERVIEW".equals(stage.getId())) {
+                return stage;
+            }
+
+            // 写作辅导员
+            if (taskTitle.contains("写作辅导员") && "WRITING_GUIDANCE".equals(stage.getId())) {
+                return stage;
+            }
+
+            // 报告撰写
+            if ((taskTitle.contains("报告") || taskTitle.contains("大纲")) && "REPORT_OUTLINE".equals(stage.getId())) {
+                return stage;
+            }
+
+            // 结束任务
+            if (taskTitle.contains("总结") && "END".equals(stage.getId())) {
+                return stage;
             }
         }
 
+        return null;
+    }
+
+    // 新增方法：渲染任务内容
+    private void renderTaskContent(PoseStack poseStack, AdaptiveSubTaskModel subTask, SRLStageInfo relatedStage) {
         // 如果找到关联的阶段，显示阶段内容
-        if (relatedStage != null) {
-            
+        if (relatedStage != null && !relatedStage.getContent().isEmpty()) {
             // 渲染阶段内容
             String content = relatedStage.getContent();
             List<ColoredText> contentLines = TextUtils.wrapText(content, (int) (this.width / 1.3f), true);
@@ -483,98 +538,54 @@ public class GlobalGuideBookScreen extends Screen {
             }
             yOffset += 10;
         }
-
-        
-        // 如果任务已完成，显示任务成果
-        if (subTask.getStatus() == AdaptiveSubTaskModel.TaskStatus.COMPLETED) {
-            renderSubTaskCompletionContent(poseStack, subTask, relatedStage);
-        }
-        else{
-            // 显示任务对应的Hint内容
-            renderTaskHint(poseStack, subTask, relatedStage);
-        }
-
     }
-    
-    // 新方法：根据当前任务和关联阶段渲染提示内容
-    private void renderTaskHint(PoseStack poseStack, AdaptiveSubTaskModel subTask, SRLStageInfo relatedStage) {
-        // 如果有关联阶段，使用阶段信息来确定提示内容
+
+    // 新方法：渲染任务提示
+    private void renderTaskHint(PoseStack poseStack, AdaptiveSubTaskModel subTask) {
+        // 根据任务标题匹配提示内容
+        String taskTitle = subTask.getTitle();
         String hintTitle;
         String hintContent;
         int hintColor = 0xFFFFAA00;
-        
-        if (relatedStage != null) {
-            // 根据阶段ID或顺序来确定合适的提示内容
-            switch (relatedStage.getId()) {
-                case "KNOWLEDGE_MAP":
-                    hintTitle = "在当前场景中找到需要学习的知识海报，右键点击海报学习";
-                    hintContent = "阅读海报后会获得题目，右键地面即可作答；物品栏中有知识图谱总览，可以随时查看你的学习进度！";
-                    break;
-                    
-                case "LITERATURE_EXPEL":
-                case "LITERATURE_PROMPT":
-                    hintTitle = "在场景中找到需要学习的文献，右键点击地面即可打开阅读界面，";
-                    hintContent = "请在编辑框中输入你的阅读思考和总结，编辑完成后记得保存哦！";
-                    break;
-                case "EXPERT_INTERVIEW":
-                    hintTitle = "找到王教授，跟他聊聊你的报告选题和想法吧！";
-                    hintContent = "右键点击王教授即可开始对话，记得保存你对聊天内容的总结哦！";
-                    break;
-                case "WRITING_GUIDANCE":
-                    hintTitle = "找到论文写作辅导员";
-                    hintContent = "可以使用传送功能哦！";
-                    break;
-                case "REPORT_OUTLINE":
-                    hintTitle = "回到论文写作辅导员那里，在那里完成你对Agent各模块学习的总结报告吧！";
-                    hintContent = "如果建议面板可用的话，写作中可以随时向辅导员提问，辅导员会根据你的进度给出建议，记得保存你的写作内容哦！";
-                    break;
-                    
-                case "END":
-                    hintTitle = "任务完成！";
-                    hintContent = "恭喜你完成了所有Agent研究任务！";
-                    hintColor = 0xFF55FF55;
-                    break;
-                    
-                default:
-                    // 默认提示
-                    hintTitle = "Agent研究任务";
-                    hintContent = "按照指引完成各项任务，逐步掌握Agent领域的知识和技能。";
-            }
-        } else {
-            // 如果没有关联阶段，根据任务标题或ID来确定提示内容
-            switch (subTask.getTitle()) {
-                case "完成知识图谱学习":
-                    hintTitle = "在当前场景中找到需要学习的知识海报，右键点击海报学习";
-                    hintContent = "阅读海报后会获得题目，右键地面即可作答；物品栏中有知识图谱总览，可以随时查看你的学习进度！"; 
-                    break;
-                    
-                case "文献搜集-CoT":
-                case "文献搜集-ToolFormer":
-                    hintTitle = "在场景中找到需要学习的文献，右键点击地面即可打开阅读界面，";
-                    hintContent = "请在编辑框中输入你的阅读思考和总结，编辑完成后记得保存哦！";
-                    break;
-                    
-                case "专家访谈":
-                    hintTitle = "找到王教授，跟他聊聊你的报告选题和想法吧！";
-                    hintContent = "右键点击王教授即可开始对话，记得保存你们的对话内容哦！";
-                    break;
-                case "找到论文写作辅导员":
-                    hintTitle = "找到论文写作辅导员";
-                    hintContent = "可以使用传送功能哦！";
-                    break;
-                    
-                case "报告大纲撰写":
-                    hintTitle = "回到论文写作辅导员那里，在那里完成你对Agent各模块学习的总结报告吧！";
-                    hintContent = "如果建议面板可用的话，写作中可以随时向辅导员提问，辅导员会根据你的进度给出建议，记得保存你的写作内容哦！";
-                    break;
-                    
-                default:
-                    // 默认提示
-                    hintTitle = "Agent研究任务";
-                    hintContent = "按照指引完成各项任务，逐步掌握Agent领域的知识和技能。";
-            }
+
+        // 根据任务标题来决定提示内容
+        if (taskTitle.contains("知识图谱")) {
+            // 知识图谱任务
+            hintTitle = "在当前场景中找到需要学习的知识海报，右键点击海报学习";
+            hintContent = "阅读海报后会获得题目，右键地面即可作答；物品栏中有知识图谱总览，可以随时查看你的学习进度！";
         }
-        
+        else if (taskTitle.contains("文献") || taskTitle.contains("CoT") || taskTitle.contains("ToolFormer")) {
+            // 文献任务(CoT或ToolFormer)
+            hintTitle = "在场景中找到需要学习的文献，右键点击地面即可打开阅读界面，";
+            hintContent = "请在编辑框中输入你的阅读思考和总结，编辑完成后记得保存哦！";
+        }
+        else if (taskTitle.contains("专家访谈")) {
+            // 专家访谈
+            hintTitle = "找到王教授，跟他聊聊你的报告选题和想法吧！";
+            hintContent = "右键点击王教授即可开始对话，记得保存你对聊天内容的总结哦！";
+        }
+        else if (taskTitle.contains("写作辅导员")) {
+            // 写作辅导员
+            hintTitle = "找到论文写作辅导员";
+            hintContent = "可以使用传送功能哦！";
+        }
+        else if (taskTitle.contains("报告") || taskTitle.contains("大纲")) {
+            // 报告撰写
+            hintTitle = "回到论文写作辅导员处，完成你对Agent各模块学习的总结报告吧！";
+            hintContent = "如果建议面板可用的话，写作中可以随时向辅导员提问，辅导员会根据你的进度给出建议，记得保存你的写作内容哦！";
+        }
+        else if (taskTitle.contains("总结")) {
+            // 结束阶段
+            hintTitle = "任务完成！";
+            hintContent = "恭喜你完成了所有Agent研究任务！";
+            hintColor = 0xFF55FF55;
+        }
+        else {
+            // 默认提示
+            hintTitle = "Agent研究任务";
+            hintContent = "按照指引完成各项任务，逐步掌握Agent领域的知识和技能。";
+        }
+
         // 渲染提示标题
         drawString(poseStack, this.font, "提示: " + hintTitle, this.width / 2 - 120, yOffset, hintColor);
         yOffset += 15;
@@ -587,14 +598,12 @@ public class GlobalGuideBookScreen extends Screen {
         }
         yOffset += 5;
     }
-    
-    // 新方法：渲染子任务完成内容
+
+    // 整合您提供的任务完成内容渲染方法
     private void renderSubTaskCompletionContent(PoseStack poseStack, AdaptiveSubTaskModel subTask, SRLStageInfo relatedStage) {
         yOffset += 10;
-        
-        // 1. 首先显示子任务的outcome
 
-        
+        // 1. 首先显示子任务的outcome
         String taskOutcome = subTask.getOutcome();
         if (taskOutcome != null && !taskOutcome.isEmpty()) {
             // 使用通用渲染函数显示子任务outcome
@@ -605,22 +614,22 @@ public class GlobalGuideBookScreen extends Screen {
             drawString(poseStack, this.font, "任务已完成", this.width / 2 - 120, yOffset, 0xFF55FF55);
             yOffset += 15;
         }
-        
+
         // 2. 然后显示阶段的outcome（如果有）
         if (relatedStage != null && relatedStage.getOutcome() != null && !relatedStage.getOutcome().isEmpty()) {
             // 添加分隔线
             yOffset += 5;
             fill(poseStack, this.width / 2 - 120, yOffset, this.width / 2 + 120, yOffset + 1, 0x55FFFFFF);
             yOffset += 10;
-            
+
             drawString(poseStack, this.font, "阶段成果:", this.width / 2 - 120, yOffset, 0xFFFFAA00);
             yOffset += 15;
-            
+
             // 使用通用渲染函数显示阶段outcome
             renderGenericOutcome(poseStack, relatedStage.getOutcome());
         }
     }
-    
+
     // 通用的outcome渲染函数，可以指定文本颜色
     private void renderGenericOutcome(PoseStack poseStack, String outcome, int textColor) {
         List<ColoredText> outcomeLines = TextUtils.wrapText(outcome, (int) (this.width / 1.3f), true);

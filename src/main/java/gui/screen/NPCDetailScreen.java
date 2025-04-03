@@ -59,13 +59,13 @@ public class NPCDetailScreen extends Screen {
          }
          ));
 
-        // "查看线索" 按钮
-        // this.addRenderableWidget(new Button(centerX + buttonSpacing, buttonY, buttonWidth, buttonHeight,
-        //         new TextComponent("查看线索"), button -> {
-        //     // 切换显示对话内容
-        //     this.showHint = true;
-        // }
-        // ));
+         //"查看线索" 按钮
+         this.addRenderableWidget(new Button(centerX - buttonSpacing - buttonWidth, buttonY, buttonWidth, buttonHeight,
+                 new TextComponent("查看线索"), button -> {
+             // 切换显示对话内容
+             this.showHint = true;
+         }
+         ));
 
         // 关闭按钮
         this.addRenderableWidget(new Button(this.width - 30, 15, 20, 20, new TextComponent("X"), button -> {
