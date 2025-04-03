@@ -17,6 +17,7 @@ public class TaskManager {
     private List<AdaptiveTaskModel> currentTasks;
     private AdaptiveTaskModel currentTaskInOverview;
     private AdaptiveTaskModel currentActiveTask; // 当前正在执行的主任务
+    private AdaptiveTaskModel lastCompletedTask = null;
 
     // 存储每个主任务对应的排序后的子任务列表
     private Map<AdaptiveTaskModel, List<AdaptiveSubTaskModel>> sortedSubTasksMap;
@@ -109,6 +110,13 @@ public class TaskManager {
         }
 
         return taskList;
+    }
+    // 新方法：获取最后完成的任务的子任务
+    public AdaptiveTaskModel getLastCompletedTask() {
+        if (lastCompletedTask != null) {
+            return lastCompletedTask;
+        }
+        return null;
     }
 
     // 检查当前任务是否有正在进行的子任务
@@ -233,6 +241,7 @@ public class TaskManager {
             // 如果所有子任务都已完成，取消当前活动任务状态
             if (allSubTasksCompleted) {
                 if (parentTask.equals(currentActiveTask)) {
+                    lastCompletedTask = currentActiveTask;
                     setCurrentActiveTask(null);
                 }
                 System.out.println("All sub-tasks completed! Task completed: " + parentTask.getTitle());

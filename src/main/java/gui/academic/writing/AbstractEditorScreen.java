@@ -271,15 +271,17 @@ public abstract class AbstractEditorScreen extends Screen {
         this.outcomePanel.refreshPanel();
     }
 
-    // 获取子任务列表
+    // 修改getSubTasks()方法以处理主任务完成的情况
     protected List<AdaptiveSubTaskModel> getSubTasks() {
-        // 从TaskManager获取当前任务的子任务
-        System.out.println("TaskManager.getInstance().getCurrentActiveTask() " + TaskManager.getInstance().getCurrentActiveTask());
+        // 先尝试从当前活动任务获取子任务
         if (TaskManager.getInstance().getCurrentActiveTask() != null) {
-            System.out.println("TaskManager.getInstance().getCurrentActiveTask().getTitle() " + TaskManager.getInstance().getCurrentActiveTask().getTitle());
             return TaskManager.getInstance().getCurrentActiveTask().getSubTasks();
         }
-        return new ArrayList<>();
+        // 如果当前没有活动任务（可能是所有任务都完成了），则尝试获取最后完成的任务
+        else {
+            // 从TaskManager获取最后完成的任务
+            return TaskManager.getInstance().getLastCompletedTask().getSubTasks();
+        }
     }
 
     @Override
