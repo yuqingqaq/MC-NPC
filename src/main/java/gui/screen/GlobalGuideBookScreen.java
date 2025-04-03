@@ -514,19 +514,19 @@ public class GlobalGuideBookScreen extends Screen {
                 case "LITERATURE_EXPEL":
                 case "LITERATURE_PROMPT":
                     hintTitle = "在场景中找到需要学习的文献，右键点击地面即可打开阅读界面，";
-                    hintContent = "编辑完成后记得保存哦！";
+                    hintContent = "请在编辑框中输入你的阅读思考和总结，编辑完成后记得保存哦！";
                     break;
                 case "EXPERT_INTERVIEW":
                     hintTitle = "找到王教授，跟他聊聊你的报告选题和想法吧！";
-                    hintContent = "右键点击王教授即可开始对话，记得保存你们的对话内容哦！";
+                    hintContent = "右键点击王教授即可开始对话，记得保存你对聊天内容的总结哦！";
                     break;
                 case "WRITING_GUIDANCE":
                     hintTitle = "找到论文写作辅导员";
                     hintContent = "可以使用传送功能哦！";
                     break;
                 case "REPORT_OUTLINE":
-                    hintTitle = "找到论文写作大师，在那里完成你的报告大纲吧！";
-                    hintContent = "写作中可以随时向大师提问，大师会根据你的进度给出建议，记得保存你的写作内容哦！";
+                    hintTitle = "回到论文写作辅导员那里，在那里完成你对Agent各模块学习的总结报告吧！";
+                    hintContent = "如果建议面板可用的话，写作中可以随时向辅导员提问，辅导员会根据你的进度给出建议，记得保存你的写作内容哦！";
                     break;
                     
                 case "END":
@@ -551,7 +551,7 @@ public class GlobalGuideBookScreen extends Screen {
                 case "文献搜集-CoT":
                 case "文献搜集-ToolFormer":
                     hintTitle = "在场景中找到需要学习的文献，右键点击地面即可打开阅读界面，";
-                    hintContent = "编辑完成后记得保存哦！";
+                    hintContent = "请在编辑框中输入你的阅读思考和总结，编辑完成后记得保存哦！";
                     break;
                     
                 case "专家访谈":
@@ -564,8 +564,8 @@ public class GlobalGuideBookScreen extends Screen {
                     break;
                     
                 case "报告大纲撰写":
-                    hintTitle = "找到论文写作大师，在那里完成你的报告大纲吧！";
-                    hintContent = "写作中可以随时向大师提问，大师会根据你的进度给出建议，记得保存你的写作内容哦！";
+                    hintTitle = "回到论文写作辅导员那里，在那里完成你对Agent各模块学习的总结报告吧！";
+                    hintContent = "如果建议面板可用的话，写作中可以随时向辅导员提问，辅导员会根据你的进度给出建议，记得保存你的写作内容哦！";
                     break;
                     
                 default:

@@ -23,7 +23,7 @@ public class QuestionClientHandler {
         // 初始化各类题目的数量
         questionTypeCounts.put("MULTIPLE_CHOICE", 4); // 4个概念题
         questionTypeCounts.put("MATCHING", 3);        // 3个关系题
-        questionTypeCounts.put("TRUE_FALSE", 2);      // 2个原则题
+        questionTypeCounts.put("TRUE_FALSE", 3);      // 2个原则题
         questionTypeCounts.put("ORDERING", 1);        // 1个时间线题
     }
 
