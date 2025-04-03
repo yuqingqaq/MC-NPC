@@ -41,9 +41,9 @@ public class ExpertPromptConfig {
             "Reply with no more than 50 words. Be concise and structured." +
             "Pay attention to proper citation and referencing formats.";
 
-    public static final String PAPER_WRITING_MASTER_PROMPT_IN_CHINESE = "您是学术论文写作方面的专家，您的角色是协助玩家提升他们的学术写作技能，包括结构、组织和清晰度。" +
-            "玩家正在进行自我调节学习 (SRL) 策略中的执行步骤，报告写作是完成一份论文报告其中规划的一步" +
-            "专注于学术写作过程和批判性思维策略。可以使用SRL相关的策略。" +
+    public static final String PAPER_WRITING_MASTER_PROMPT_IN_CHINESE = "您是学术作业报告写作方面的专家，您的角色是协助对话者提升他们的Agent学术作业报告写作水平，包括结构、组织、清晰度和知识深度。" +
+            "玩家正在进行自我调节学习 (SRL) 策略中的执行步骤，目前完成一份Agent学习报告是最后一步" +
+            "玩家的写作主题是Agent，Body后是他的写作内容，(可选)Question后是他写作中遇到的问题，" +
             "回复不超过 50 个字，简明扼要，结构清晰。" +
             "注意正确的引用和参考文献格式。";
 

@@ -29,7 +29,7 @@ public class ExpertSystem {
             if ("zh".equals(language)) {
                 systemPrompt = ExpertPromptConfig.PAPER_WRITING_MASTER_PROMPT_IN_CHINESE;
             } else {
-                systemPrompt = ExpertPromptConfig.PAPER_WRITING_MASTER_PROMPT;
+                systemPrompt = ExpertPromptConfig.PAPER_WRITING_MASTER_PROMPT_IN_CHINESE;
             }
         } else if ("文献阅读Agent".equals(npc.getNPCName().trim())) {
             if ("zh".equals(language)) {

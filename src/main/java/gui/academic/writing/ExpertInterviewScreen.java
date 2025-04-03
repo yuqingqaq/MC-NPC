@@ -91,14 +91,14 @@ public class ExpertInterviewScreen extends Screen {
                 new TextComponent("发送消息"));
         this.addWidget(this.inputField);
 
-        // 录音按钮
-        recordButton = this.addRenderableWidget(new Button(
-                20,
-                centerY + 90,
-                110,
-                20,
-                new TextComponent("开始录音"),
-                button -> toggleRecording()));
+//        // 录音按钮
+//        recordButton = this.addRenderableWidget(new Button(
+//                20,
+//                centerY + 90,
+//                110,
+//                20,
+//                new TextComponent("开始录音"),
+//                button -> toggleRecording()));
 
         // 发送按钮
         this.sendButton = this.addRenderableWidget(new Button(
@@ -228,14 +228,14 @@ public class ExpertInterviewScreen extends Screen {
             // 刷新聊天面板
             this.chatPanel.refreshPanel();
 
-            // 使用语音合成将NPC的回答转换为语音
-            try {
-                String ttsPath = TextToSpeechService.RefTTS(response, npcName);
-                System.out.println(ttsPath);
-                audioPlayer.playAudio(ttsPath);
-            } catch (Exception e) {
-                System.out.println("Text-to-speech error: " + e.getMessage());
-            }
+//            // 使用语音合成将NPC的回答转换为语音
+//            try {
+//                String ttsPath = TextToSpeechService.RefTTS(response, npcName);
+//                System.out.println(ttsPath);
+//                audioPlayer.playAudio(ttsPath);
+//            } catch (Exception e) {
+//                System.out.println("Text-to-speech error: " + e.getMessage());
+//            }
 
             if (!isToastShown) {
                 Minecraft.getInstance().getToasts().addToast(toast);

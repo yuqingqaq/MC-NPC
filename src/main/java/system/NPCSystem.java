@@ -21,10 +21,10 @@ public class NPCSystem {
     }
 
     public String interact(NPCModel npc, String userInput, String language) {
-        String introduction, cautionNote, npcResponse;
+        String systemPrompt, npcResponse;
 
-        if (npc.getRole().equals("下园校医务室-全科医生")){
-            String systemPrompt = "您是香港中文大学（深圳）下园校医务室的全科医生。";
+        if (npc.getRole().equals("下园校医务室-全科医生")) {
+            systemPrompt = "您是香港中文大学（深圳）下园校医务室的全科医生。";
             npc.addDialogueToHistory(new NPCMessage("user", userInput));
             List<NPCMessage> messageHistory = new ArrayList<>();
             messageHistory.add(new NPCMessage("system", systemPrompt));
@@ -33,51 +33,42 @@ public class NPCSystem {
             System.out.println("NPC Response:");
             System.out.println(npcResponse);
             System.out.println();
-//            npcResponse = "Testtest";
-        }
-        else{
-
-            cautionNote = NPCPromptConfig.generateCautionNoteInZh();
-            String systemPrompt = String.format("IMPORTANT Rules: %s", cautionNote);
-
+        } else {
+            String cautionNote = NPCPromptConfig.generateCautionNoteInZh();
             String taskDetails = generateTaskDetails(npc); // This method can stay here as it is specific to NPC
 
-            if(npc.getNPCName().equals("徐扬生教授")){
-                npc.addDialogueToHistory(new NPCMessage("user", NPCPromptConfig.HeadmasterPrompt() + userInput));
+            // 基于NPC类型构建system prompt
+            if(npc.getNPCName().equals("徐扬生教授")) {
+                systemPrompt = String.format("IMPORTANT Rules: %s\n%s", cautionNote, NPCPromptConfig.HeadmasterPrompt());
+            } else if(npc.getNPCName().equals("熊伟教授")) {
+                systemPrompt = String.format("IMPORTANT Rules: %s\n%s", cautionNote, NPCPromptConfig.SMEPrompt());
+            } else if(npc.getNPCName().equals("唐文方教授")) {
+                systemPrompt = String.format("IMPORTANT Rules: %s\n%s", cautionNote, NPCPromptConfig.HSSPrompt());
+            } else if(npc.getNPCName().equals("郑仲煊教授")) {
+                systemPrompt = String.format("IMPORTANT Rules: %s\n%s", cautionNote, NPCPromptConfig.MEDPrompt());
+            } else if(npc.getNPCName().equals("唐本忠教授")) {
+                systemPrompt = String.format("IMPORTANT Rules: %s\n%s", cautionNote, NPCPromptConfig.SSEPrompt());
+            } else if(npc.getNPCName().equals("戴建岗教授")) {
+                systemPrompt = String.format("IMPORTANT Rules: %s\n%s", cautionNote, NPCPromptConfig.SDSPrompt());
+            } else if(npc.getNPCName().equals("叶小钢教授")) {
+                systemPrompt = String.format("IMPORTANT Rules: %s\n%s", cautionNote, NPCPromptConfig.MUSPrompt());
+            } else if(npc.getNPCName().equals("罗智泉教授")) {
+                systemPrompt = String.format("IMPORTANT Rules: %s\n%s", cautionNote, NPCPromptConfig.SRIBDPrompt());
+            } else if(npc.getNPCName().equals("图书馆工作人员")) {
+                systemPrompt = String.format("IMPORTANT Rules: %s\n%s", cautionNote, NPCPromptConfig.LibPrompt());
+            } else if(npc.getNPCName().equals("体育馆工作人员")) {
+                systemPrompt = String.format("IMPORTANT Rules: %s\n%s", cautionNote, NPCPromptConfig.GymPrompt());
+            } else if(npc.getNPCName().equals("朋辈心理辅导员")) {
+                systemPrompt = String.format("IMPORTANT Rules: %s\n%s", cautionNote, NPCPromptConfig.uBuddiesPromptZh());
+            } else if(npc.getNPCName().equals("王教授")) {
+                systemPrompt = String.format("IMPORTANT Rules: %s\n%s", cautionNote, NPCPromptConfig.ProfWangPromptZh());
+            } else {
+                // 默认system prompt
+                systemPrompt = String.format("IMPORTANT Rules: %s", cautionNote);
             }
-            else if(npc.getNPCName().equals("熊伟教授")){
-                npc.addDialogueToHistory(new NPCMessage("user", NPCPromptConfig.SMEPrompt() + userInput));
-            }
-            else if(npc.getNPCName().equals("唐文方教授")){
-                npc.addDialogueToHistory(new NPCMessage("user", NPCPromptConfig.HSSPrompt() + userInput));
-            }
-            else if(npc.getNPCName().equals("郑仲煊教授")){
-                npc.addDialogueToHistory(new NPCMessage("user", NPCPromptConfig.MEDPrompt() + userInput));
-            }
-            else if(npc.getNPCName().equals("唐本忠教授")){
-                npc.addDialogueToHistory(new NPCMessage("user", NPCPromptConfig.SSEPrompt() + userInput));
-            }
-            else if(npc.getNPCName().equals("戴建岗教授")){
-                npc.addDialogueToHistory(new NPCMessage("user", NPCPromptConfig.SDSPrompt() + userInput));
-            }
-            else if(npc.getNPCName().equals("叶小钢教授")){
-                npc.addDialogueToHistory(new NPCMessage("user", NPCPromptConfig.MUSPrompt() + userInput));
-            }
-            else if(npc.getNPCName().equals("罗智泉教授")){
-                npc.addDialogueToHistory(new NPCMessage("user", NPCPromptConfig.SRIBDPrompt() + userInput));
-            }
-            else if(npc.getNPCName().equals("图书馆工作人员")){
-                npc.addDialogueToHistory(new NPCMessage("user", NPCPromptConfig.LibPrompt() + userInput));
-            }
-            else if(npc.getNPCName().equals("体育馆工作人员")){
-                npc.addDialogueToHistory(new NPCMessage("user", NPCPromptConfig.GymPrompt() + userInput));
-            }
-            else if(npc.getNPCName().equals("朋辈心理辅导员")){
-                npc.addDialogueToHistory(new NPCMessage("user", NPCPromptConfig. uBuddiesPromptZh() + userInput));
-            }
-            else if(npc.getNPCName().equals("王教授")){
-                npc.addDialogueToHistory(new NPCMessage("user", NPCPromptConfig.ProfWangPromptZh() + userInput));
-            }
+
+            // 直接添加用户输入，不带提示词
+            npc.addDialogueToHistory(new NPCMessage("user", userInput));
 
             List<NPCMessage> messageHistory = new ArrayList<>();
             messageHistory.add(new NPCMessage("system", systemPrompt));
@@ -90,17 +81,7 @@ public class NPCSystem {
             npcResponse = gptModel.call(messageHistory);
         }
 
-
-
-        String cleanedResponse = cleanResponse(npcResponse);
-
-        npc.addDialogueToHistory(new NPCMessage("assistant", cleanedResponse));
-
-        // Check if the dialogue completion condition is met
-        if (npc.checkDialogueCompletionCondition()) {
-            npc.completeAllTasks();
-        }
-        return cleanedResponse;
+        return npcResponse;
     }
 
     private String generateTaskDetails(NPCModel npc) {

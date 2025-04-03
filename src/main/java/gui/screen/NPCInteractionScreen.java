@@ -77,19 +77,19 @@ public class NPCInteractionScreen extends Screen {
         int centerY = this.height / 2;
         int centerX = this.width  / 2;
 
-        this.inputField = new EditBox(this.font, centerX - 190, centerY + 65, 220, 20, new TextComponent("Enter Message"));
+        this.inputField = new EditBox(this.font, centerX - 190, centerY + 65, 250, 20, new TextComponent("Enter Message"));
         this.addWidget(this.inputField);
-        // 添加录音按钮
-        recordButton = this.addRenderableWidget(new Button(centerX + 40, centerY + 65, 100, 20, new TextComponent("Start Recording"), button -> {
-            toggleRecording();
-        }));
+//        // 添加录音按钮
+//        recordButton = this.addRenderableWidget(new Button(centerX + 40, centerY + 65, 100, 20, new TextComponent("Start Recording"), button -> {
+//            toggleRecording();
+//        }));
 //        this.hintButton = this.addRenderableWidget(new Button(centerX + 75, centerY + 65, 80, 20, new TextComponent("Hint"), button -> {
 //            getAdvice();
 //        }));
-        clearButton = this.addRenderableWidget(new Button(centerX + 145, centerY + 95, 50, 20, new TextComponent("Clear"), button -> {
+        clearButton = this.addRenderableWidget(new Button(centerX + 145, centerY + 65, 50, 20, new TextComponent("Clear"), button -> {
             clearChatHistory();
         }));
-        this.sendButton = this.addRenderableWidget(new Button(centerX + 145, centerY + 65, 50, 20, new TextComponent("Send"), button -> {
+        this.sendButton = this.addRenderableWidget(new Button(centerX + 85, centerY + 65, 50, 20, new TextComponent("Send"), button -> {
              sendChatMessage();
         }));
 

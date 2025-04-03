@@ -1,5 +1,6 @@
 package system;
 
+import controller.GameController;
 import model.AdaptiveSubTaskModel;
 import utils.TimeUtil;
 
@@ -22,8 +23,11 @@ public class TimeManager {
     }
 
     // 开启子任务的时间更新逻辑
+// 开启子任务的时间更新逻辑
     public void startTrackingTime(AdaptiveSubTaskModel subTask) {
-        if (subTask.getStatus() == AdaptiveSubTaskModel.TaskStatus.IN_PROGRESS) {
+        // 只在SRL模式下启动计时器
+        if (GameController.getInstance().isSRLQuestAvailable() &&
+                subTask.getStatus() == AdaptiveSubTaskModel.TaskStatus.IN_PROGRESS) {
             timer.scheduleAtFixedRate(new TimerTask() {
                 @Override
                 public void run() {

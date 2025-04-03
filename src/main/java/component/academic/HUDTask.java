@@ -61,8 +61,11 @@ public class HUDTask {
             for (AdaptiveSubTaskModel subTask : sortedSubTasks) {
                 if (subTask.getStatus() == AdaptiveSubTaskModel.TaskStatus.IN_PROGRESS) {
                     String taskText = subTask.getTitle();
-                    String formattedTime = TimeManager.getInstance().formatTime(subTask.getRemainingTime());
-                    taskText += " " + formattedTime;
+                    // 只在SRL模式下添加倒计时
+                    if (GameController.getInstance().isSRLQuestAvailable()) {
+                        String formattedTime = TimeManager.getInstance().formatTime(subTask.getRemainingTime());
+                        taskText += " " + formattedTime;
+                    }
                     minecraft.font.draw(poseStack, new TextComponent(taskText), x + 4, y, 0xFFFFA500);
                     y += 10;
                 }
@@ -79,7 +82,8 @@ public class HUDTask {
                         color = 0xFFADFF2F; // 已完成任务显示绿色
                     } else {
                         color = 0xFFFFA500; // 当前任务显示橙色
-                        taskText += " " + TimeManager.getInstance().formatTime(subTask.getRemainingTime());
+                        // 移除这里的倒计时显示，因为是非SRL模式
+                        // taskText += " " + TimeManager.getInstance().formatTime(subTask.getRemainingTime());
                     }
 
                     minecraft.font.draw(poseStack, new TextComponent(taskText), x + 4, y, color);
@@ -102,6 +106,7 @@ public class HUDTask {
                             break;
                         case IN_PROGRESS:
                             color = 0xFFFFA500;
+                            // 在SRL模式下保留倒计时显示
                             taskText += " " + TimeManager.getInstance().formatTime(subTask.getRemainingTime());
                             break;
                         default:
