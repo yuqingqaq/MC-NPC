@@ -188,15 +188,15 @@ public class NPCInteractionScreen extends Screen {
 
             // 刷新聊天面板和提示面板
             this.chatPanel.refreshPanel();
-
-            // 使用语音合成将NPC的回答转换为语音
-            try {
-                String ttsPath = TextToSpeechService.RefTTS(response,npcName);
-                System.out.println(ttsPath);
-                audioPlayer.playAudio(ttsPath);
-            } catch (Exception e) {
-                System.out.println("Text-to-speech error: " + e.getMessage());
-            }
+//
+//            // 使用语音合成将NPC的回答转换为语音
+//            try {
+//                String ttsPath = TextToSpeechService.RefTTS(response,npcName);
+//                System.out.println(ttsPath);
+//                audioPlayer.playAudio(ttsPath);
+//            } catch (Exception e) {
+//                System.out.println("Text-to-speech error: " + e.getMessage());
+//            }
 
         }
     }
