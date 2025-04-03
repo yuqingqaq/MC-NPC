@@ -562,7 +562,7 @@ public class GlobalGuideBookScreen extends Screen {
         else if (taskTitle.contains("专家访谈")) {
             // 专家访谈
             hintTitle = "找到王教授，跟他聊聊你的报告选题和想法吧！";
-            hintContent = "右键点击王教授即可开始对话，记得保存你对聊天内容的总结哦！";
+            hintContent = "右键点击王教授即可开始对话，记得保存你对聊天内容的总结！学习过程中任何不理解的知识点也可以提问哦！";
         }
         else if (taskTitle.contains("写作辅导员")) {
             // 写作辅导员
