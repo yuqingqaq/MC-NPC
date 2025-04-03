@@ -393,8 +393,22 @@ public abstract class AbstractEditorScreen extends Screen {
         super.render(poseStack, mouseX, mouseY, partialTicks);
 
         this.titleField.render(poseStack, mouseX, mouseY, partialTicks);
+        if (this.titleField.getValue().isEmpty()) {
+            this.font.draw(poseStack,
+                    new TextComponent("报告标题"),
+                    this.titleField.x + 4,
+                    this.titleField.y + 6,
+                    0x707070);  // 灰色提示文本
+        }
         if(GameController.getInstance().isSRLQuestAvailable()) {
             this.questionField.render(poseStack, mouseX, mouseY, partialTicks);
+            if (this.questionField.getValue().isEmpty()) {
+                this.font.draw(poseStack,
+                        new TextComponent("随时输入你对报告写作的问题并获取建议..."),
+                        this.questionField.x + 4,
+                        this.questionField.y + 6,
+                        0x707070);  // 灰色提示文本
+            }
         }
         this.bodyField.render(poseStack, mouseX, mouseY, partialTicks);
 

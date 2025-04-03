@@ -205,7 +205,7 @@ public class ExpertInterviewScreen extends Screen {
         } else {
             try {
                 String audioDataText = speechHandler.stopRecording();
-                recordButton.setMessage(new TextComponent("=开始录音"));
+                recordButton.setMessage(new TextComponent("开始录音"));
                 inputField.setValue(new String(audioDataText));
                 sendChatMessage();
             } catch (Exception e) {

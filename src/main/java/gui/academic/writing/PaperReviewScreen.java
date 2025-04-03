@@ -257,7 +257,16 @@ public class PaperReviewScreen extends Screen {
         this.paperContentPanel.render(poseStack, mouseX, mouseY, partialTicks);
         this.textEditor.render(poseStack, mouseX, mouseY, partialTicks);
         if(GameController.getInstance().isSRLQuestAvailable()) {
+
             this.questionInput.render(poseStack, mouseX, mouseY, partialTicks);
+            // 如果输入框为空，显示提示文本
+            if (this.questionInput.getValue().isEmpty()) {
+                this.font.draw(poseStack,
+                        new TextComponent("输入你对右侧文献阅读助手的问题..."),
+                        this.questionInput.x + 4,
+                        this.questionInput.y + 6,
+                        0x707070);  // 灰色提示文本
+            }
         }
         this.hintPanel.render(poseStack, mouseX, mouseY, partialTicks);
 

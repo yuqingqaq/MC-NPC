@@ -78,8 +78,10 @@ public class GlobalGuidebookScreen extends Screen {
                 !TaskManager.getInstance().isStrategyPlanned()) {
                 String message = "需要先制定学习策略！";
                 String hint = "请打开 SRLQuest 进行任务规划。";
+                String hint_reflection = "任务全部完成后可打开SRLQuest查看完成情况。";
                 font.draw(poseStack, message, contentX, 80, 0xFFFF0000);
                 font.draw(poseStack, hint, contentX, 95, 0xFFAAAAAA);
+                font.draw(poseStack, hint_reflection, contentX, 100, 0xFFAAAAAA);
                 return;
             }
 
