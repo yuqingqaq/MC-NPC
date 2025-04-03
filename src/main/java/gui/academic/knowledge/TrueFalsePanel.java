@@ -119,7 +119,12 @@ public class TrueFalsePanel extends BaseQuestionPanel {
 
     @Override
     public String getIncorrectFeedback() {
-        return "这不太正确。" + "该语句实际上是" + (isTrue ? "正确" : "错误") + "解释：" + explanation;
+        if(GameController.getInstance().isSRLQuestAvailable()){
+            return "这不太正确。" + "解释：" + explanation;
+        }
+        else{
+            return "这不太正确。再想想吧....";
+        }
     }
 
     @Override

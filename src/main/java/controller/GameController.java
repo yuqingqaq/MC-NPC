@@ -61,12 +61,20 @@ public class GameController implements GameControllerInterface {
 
 //        npcs = JsonLoader.loadNPCsFromJson("json/psy_sim.json");
         npcs = JsonLoader.loadNPCsFromJson("json/campus_tour.json");
-
-        adaptiveTasks = JsonLoader.loadObjectListFromJson(
-                "json/adaptive_tasks.json",
-                "adaptive_tasks",
-                new TypeReference<List<AdaptiveTaskModel>>() {}
-        );
+        if(isSRLQuestAvailable()){
+            adaptiveTasks = JsonLoader.loadObjectListFromJson(
+                    "json/adaptive_tasks.json",
+                    "adaptive_tasks",
+                    new TypeReference<List<AdaptiveTaskModel>>() {}
+            );
+        }
+        else{
+            adaptiveTasks = JsonLoader.loadObjectListFromJson(
+                    "json/adaptive_tasks_withoutSRL.json",
+                    "adaptive_tasks",
+                    new TypeReference<List<AdaptiveTaskModel>>() {}
+            );
+        }
 
         gptModel = new OpenAIGPT("gpt-4o","config/gpt3keys.txt");
 //        gptModel = new OpenAIGPT("bot-20241220150201-tvbhd","config/doubao.txt");  // Doubao API

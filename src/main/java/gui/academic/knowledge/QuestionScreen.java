@@ -139,10 +139,9 @@ public class QuestionScreen extends Screen {
 
         // 初始化反馈面板 - 但默认不显示
         this.feedbackPanel = new FeedbackPanel(
-                this.width - 40,
-                FEEDBACK_HEIGHT,
-                20,
-                this.height - FEEDBACK_HEIGHT - 10
+                this.width - 40,  // 面板宽度
+                20,               // x位置
+                this.height - 100 // y位置的初始值，将在显示时根据实际高度调整
         );
 
         // 关闭按钮
@@ -187,14 +186,18 @@ public class QuestionScreen extends Screen {
             // 错误答案反馈
             feedback = questionPanel.getIncorrectFeedback();
 
-            // 获取专家提示
-            String expertHint = GameController.getInstance().interactWithExpert(
-                    npcModel,
-                    questionPanel.getHintPrompt()
-            );
 
-            // 显示反馈
-            feedbackPanel.setFeedback(false, feedback + "\n\n提示: " + expertHint);
+            if(GameController.getInstance().isSRLQuestAvailable()){
+                // 获取专家提示
+                String expertHint = GameController.getInstance().interactWithExpert(
+                        npcModel,
+                        questionPanel.getHintPrompt()
+                );
+                feedbackPanel.setFeedback(false, feedback + "\n提示: " + expertHint);
+            }
+            else{
+                feedbackPanel.setFeedback(false, feedback);
+            }
         }
 
         showFeedback = true;

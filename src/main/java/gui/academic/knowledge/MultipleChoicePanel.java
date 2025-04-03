@@ -102,8 +102,11 @@ public class MultipleChoicePanel extends BaseQuestionPanel {
     
     @Override
     public String getIncorrectFeedback() {
-        return "不太正确。" +
-        "正确答案是：" + options.get(correctOption);
+        if(GameController.getInstance().isSRLQuestAvailable()){
+            return "不太正确。" +
+                    "正确答案是：" + options.get(correctOption);
+        }
+        return "不太正确。";
     }
     
     @Override

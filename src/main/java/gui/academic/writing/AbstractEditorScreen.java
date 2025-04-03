@@ -28,7 +28,7 @@ public abstract class AbstractEditorScreen extends Screen {
     protected List<String> adviceHistory;     // GPT 返回的建议历史
     protected List<String> outcomeHistory;    // 子任务收获历史
 
-    protected boolean showingAdvicePanel = true; // 当前显示的是建议面板还是收获面板
+    protected boolean showingAdvicePanel = false; // 当前显示的是建议面板还是收获面板
 
     protected NPCModel currentNPC;            // 当前 NPC 对象
 
@@ -92,19 +92,23 @@ public abstract class AbstractEditorScreen extends Screen {
                 button -> saveContent()
         ));
 
-        // 用户问题输入框
-        this.questionField = new EditBox(this.font, 40, centerY + 90, leftPanelWidth - 30, 20, new TextComponent(getQuestionPlaceholder()));
-        this.addWidget(this.questionField);
 
-        // 获取建议按钮 (保持不变)
-        this.getAdviceButton = this.addRenderableWidget(new Button(
-                leftPanelWidth + 20,
-                centerY + 90,
-                100,
-                20,
-                new TextComponent("获取写作建议"),
-                button -> generateAdvice()
-        ));
+
+        if(GameController.getInstance().isSRLQuestAvailable()){
+            // 用户问题输入框
+            this.questionField = new EditBox(this.font, 40, centerY + 90, leftPanelWidth - 30, 20, new TextComponent(getQuestionPlaceholder()));
+            this.addWidget(this.questionField);
+
+            // 获取建议按钮 (保持不变)
+            this.getAdviceButton = this.addRenderableWidget(new Button(
+                    leftPanelWidth + 20,
+                    centerY + 90,
+                    100,
+                    20,
+                    new TextComponent("获取写作建议"),
+                    button -> generateAdvice()
+            ));
+        }
 
         // 建议展示面板和收获展示面板的共同配置
         Minecraft mc = Minecraft.getInstance();
@@ -373,7 +377,9 @@ public abstract class AbstractEditorScreen extends Screen {
         super.render(poseStack, mouseX, mouseY, partialTicks);
 
         this.titleField.render(poseStack, mouseX, mouseY, partialTicks);
-        this.questionField.render(poseStack, mouseX, mouseY, partialTicks);
+        if(GameController.getInstance().isSRLQuestAvailable()) {
+            this.questionField.render(poseStack, mouseX, mouseY, partialTicks);
+        }
         this.bodyField.render(poseStack, mouseX, mouseY, partialTicks);
 
         // 根据当前状态渲染相应的面板
@@ -403,7 +409,9 @@ public abstract class AbstractEditorScreen extends Screen {
                 showingAdvicePanel = false;
                 return true;
             } else if (mouseX >= adviceTabX && mouseX <= adviceTabX + tabWidth) {
-                showingAdvicePanel = true;
+                if(GameController.getInstance().isSRLQuestAvailable()) {
+                    showingAdvicePanel = true;
+                }
                 return true;
             }
         }

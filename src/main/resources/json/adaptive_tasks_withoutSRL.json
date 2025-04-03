@@ -1,0 +1,92 @@
+{
+  "adaptive_tasks": [
+    {
+      "taskId": "task3",
+      "title": "Agent研究",
+      "category": "Academic",
+      "description": "在开始写作前：在学校图书馆内找到1篇相关的参考文献，并进行总结，需要输出简洁的review结论",
+      "target": "完成一份有关Agent的学习报告",
+      "resources": ["知识图谱", "参考文献", "论文写作专家"],
+      "location": "实验室",
+      "estimatedTime": "40:00",
+      "strategies": ["自行规划", "协作规划"],
+      "summary": {},
+      "completed": false,
+      "notes": "需要与团队成员讨论",
+      "subTasks": [
+        {
+          "subTaskId": "1",
+          "title": "完成知识图谱学习",
+          "description": "系统学习Agent的基础概念、关系理解、原则验证和发展时间线，构建完整的知识体系",
+          "estimatedTime": "10:00",
+          "completed": false,
+          "status": "NOT_STARTED"
+        },
+        {
+          "subTaskId": "2",
+          "title": "文献搜集-CoT",
+          "description": "收集PaperItem，阅读文献摘要内容，写简短总结",
+          "estimatedTime": "5:00",
+          "completed": false,
+          "status": "NOT_STARTED"
+        },
+        {
+          "subTaskId": "3",
+          "title": "文献搜集-ToolFormer",
+          "description": "收集PaperItem，阅读文献摘要内容，写简短总结",
+          "estimatedTime": "5:00",
+          "completed": false,
+          "status": "NOT_STARTED"
+        },
+        {
+          "subTaskId": "4",
+          "title": "找到论文写作辅导员",
+          "description": "可以通过任务总览界面快速传送",
+          "estimatedTime": "02:00",
+          "completed": false,
+          "status": "NOT_STARTED"
+        },
+        {
+          "subTaskId": "5",
+          "title": "报告大纲撰写",
+          "description": "根据概念学习、文献搜集和专家访谈的结果写一份报告大纲",
+          "estimatedTime": "15:00",
+          "completed": false,
+          "status": "NOT_STARTED"
+        }
+      ]
+    },
+    {
+      "taskId": "task4",
+      "title": "熟悉校园",
+      "category": "Environmental",
+      "description": "熟悉虚拟校园场景",
+      "target": "完成一份详细的报告",
+      "resources": ["校园导览地图"],
+      "location": "行政楼",
+      "estimatedTime": "12:00",
+      "strategies": ["自行规划"],
+      "summary": {
+        "进展": "已游览部分校园"
+      },
+      "completed": false,
+      "notes": "与学校教授聊天",
+      "subTasks": [
+        {
+          "subTaskId": "1",
+          "title": "收集校徽碎片",
+          "estimatedTime": "10:00",
+          "completed": false,
+          "status": "NOT_STARTED"
+        },
+        {
+          "subTaskId": "2",
+          "title": "与一位教授聊天",
+          "estimatedTime": "5:00",
+          "completed": false,
+          "status": "NOT_STARTED"
+        }
+      ]
+    }
+  ]
+}

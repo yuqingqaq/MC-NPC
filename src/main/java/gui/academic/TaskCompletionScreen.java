@@ -139,7 +139,9 @@ public class TaskCompletionScreen extends Screen {
         if (subTasks != null && !subTasks.isEmpty()) {
             for (AdaptiveSubTaskModel subTask : subTasks) {
                 String outcome = subTask.getOutcome();
+
                 if (outcome != null && !outcome.isEmpty()) {
+                    outcome = String.join("\n", outcome);
                     outcomesBuilder.append("   ").append(subTask.getTitle()).append("\n\n");
                     outcomesBuilder.append(outcome).append("\n\n");
                     hasOutcomes = true;

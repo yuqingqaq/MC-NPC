@@ -308,7 +308,67 @@ public class MatchingPanel extends BaseQuestionPanel {
 
     @Override
     public String getHintPrompt() {
-        return "提供关于概念之间关系的提示： " + conceptCategory;
+        StringBuilder promptBuilder = new StringBuilder();
+        promptBuilder.append("请提供关于概念分类").append(conceptCategory).append("的提示。\n\n");
+
+        // 添加当前的匹配状态信息
+        promptBuilder.append("用户当前的连线状态:\n");
+
+        // 列出所有左侧项目和右侧项目
+        promptBuilder.append("左侧项目列表:\n");
+        for (int i = 0; i < leftItems.size(); i++) {
+            promptBuilder.append((i+1)).append(". ").append(leftItems.get(i)).append("\n");
+        }
+
+        promptBuilder.append("\n右侧项目列表:\n");
+        for (int i = 0; i < rightItems.size(); i++) {
+            promptBuilder.append((i+1)).append(". ").append(rightItems.get(i)).append("\n");
+        }
+
+        // 列出正确的匹配关系（这是给GPT的信息，不会直接展示给玩家）
+        promptBuilder.append("\n正确的匹配关系:\n");
+        for (Map.Entry<Integer, Integer> match : correctMatches.entrySet()) {
+            int leftIndex = match.getKey();
+            int rightIndex = match.getValue();
+            promptBuilder.append("- ").append(leftItems.get(leftIndex))
+                    .append(" → ").append(rightItems.get(rightIndex)).append("\n");
+        }
+
+        // 列出用户当前的匹配，标明正确和错误
+        promptBuilder.append("\n用户当前的匹配:\n");
+        if (userMatches.isEmpty()) {
+            promptBuilder.append("用户尚未建立任何连线。\n");
+        } else {
+            for (Map.Entry<Integer, Integer> userMatch : userMatches.entrySet()) {
+                int leftIndex = userMatch.getKey();
+                int rightIndex = userMatch.getValue();
+
+                String leftItem = leftItems.get(leftIndex);
+                String rightItem = rightItems.get(rightIndex);
+
+                // 检查是否正确
+                boolean isCorrect = correctMatches.containsKey(leftIndex) &&
+                        correctMatches.get(leftIndex).equals(rightIndex);
+
+                promptBuilder.append("- ").append(leftItem)
+                        .append(" → ").append(rightItem)
+                        .append(" (").append(isCorrect ? "正确" : "错误").append(")\n");
+
+                // 如果错误，提供正确答案
+                if (!isCorrect && correctMatches.containsKey(leftIndex)) {
+                    int correctRightIndex = correctMatches.get(leftIndex);
+                    promptBuilder.append("  正确应为: ").append(leftItem)
+                            .append(" → ").append(rightItems.get(correctRightIndex)).append("\n");
+                }
+            }
+        }
+
+        // 指导GPT如何提供提示
+        promptBuilder.append("\n请基于以上信息，提供针对性的提示，帮助用户理解概念之间的关系。");
+        promptBuilder.append("提示应该引导用户思考，而不是直接给出答案。");
+        promptBuilder.append("如果用户有错误的连线，可以针对这些错误提供更具体的指导。");
+
+        return promptBuilder.toString();
     }
 
     @Override

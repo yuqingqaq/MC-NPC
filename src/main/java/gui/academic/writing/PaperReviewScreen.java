@@ -117,15 +117,17 @@ public class PaperReviewScreen extends Screen {
                 button -> saveOutcome()
         ));
 
-        // 右侧上方：获取建议按钮
-        this.getAdviceButton = this.addRenderableWidget(new Button(
-                this.width - rightPanelWidth + 10,
-                centerY + 90,
-                100,
-                20,
-                new TextComponent("获取总结建议"),
-                button -> generateAdvice()
-        ));
+        if(GameController.getInstance().isSRLQuestAvailable()) {
+            // 右侧上方：获取建议按钮
+            this.getAdviceButton = this.addRenderableWidget(new Button(
+                    this.width - rightPanelWidth + 10,
+                    centerY + 90,
+                    100,
+                    20,
+                    new TextComponent("获取总结建议"),
+                    button -> generateAdvice()
+            ));
+        }
 
         // 右侧：显示建议历史的面板
         int hintPanelHeight = this.height - 60;
@@ -254,7 +256,9 @@ public class PaperReviewScreen extends Screen {
 
         this.paperContentPanel.render(poseStack, mouseX, mouseY, partialTicks);
         this.textEditor.render(poseStack, mouseX, mouseY, partialTicks);
-        this.questionInput.render(poseStack, mouseX, mouseY, partialTicks);
+        if(GameController.getInstance().isSRLQuestAvailable()) {
+            this.questionInput.render(poseStack, mouseX, mouseY, partialTicks);
+        }
         this.hintPanel.render(poseStack, mouseX, mouseY, partialTicks);
 
         super.render(poseStack, mouseX, mouseY, partialTicks);

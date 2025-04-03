@@ -10,25 +10,26 @@ import net.minecraft.client.gui.GuiComponent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FeedbackPanel extends GuiComponent { // 继承GuiComponent以使用其方法
+public class FeedbackPanel extends GuiComponent {
     private static final int PADDING = 10;
     private static final int CLOSE_BUTTON_SIZE = 20;
     private static final int LINE_HEIGHT = 12;
+    private static final int TITLE_HEIGHT = 20;
 
-    private final int width;
-    private final int height;
+    private int width;
+    private int height;
     private int x;
     private int y;
 
     private boolean isCorrect;
     private String feedback;
-    private List<ColoredText> wrappedLines = new ArrayList<>(); // 存储处理后的彩色文本
+    private List<ColoredText> wrappedLines = new ArrayList<>();
 
-    public FeedbackPanel(int width, int height, int x, int y) {
+    public FeedbackPanel(int width, int x, int y) {
         this.width = width;
-        this.height = height;
         this.x = x;
         this.y = y;
+        // 高度将在setFeedback中计算
     }
 
     public void setFeedback(boolean isCorrect, String feedback) {
@@ -37,15 +38,13 @@ public class FeedbackPanel extends GuiComponent { // 继承GuiComponent以使用
 
         // 使用TextUtils处理文本换行和着色
         int maxTextWidth = width - (PADDING * 2);
-        wrappedLines = TextUtils.wrapText(feedback, maxTextWidth, false); // feedback使用NPC颜色
+        wrappedLines = TextUtils.wrapText(feedback, maxTextWidth, false);
 
-        // 限制最大行数
-        int maxLines = (height - PADDING * 2 - 20) / LINE_HEIGHT; // 减去标题空间
-        if (wrappedLines.size() > maxLines) {
-            List<ColoredText> truncatedLines = wrappedLines.subList(0, maxLines - 1);
-            truncatedLines.add(new ColoredText("... (content truncated)", 0xFFAAAA));
-            wrappedLines = new ArrayList<>(truncatedLines);
-        }
+        // 计算所需的高度
+        this.height = PADDING * 2 + TITLE_HEIGHT + (wrappedLines.size() * LINE_HEIGHT);
+
+        // 确保最小高度
+        this.height = Math.max(this.height, PADDING * 2 + TITLE_HEIGHT + LINE_HEIGHT);
     }
 
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
@@ -54,42 +53,47 @@ public class FeedbackPanel extends GuiComponent { // 继承GuiComponent以使用
         int screenHeight = Minecraft.getInstance().getWindow().getGuiScaledHeight();
 
         // 调整位置，确保面板完全可见
-        x = Math.min(x, screenWidth - width);
-        y = Math.min(y, screenHeight - height);
-        x = Math.max(x, 0);
-        y = Math.max(y, 0);
+        int adjustedX = Math.min(x, screenWidth - width);
+        adjustedX = Math.max(adjustedX, 0);
 
-        // 绘制背景 - 使用继承的fillGradient方法
+        int adjustedY = Math.min(y, screenHeight - height);
+        adjustedY = Math.max(adjustedY, 0);
+
+        // 临时存储调整后的位置，以便在isMouseOver等方法中使用
+        int renderX = adjustedX;
+        int renderY = adjustedY;
+
+        // 绘制背景
         int backgroundColor = isCorrect ? 0xFF4CAF50 : 0xFFF44336; // 绿色或红色
-        this.fillGradient(poseStack, x, y, x + width, y + height, backgroundColor, backgroundColor);
+        this.fillGradient(poseStack, renderX, renderY, renderX + width, renderY + height, backgroundColor, backgroundColor);
 
         // 绘制边框
-        this.fillGradient(poseStack, x, y, x + width, y + 2, 0xFF000000, 0xFF000000); // 顶部边框
-        this.fillGradient(poseStack, x, y, x + 2, y + height, 0xFF000000, 0xFF000000); // 左侧边框
-        this.fillGradient(poseStack, x + width - 2, y, x + width, y + height, 0xFF000000, 0xFF000000); // 右侧边框
-        this.fillGradient(poseStack, x, y + height - 2, x + width, y + height, 0xFF000000, 0xFF000000); // 底部边框
+        this.fillGradient(poseStack, renderX, renderY, renderX + width, renderY + 2, 0xFF000000, 0xFF000000); // 顶部边框
+        this.fillGradient(poseStack, renderX, renderY, renderX + 2, renderY + height, 0xFF000000, 0xFF000000); // 左侧边框
+        this.fillGradient(poseStack, renderX + width - 2, renderY, renderX + width, renderY + height, 0xFF000000, 0xFF000000); // 右侧边框
+        this.fillGradient(poseStack, renderX, renderY + height - 2, renderX + width, renderY + height, 0xFF000000, 0xFF000000); // 底部边框
 
         // 绘制标题
         Font font = Minecraft.getInstance().font;
         String title = isCorrect ? "正确!" : "再想想...";
-        font.draw(poseStack, title, x + PADDING, y + PADDING, 0xFFFFFFFF);
+        font.draw(poseStack, title, renderX + PADDING, renderY + PADDING, 0xFFFFFFFF);
 
         // 绘制处理过的彩色文本
-        int textY = y + PADDING + 20; // 标题下方开始
+        int textY = renderY + PADDING + TITLE_HEIGHT; // 标题下方开始
         for (ColoredText line : wrappedLines) {
-            // 确保文本在可视范围内
-            if (textY + LINE_HEIGHT > y + height - PADDING) {
-                break;
-            }
-            font.draw(poseStack, line.text, x + PADDING, textY, line.color);
+            font.draw(poseStack, line.text, renderX + PADDING, textY, line.color);
             textY += LINE_HEIGHT;
         }
 
         // 绘制关闭按钮
-        this.fillGradient(poseStack, x + width - CLOSE_BUTTON_SIZE - PADDING, y + PADDING,
-                x + width - PADDING, y + PADDING + CLOSE_BUTTON_SIZE, 0xFF333333, 0xFF333333);
-        font.draw(poseStack, "X", x + width - CLOSE_BUTTON_SIZE/2 - PADDING - 4,
-                y + PADDING + 6, 0xFFFFFFFF);
+        this.fillGradient(poseStack, renderX + width - CLOSE_BUTTON_SIZE - PADDING, renderY + PADDING,
+                renderX + width - PADDING, renderY + PADDING + CLOSE_BUTTON_SIZE, 0xFF333333, 0xFF333333);
+        font.draw(poseStack, "X", renderX + width - CLOSE_BUTTON_SIZE/2 - PADDING - 4,
+                renderY + PADDING + 6, 0xFFFFFFFF);
+
+        // 更新实际渲染位置
+        x = renderX;
+        y = renderY;
     }
 
     // 判断鼠标是否在面板上
@@ -108,5 +112,15 @@ public class FeedbackPanel extends GuiComponent { // 继承GuiComponent以使用
     // 获取反馈是否为正确
     public boolean isCorrect() {
         return isCorrect;
+    }
+
+    // 获取面板高度
+    public int getHeight() {
+        return height;
+    }
+
+    // 获取面板宽度
+    public int getWidth() {
+        return width;
     }
 }

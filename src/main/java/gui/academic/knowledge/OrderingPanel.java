@@ -190,15 +190,20 @@ public class OrderingPanel extends BaseQuestionPanel {
         }
 
         if (firstErrorIndex != -1) {
-        return "顺序不太正确。" +
-        "检查 " + currentOrder.get(firstErrorIndex) + "的位置";
+            if(GameController.getInstance().isSRLQuestAvailable()){
+                return "顺序不太正确。" +
+                        "检查 " + currentOrder.get(firstErrorIndex) + "的位置";
+            }
+            else{
+                return "顺序不太正确。" ;
+            }
+
         } else {
         return "顺序不太正确。" +
         "考虑一下逻辑顺序。";
         }
     
     }
-
     @Override
     public String getHintPrompt() {
         // 找出第一个错误的位置来提供针对性提示
@@ -212,13 +217,20 @@ public class OrderingPanel extends BaseQuestionPanel {
 
         if (firstErrorIndex != -1) {
             String hintItem = currentOrder.get(firstErrorIndex);
-            return "提示 " + hintItem +
-            " 应放在 " + orderingTopic + " 时间轴的哪个位置";
-            } else {
-            return "提示 " + orderingTopic + " 的正确顺序";
+            return "提示: " + hintItem + " 应放在 " + orderingTopic + " 时间轴的不同位置。";
+        } else {
+            // 格式化完整的正确顺序
+            StringBuilder correctSequence = new StringBuilder();
+            correctSequence.append("正确的").append(orderingTopic).append("顺序是: \n");
+            for (int i = 0; i < correctOrder.size(); i++) {
+                correctSequence.append((i+1)).append(". ").append(correctOrder.get(i));
+                if (i < correctOrder.size() - 1) {
+                    correctSequence.append("\n");
+                }
+            }
+            return correctSequence.toString();
         }
     }
-
     @Override
     public void onCorrectAnswer() {
         // 记录玩家掌握了这个顺序
