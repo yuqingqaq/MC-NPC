@@ -224,6 +224,9 @@ public abstract class AbstractEditorScreen extends Screen {
         // 查找目标子任务
         AdaptiveSubTaskModel subTask = TaskManager.getInstance().findSubTaskByTitle(targetSubTaskTitle);
 
+
+
+        // 在saveContentAndCompleteTask()方法中，修改刷新逻辑：
         if (subTask != null) {
             // 保存内容到子任务
             subTask.setOutcome(content);
@@ -232,30 +235,39 @@ public abstract class AbstractEditorScreen extends Screen {
             TaskManager.getInstance().completeSubTask(subTask);
 
             Minecraft.getInstance().player.displayClientMessage(
-                    new TextComponent("Content saved and task completed: " + targetSubTaskTitle), false
+                    new TextComponent("内容已保存并完成任务: " + targetSubTaskTitle), false
             );
 
-            // 刷新任务面板
+            // 刷新任务面板 - 确保正确重新加载成果数据
             loadSubTaskOutcomes();
-        } else {
+
+            // 强制显示成果面板
+            showingAdvicePanel = false;
+
+        }else {
             Minecraft.getInstance().player.displayClientMessage(
                     new TextComponent("Could not find task: " + targetSubTaskTitle), true
             );
         }
     }
 
+    // 修复loadSubTaskOutcomes()方法以确保正确刷新
     private void loadSubTaskOutcomes() {
         outcomeHistory.clear(); // 清空之前的内容
 
-        StringBuilder outcomesBuilder = getSubTaskOutcomes(true); // 排除当前编辑的子任务
+        StringBuilder outcomesBuilder = getSubTaskOutcomes(true); // 包含所有任务以查看更新
         if (outcomesBuilder.length() > 0) {
-            // 将构建器的内容按行分割，添加到历史记录中
+            // 按行分割，添加到历史记录中
             String[] lines = outcomesBuilder.toString().split("\n");
             for (String line : lines) {
                 outcomeHistory.add(line);
             }
+        } else {
+            // 如果没有成果，添加一条消息
+            outcomeHistory.add("暂无任务成果");
         }
 
+        // 确保面板刷新
         this.outcomePanel.refreshPanel();
     }
 
@@ -409,10 +421,11 @@ public abstract class AbstractEditorScreen extends Screen {
                 showingAdvicePanel = false;
                 return true;
             } else if (mouseX >= adviceTabX && mouseX <= adviceTabX + tabWidth) {
+                // 只有在SRL任务可用时才允许切换到建议面板
                 if(GameController.getInstance().isSRLQuestAvailable()) {
                     showingAdvicePanel = true;
+                    return true;
                 }
-                return true;
             }
         }
 
