@@ -54,6 +54,10 @@ public class PosterManager {
         content.add("关键特性：自主性、反应性、前瞻性和社交能力。");
         content.add("智能体的核心是与环境交互的能动性，常用于个人助手、客服和游戏NPC等场景。");
         content.add("智能体解决问题的方式是通过理解、推理与环境交互的综合能力。");
+        content.add("想象Alfred收到指令'Alfred，我想来杯咖啡'，他会理解请求、推理规划并执行步骤：去厨房→使用咖啡机→煮咖啡→拿回来。");
+        content.add("智能体大脑通常使用LLM(如GPT4、LLama、Gemini)，已经过大量文本训练，具有良好泛化能力。");
+        content.add("虽然LLM只能生成文本，但智能体可通过工具扩展能力，例如HuggingChat和ChatGPT能够生成图像。");
+        content.add("");
 
         return new PosterData(
                 "智能体定义",
@@ -74,6 +78,10 @@ public class PosterManager {
         content.add("特殊标记(Special Tokens)用于界定消息边界和序列结束。");
         content.add("LLM通过保存对话历史维持上下文，实现连贯的多轮交互。");
         content.add("虽然LLM只能生成文本，但通过工具调用可以实现更多功能。");
+        content.add("Token是LLM处理的基本单位，类似于'单词'但更高效，如'computer'可能被分为多个token。");
+        content.add("系统消息作为持久性指令，指导每次交互，在智能体中还包含工具使用和格式化指南。");
+        content.add("LLM是自回归的，一次预测的输出成为下一次的输入，直到预测出EOS(End of Sequence)标记停止生成。");
+        content.add("");
 
         return new PosterData(
                 "大型语言模型",
@@ -88,13 +96,17 @@ public class PosterManager {
     // 初始化Tools海报
     private PosterData initToolsPoster() {
         List<String> content = new ArrayList<>();
+
         content.add("工具(Tools)是赋予LLM执行能力的函数，弥补模型的局限性。");
         content.add("工具定义包括：功能描述、预期输入格式和输出结果。");
         content.add("工具调用流程：LLM生成调用文本 → 智能体解析并执行 → 结果返回给LLM。");
         content.add("合格工具应补充LLM能力，如计算器弥补数学弱点，搜索提供最新信息。");
         content.add("工具描述通常采用结构化表达方式，确保模型正确理解和调用。");
         content.add("工具对于突破LLM静态训练的局限至关重要，使其能处理实时任务。");
-
+        content.add("LLM不能直接调用工具，而是生成描述调用的文本，由智能体框架执行实际调用。");
+        content.add("例如，询问巴黎天气时，LLM识别需使用'天气'工具，智能体执行调用并返回结果。");
+        content.add("工具调用对用户通常不可见，智能体在后台完成调用并将结果整合到对话中。");
+        content.add("");
         return new PosterData(
                 "智能体工具",
                 content,
@@ -113,7 +125,11 @@ public class PosterManager {
         content.add("行动(Action)：调用合适工具或执行操作，有多种类型如JSON、代码或函数调用。");
         content.add("观察(Observation)：获取行动结果，整合反馈并调整策略，为下一轮循环提供信息。");
         content.add("整个循环持续进行，直到智能体实现目标或达到停止条件。");
-        content.add("ReAct是指‘推理’与‘行动’结合，引导智能体逐步思考而非直接输出最终方案。");
+        content.add("ReAct是指'推理'与'行动'结合，引导智能体逐步思考而非直接输出最终方案。");
+        content.add("ReAct通过提示'让我们逐步思考'引导模型生成详细推理过程，显著减少错误，提高问题解决可靠性。");
+        content.add("行动类型包括：信息收集、工具使用、环境交互和通信，智能体需能够适时停止生成标记。");
+        content.add("观察阶段包括：收集反馈、附加结果到上下文中、调整策略，如天气API返回'多云,15°C'的结果。");
+        content.add("");
 
         return new PosterData(
                 "智能体工作流",
